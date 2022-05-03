@@ -8,20 +8,19 @@ public class PlaceDetails {
     private Double rating;
     private Price price;
     private String phoneNumber;
-    private Integer reviewsNumber;
+    private Integer reviewsCounter;
     private List<WorkingHours> workingHoursDays;
     private List<Review> reviews;
     private Boolean isOpen;
 
-    public PlaceDetails(String id, String name, Double rating, Price price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays, List<Review> reviews, Boolean isOpen) {
+    public PlaceDetails(String id, String name, Double rating, Price price, String phoneNumber, Integer reviewsCounter, List<WorkingHours> workingHoursDays, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
-        this.reviewsNumber = reviewsNumber;
+        this.reviewsCounter = reviewsCounter;
         this.workingHoursDays = workingHoursDays;
-        this.reviews = reviews;
         this.isOpen = isOpen;
     }
 
@@ -65,12 +64,12 @@ public class PlaceDetails {
         this.phoneNumber = phoneNumber;
     }
 
-    public Integer getReviewsNumber() {
-        return reviewsNumber;
+    public Integer getReviewsCounter() {
+        return reviewsCounter;
     }
 
-    public void setReviewsNumber(Integer reviewsNumber) {
-        this.reviewsNumber = reviewsNumber;
+    public void setReviewsCounter(Integer reviewsCounter) {
+        this.reviewsCounter = reviewsCounter;
     }
 
     public List<WorkingHours> getWorkingHoursDays() {
