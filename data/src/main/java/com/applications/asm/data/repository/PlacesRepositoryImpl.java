@@ -1,7 +1,11 @@
 package com.applications.asm.data.repository;
 
+import com.applications.asm.data.entity.PlaceDetailsEntity;
 import com.applications.asm.data.entity.PlaceEntity;
+import com.applications.asm.data.entity.ReviewEntity;
+import com.applications.asm.data.entity.mapper.PlaceDetaislEntityMapper;
 import com.applications.asm.data.entity.mapper.PlaceEntityMapper;
+import com.applications.asm.data.entity.mapper.ReviewEntityMapper;
 import com.applications.asm.data.sources.PlacesDataSource;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
@@ -14,15 +18,20 @@ import java.util.List;
 public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlacesDataSource placeDataSource;
     private final PlaceEntityMapper placeEntityMapper;
+    private final PlaceDetaislEntityMapper placeDetaislEntityMapper;
+    private final ReviewEntityMapper reviewEntityMapper;
 
-    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceEntityMapper placeEntityMapper) {
+    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceEntityMapper placeEntityMapper, PlaceDetaislEntityMapper placeDetaislEntityMapper, ReviewEntityMapper reviewEntityMapper) {
         this.placeDataSource = placeDataSource;
         this.placeEntityMapper = placeEntityMapper;
+        this.placeDetaislEntityMapper = placeDetaislEntityMapper;
+        this.reviewEntityMapper = reviewEntityMapper;
     }
 
     @Override
     public PlaceDetails getPlaceDetails(String placeId) {
-        return null;
+        PlaceDetailsEntity placeDetails = placeDataSource.getPlaceDetailsEntity(placeId);
+        return placeDetaislEntityMapper.getPlaceDetailsFromPlaceDetailsEntity(placeDetails);
     }
 
     @Override
@@ -36,6 +45,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
 
     @Override
     public List<Review> getReviews(String placeId) {
-        return null;
+        List<Review> reviews = new ArrayList<>();
+        List<ReviewEntity> reviewsEntities = placeDataSource.getReviewsEntity(placeId);
+        for(ReviewEntity reviewEntity: reviewsEntities)
+            reviews.add(reviewEntityMapper.getReviewFromReviewEntity(reviewEntity));
+        return reviews;
     }
 }

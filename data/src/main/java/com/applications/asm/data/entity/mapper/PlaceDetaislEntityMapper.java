@@ -13,14 +13,14 @@ import com.applications.asm.domain.entities.WorkingHours;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceDetailEntityMapper {
+public class PlaceDetaislEntityMapper {
     private final Context context;
 
-    public PlaceDetailEntityMapper(Context context) {
+    public PlaceDetaislEntityMapper(Context context) {
         this.context = context;
     }
 
-    PlaceDetails getPlaceDetailsFromPlaceDetailsEntity(PlaceDetailsEntity placeDetailsEntity) {
+    public PlaceDetails getPlaceDetailsFromPlaceDetailsEntity(PlaceDetailsEntity placeDetailsEntity) {
         String id = placeDetailsEntity.getId();
         String name = placeDetailsEntity.getName();
         Double rating = placeDetailsEntity.getRating();
