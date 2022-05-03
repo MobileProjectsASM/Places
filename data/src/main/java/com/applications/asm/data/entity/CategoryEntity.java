@@ -4,6 +4,8 @@ public class CategoryEntity {
     private String id;
     private String name;
 
+    public CategoryEntity() {}
+
     public CategoryEntity(String id, String name) {
         this.id = id;
         this.name = name;

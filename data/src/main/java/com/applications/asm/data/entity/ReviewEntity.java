@@ -7,6 +7,8 @@ public class ReviewEntity {
     private Integer rate;
     private String description;
 
+    public ReviewEntity() {}
+
     public ReviewEntity(String userName, String imageUrl, String dateCreated, Integer rate, String description) {
         this.userName = userName;
         this.imageUrl = imageUrl;

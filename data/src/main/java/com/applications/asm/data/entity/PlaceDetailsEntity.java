@@ -12,6 +12,8 @@ public class PlaceDetailsEntity {
     private List<WorkingHoursEntity> workingHoursEntityDays;
     private Boolean isOpen;
 
+    public PlaceDetailsEntity() {}
+
     public PlaceDetailsEntity(String id, String name, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursEntity> workingHoursEntityDays, Boolean isOpen) {
         this.id = id;
         this.name = name;

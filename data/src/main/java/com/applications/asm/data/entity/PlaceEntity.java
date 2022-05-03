@@ -10,6 +10,8 @@ public class PlaceEntity {
     private List<CategoryEntity> categories;
     private LocationEntity locationEntity;
 
+    public PlaceEntity() {}
+
     public PlaceEntity(String id, String name, String imageUrl, CoordinatesEntity coordinatesEntity, List<CategoryEntity> categories, LocationEntity locationEntity) {
         this.id = id;
         this.name = name;

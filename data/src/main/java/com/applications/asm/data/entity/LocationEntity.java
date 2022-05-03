@@ -8,6 +8,8 @@ public class LocationEntity {
     private String suburb;
     private String address;
 
+    public LocationEntity() {}
+
     public LocationEntity(String country, String state, String city, String zipCode, String suburb, String address) {
         this.country = country;
         this.state = state;

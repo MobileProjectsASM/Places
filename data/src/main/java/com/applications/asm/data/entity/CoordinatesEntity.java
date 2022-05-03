@@ -4,6 +4,8 @@ public class CoordinatesEntity {
     private Double latitude;
     private Double longitude;
 
+    public CoordinatesEntity() {}
+
     public CoordinatesEntity(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;

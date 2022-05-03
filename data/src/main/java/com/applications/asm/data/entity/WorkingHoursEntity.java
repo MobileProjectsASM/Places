@@ -5,6 +5,8 @@ public class WorkingHoursEntity {
     private String hourOpen;
     private String hourClose;
 
+    public WorkingHoursEntity() {}
+
     public WorkingHoursEntity(Integer day, String hourOpen, String hourClose) {
         this.day = day;
         this.hourOpen = hourOpen;
