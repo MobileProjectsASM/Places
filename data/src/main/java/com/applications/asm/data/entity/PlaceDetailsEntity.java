@@ -2,7 +2,7 @@ package com.applications.asm.data.entity;
 
 import java.util.List;
 
-public class PlaceDetailEntity {
+public class PlaceDetailsEntity {
     private String id;
     private String name;
     private Double rating;
@@ -10,8 +10,9 @@ public class PlaceDetailEntity {
     private String phoneNumber;
     private Integer reviewCount;
     private List<WorkingHoursEntity> workingHoursEntityDays;
+    private Boolean isOpen;
 
-    public PlaceDetailEntity(String id, String name, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursEntity> workingHoursEntityDays) {
+    public PlaceDetailsEntity(String id, String name, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursEntity> workingHoursEntityDays, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.rating = rating;
@@ -19,6 +20,7 @@ public class PlaceDetailEntity {
         this.phoneNumber = phoneNumber;
         this.reviewCount = reviewCount;
         this.workingHoursEntityDays = workingHoursEntityDays;
+        this.isOpen = isOpen;
     }
 
     public String getId() {
@@ -75,5 +77,13 @@ public class PlaceDetailEntity {
 
     public void setWorkingHoursEntityDays(List<WorkingHoursEntity> workingHoursEntityDays) {
         this.workingHoursEntityDays = workingHoursEntityDays;
+    }
+
+    public Boolean getOpen() {
+        return isOpen;
+    }
+
+    public void setOpen(Boolean open) {
+        isOpen = open;
     }
 }
