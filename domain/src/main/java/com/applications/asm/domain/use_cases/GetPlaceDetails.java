@@ -1,12 +1,13 @@
 package com.applications.asm.domain.use_cases;
 
-import com.applications.asm.domain.entities.Date;
 import com.applications.asm.domain.entities.PlaceDetails;
+import com.applications.asm.domain.entities.Review;
 import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
-import com.applications.asm.domain.repository.System;
 import com.applications.asm.domain.use_cases.base.UseCase;
+
+import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
 
@@ -26,9 +27,9 @@ public class GetPlaceDetails extends UseCase<PlaceDetails, String> {
     }
 
     private PlaceDetails getDetails(String placeId) {
-        Date currentDate = system.getCurrentDate();
+        List<Review> reviews = placesRepository.getReviews(placeId);
         PlaceDetails placeDetails = placesRepository.getPlaceDetails(placeId);
-        placeDetails.setIsOpen(currentDate);
+        placeDetails.setReviews(reviews);
         return placeDetails;
     }
 }

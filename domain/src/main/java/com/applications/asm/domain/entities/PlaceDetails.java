@@ -10,9 +10,10 @@ public class PlaceDetails {
     private String phoneNumber;
     private Integer reviewsNumber;
     private List<WorkingHours> workingHoursDays;
+    private List<Review> reviews;
     private Boolean isOpen;
 
-    public PlaceDetails(String id, String name, Double rating, Double price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays) {
+    public PlaceDetails(String id, String name, Double rating, Double price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.rating = rating;
@@ -20,6 +21,7 @@ public class PlaceDetails {
         this.phoneNumber = phoneNumber;
         this.reviewsNumber = reviewsNumber;
         this.workingHoursDays = workingHoursDays;
+        this.isOpen = isOpen;
     }
 
     public String getId() {
@@ -70,39 +72,27 @@ public class PlaceDetails {
         this.reviewsNumber = reviewsNumber;
     }
 
-    public List<WorkingHours> getWorkingHours() {
+    public List<WorkingHours> getWorkingHoursDays() {
         return workingHoursDays;
     }
 
-    public void setWorkingHours(List<WorkingHours> workingHoursDays) {
+    public void setWorkingHoursDays(List<WorkingHours> workingHoursDays) {
         this.workingHoursDays = workingHoursDays;
     }
 
-    public Boolean getIsOpen() {
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public Boolean getOpen() {
         return isOpen;
     }
 
-    public void setIsOpen(Date currentDate) {
-        Integer currentDay = currentDate.getDay();
-        WorkingHours currentWorkingDay = null;
-        for(WorkingHours workingHours: workingHoursDays) {
-            if(currentDay.equals(workingHours.getDayNumber())){
-                currentWorkingDay = workingHours;
-                break;
-            }
-        }
-        if(currentWorkingDay != null)
-            isOpen = currentHourIsInRange(currentDate.getHour(), currentWorkingDay.getOpenHour(), currentWorkingDay.getCloseHour());
-        else isOpen = false;
-    }
-
-    private Boolean currentHourIsInRange(Hour currentHour, Hour openHour, Hour closeHour) {
-        if(currentHour.getHour() >= openHour.getHour() && currentHour.getHour() <= closeHour.getHour()) {
-            if(currentHour.getHour() == openHour.getHour())
-                return currentHour.getMinutes() >= openHour.getMinutes();
-            else if(currentHour.getHour() == closeHour.getHour())
-                return closeHour.getMinutes() <= closeHour.getMinutes();
-            else return true;
-        } else return false;
+    public void setOpen(Boolean open) {
+        isOpen = open;
     }
 }
