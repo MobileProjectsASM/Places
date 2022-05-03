@@ -23,13 +23,14 @@ public class PlaceDetaislEntityMapper {
     public PlaceDetails getPlaceDetailsFromPlaceDetailsEntity(PlaceDetailsEntity placeDetailsEntity) {
         String id = placeDetailsEntity.getId();
         String name = placeDetailsEntity.getName();
+        String imageUrl = placeDetailsEntity.getImageUrl();
         Double rating = placeDetailsEntity.getRating();
         Price price = getPrice(placeDetailsEntity.getPrice());
         String phoneNumber = placeDetailsEntity.getPhoneNumber();
         Integer reviewsCounter = placeDetailsEntity.getReviewCount();
         List<WorkingHours> workingHoursDays = getWorkingHours(placeDetailsEntity.getWorkingHoursEntityDays());
         Boolean isOpen = placeDetailsEntity.getOpen();
-        return new PlaceDetails(id, name, rating, price, phoneNumber, reviewsCounter, workingHoursDays, isOpen);
+        return new PlaceDetails(id, name, imageUrl, rating, price, phoneNumber, reviewsCounter, workingHoursDays, isOpen);
     }
 
     private Price getPrice(String price) {

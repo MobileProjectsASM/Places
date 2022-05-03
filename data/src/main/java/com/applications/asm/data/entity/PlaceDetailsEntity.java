@@ -5,6 +5,7 @@ import java.util.List;
 public class PlaceDetailsEntity {
     private String id;
     private String name;
+    private String imageUrl;
     private Double rating;
     private String price;
     private String phoneNumber;
@@ -14,9 +15,10 @@ public class PlaceDetailsEntity {
 
     public PlaceDetailsEntity() {}
 
-    public PlaceDetailsEntity(String id, String name, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursEntity> workingHoursEntityDays, Boolean isOpen) {
+    public PlaceDetailsEntity(String id, String name, String imageUrl, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursEntity> workingHoursEntityDays, Boolean isOpen) {
         this.id = id;
         this.name = name;
+        this.imageUrl = imageUrl;
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
@@ -39,6 +41,14 @@ public class PlaceDetailsEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public Double getRating() {

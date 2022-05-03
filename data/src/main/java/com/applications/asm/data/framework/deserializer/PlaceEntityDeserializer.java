@@ -20,10 +20,10 @@ public class PlaceEntityDeserializer implements JsonDeserializer<List<PlaceEntit
     @Override
     public List<PlaceEntity> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         List<PlaceEntity> placesEntity = new ArrayList<>();
-        JsonObject response = json.getAsJsonObject();
-        JsonArray businesses = response.getAsJsonArray("businesses");
+        JsonObject body = json.getAsJsonObject();
+        JsonArray businesses = body.getAsJsonArray("businesses");
         for(JsonElement business: businesses)
-            placesEntity.add(deserializePlace((JsonObject) business));
+            placesEntity.add(deserializePlace(business.getAsJsonObject()));
         return placesEntity;
     }
 
@@ -53,7 +53,7 @@ public class PlaceEntityDeserializer implements JsonDeserializer<List<PlaceEntit
     private List<CategoryEntity> deserializeCategories(JsonArray categories) {
         List<CategoryEntity> categoriesEntity = new ArrayList<>();
         for (JsonElement category: categories)
-            categoriesEntity.add(deserializeCategory((JsonObject) category));
+            categoriesEntity.add(deserializeCategory(category.getAsJsonObject()));
         return categoriesEntity;
     }
 
