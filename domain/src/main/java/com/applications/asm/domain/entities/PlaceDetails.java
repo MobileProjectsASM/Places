@@ -6,14 +6,14 @@ public class PlaceDetails {
     private String id;
     private String name;
     private Double rating;
-    private Double price;
+    private Price price;
     private String phoneNumber;
     private Integer reviewsNumber;
     private List<WorkingHours> workingHoursDays;
     private List<Review> reviews;
     private Boolean isOpen;
 
-    public PlaceDetails(String id, String name, Double rating, Double price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays, Boolean isOpen) {
+    public PlaceDetails(String id, String name, Double rating, Price price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays, List<Review> reviews, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.rating = rating;
@@ -21,6 +21,7 @@ public class PlaceDetails {
         this.phoneNumber = phoneNumber;
         this.reviewsNumber = reviewsNumber;
         this.workingHoursDays = workingHoursDays;
+        this.reviews = reviews;
         this.isOpen = isOpen;
     }
 
@@ -48,11 +49,11 @@ public class PlaceDetails {
         this.rating = rating;
     }
 
-    public Double getPrice() {
+    public Price getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(Price price) {
         this.price = price;
     }
 
