@@ -6,12 +6,12 @@ public class Place {
     private String id;
     private String name;
     private Double latitude;
-    private String longitude;
+    private Double longitude;
     private String imageUrl;
     private List<Category> categories;
     private String address;
 
-    public Place(String id, String name, Double latitude, String longitude, String imageUrl, List<Category> categories, String address) {
+    public Place(String id, String name, Double latitude, Double longitude, String imageUrl, List<Category> categories, String address) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -45,11 +45,11 @@ public class Place {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 

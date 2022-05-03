@@ -4,6 +4,7 @@ import java.util.List;
 
 public class PlaceDetails {
     private String id;
+    private String name;
     private Double rating;
     private Double price;
     private String phoneNumber;
@@ -11,8 +12,9 @@ public class PlaceDetails {
     private List<WorkingHours> workingHoursDays;
     private Boolean isOpen;
 
-    public PlaceDetails(String id, Double rating, Double price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays) {
+    public PlaceDetails(String id, String name, Double rating, Double price, String phoneNumber, Integer reviewsNumber, List<WorkingHours> workingHoursDays) {
         this.id = id;
+        this.name = name;
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
@@ -26,6 +28,14 @@ public class PlaceDetails {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Double getRating() {

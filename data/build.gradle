@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
+    implementation project(':domain')
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
@@ -35,4 +36,10 @@ dependencies {
 
     //Rx java para programacion asincrona
     implementation "io.reactivex.rxjava3:rxjava:3.1.4"
+
+    //Gson para el Parsing
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    //Retrofit para el consumo de servicios
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 }
