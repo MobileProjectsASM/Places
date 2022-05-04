@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import jdk.internal.org.jline.utils.Log;
 
 public class GetReviewsUc extends UseCase<List<Review>, String> {
     private final PlacesRepository placesRepository;
@@ -34,7 +35,7 @@ public class GetReviewsUc extends UseCase<List<Review>, String> {
         try {
             return placesRepository.getReviews(placeId);
         } catch (ConnectionServer connectionServer) {
-            logger.error(TAG, connectionServer);
+            Log.error(TAG + " : " + connectionServer.getMessage());
             return new ArrayList<>();
         }
     }

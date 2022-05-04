@@ -6,18 +6,16 @@ import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
 import com.applications.asm.domain.use_cases.base.UseCase;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import jdk.internal.org.jline.utils.Log;
 
 public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
     private final PlacesRepository placesRepository;
     private final String TAG = "GetPlacesUc";
-    private final static Logger logger = LoggerFactory.getLogger(GetPlacesUc.class);
 
     public static class Params {
         private final String placeToFind;
@@ -53,7 +51,7 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
         try {
             return placesRepository.getPlaces(placeToFind, latitude, longitude, radius, categories);
         } catch (ConnectionServer connectionServer) {
-            logger.error(TAG, connectionServer);
+            Log.error(TAG + " : " + connectionServer.getMessage());
             return new ArrayList<>();
         }
     }

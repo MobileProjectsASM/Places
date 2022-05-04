@@ -14,6 +14,7 @@ import com.sun.org.slf4j.internal.LoggerFactory;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import jdk.internal.org.jline.utils.Log;
 
 public class GetPlaceDetailsUc extends UseCase<PlaceDetails, String> {
     private final PlacesRepository placesRepository;
@@ -41,7 +42,7 @@ public class GetPlaceDetailsUc extends UseCase<PlaceDetails, String> {
             }
             throw new ResponseNull("Error desconocido");
         } catch (ConnectionServer connectionServer) {
-            logger.error(TAG, connectionServer);
+            Log.error(TAG + " : " + connectionServer.getMessage());
             throw new ResponseNull(connectionServer.getMessage());
         }
     }
