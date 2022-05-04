@@ -1,16 +1,16 @@
 package com.applications.asm.domain.executor;
 
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 
 public class JobExecutor implements ThreadExecutor {
-    private final ThreadPoolExecutor threadPoolExecutor;
+    private final Executor executor;
 
-    public JobExecutor(ThreadPoolExecutor threadPoolExecutor) {
-        this.threadPoolExecutor = threadPoolExecutor;
+    public JobExecutor(Executor executor) {
+        this.executor = executor;
     }
 
     @Override
     public void execute(Runnable runnable) {
-        threadPoolExecutor.execute(runnable);
+        executor.execute(runnable);
     }
 }
