@@ -33,10 +33,13 @@ public class GetPlaceDetailsUc extends UseCase<PlaceDetails, String> {
 
     private PlaceDetails getDetails(String placeId) throws ResponseNull {
         try {
-            List<Review> reviews = placesRepository.getReviews(placeId);
             PlaceDetails placeDetails = placesRepository.getPlaceDetails(placeId);
-            placeDetails.setReviews(reviews);
-            return placeDetails;
+            if(placeDetails != null) {
+                List<Review> reviews = placesRepository.getReviews(placeId);
+                placeDetails.setReviews(reviews);
+                return placeDetails;
+            }
+            throw new ResponseNull("Error desconocido");
         } catch (ConnectionServer connectionServer) {
             logger.error(TAG, connectionServer);
             throw new ResponseNull(connectionServer.getMessage());
