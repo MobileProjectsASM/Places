@@ -6,7 +6,10 @@ import com.applications.asm.data.entity.ReviewEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -51,10 +54,12 @@ public class NetworkModule {
         @Named("place_deserializer") JsonDeserializer<PlaceDetailsEntity> placeDetailDeserializer,
         @Named("review_deserializer") JsonDeserializer<List<ReviewEntity>> reviewDeserializer
     ) {
+        Type placeEntityListType = new TypeToken<ArrayList<PlaceEntity>>(){}.getType();
+        Type reviewEntityListType = new TypeToken<ArrayList<ReviewEntity>>(){}.getType();
         return new GsonBuilder()
-                .registerTypeAdapter(PlaceEntity.class, placesDeserializer)
+                .registerTypeAdapter(placeEntityListType, placesDeserializer)
                 .registerTypeAdapter(PlaceDetailsEntity.class, placeDetailDeserializer)
-                .registerTypeAdapter(ReviewEntity.class, reviewDeserializer)
+                .registerTypeAdapter(reviewEntityListType, reviewDeserializer)
                 .create();
     }
 }

@@ -5,7 +5,6 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.applications.asm.data.entity.PlaceEntity;
 import com.applications.asm.data.entity.mapper.PlaceDetailsEntityMapper;
 import com.applications.asm.data.entity.mapper.PlaceDetailsEntityMapperImpl;
 import com.applications.asm.data.entity.mapper.PlaceEntityMapper;
@@ -14,15 +13,9 @@ import com.applications.asm.data.entity.mapper.ReviewEntityMapper;
 import com.applications.asm.data.entity.mapper.ReviewEntityMapperImpl;
 import com.applications.asm.data.framework.PlaceService;
 import com.applications.asm.data.framework.ServicePlacesDataSource;
-import com.applications.asm.data.framework.deserializer.PlaceEntityDeserializer;
 import com.applications.asm.data.repository.PlacesRepositoryImpl;
 import com.applications.asm.data.sources.PlacesDataSource;
 import com.applications.asm.domain.repository.PlacesRepository;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-
-import java.util.List;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -30,7 +23,6 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module
 public class ServicesModule {
