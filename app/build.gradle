@@ -45,4 +45,10 @@ dependencies {
     //Rx java para programacion asincrona
     implementation "io.reactivex.rxjava3:rxjava:3.1.4"
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    //Gson para el Parsing
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    //Retrofit para el consumo de servicios
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
 }
