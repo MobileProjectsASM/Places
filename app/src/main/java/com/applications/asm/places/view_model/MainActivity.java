@@ -1,9 +1,11 @@
-package com.applications.asm.places;
+package com.applications.asm.places.view_model;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.format.Time;
+
+import com.applications.asm.places.R;
 
 import java.util.Calendar;
 
@@ -13,6 +15,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Calendar.getInstance().getTime();
     }
 }
