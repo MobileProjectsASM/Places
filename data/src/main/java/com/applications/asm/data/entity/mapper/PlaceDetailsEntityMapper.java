@@ -13,10 +13,10 @@ import com.applications.asm.domain.entities.WorkingHours;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceDetaislEntityMapper {
+public class PlaceDetailsEntityMapper {
     private final Context context;
 
-    public PlaceDetaislEntityMapper(Context context) {
+    public PlaceDetailsEntityMapper(Context context) {
         this.context = context;
     }
 

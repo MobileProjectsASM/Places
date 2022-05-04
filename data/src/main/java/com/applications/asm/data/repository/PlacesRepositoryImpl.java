@@ -3,7 +3,7 @@ package com.applications.asm.data.repository;
 import com.applications.asm.data.entity.PlaceDetailsEntity;
 import com.applications.asm.data.entity.PlaceEntity;
 import com.applications.asm.data.entity.ReviewEntity;
-import com.applications.asm.data.entity.mapper.PlaceDetaislEntityMapper;
+import com.applications.asm.data.entity.mapper.PlaceDetailsEntityMapper;
 import com.applications.asm.data.entity.mapper.PlaceEntityMapper;
 import com.applications.asm.data.entity.mapper.ReviewEntityMapper;
 import com.applications.asm.data.sources.PlacesDataSource;
@@ -18,20 +18,20 @@ import java.util.List;
 public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlacesDataSource placeDataSource;
     private final PlaceEntityMapper placeEntityMapper;
-    private final PlaceDetaislEntityMapper placeDetaislEntityMapper;
+    private final PlaceDetailsEntityMapper placeDetailsEntityMapper;
     private final ReviewEntityMapper reviewEntityMapper;
 
-    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceEntityMapper placeEntityMapper, PlaceDetaislEntityMapper placeDetaislEntityMapper, ReviewEntityMapper reviewEntityMapper) {
+    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceEntityMapper placeEntityMapper, PlaceDetailsEntityMapper placeDetailsEntityMapper, ReviewEntityMapper reviewEntityMapper) {
         this.placeDataSource = placeDataSource;
         this.placeEntityMapper = placeEntityMapper;
-        this.placeDetaislEntityMapper = placeDetaislEntityMapper;
+        this.placeDetailsEntityMapper = placeDetailsEntityMapper;
         this.reviewEntityMapper = reviewEntityMapper;
     }
 
     @Override
     public PlaceDetails getPlaceDetails(String placeId) {
         PlaceDetailsEntity placeDetails = placeDataSource.getPlaceDetailsEntity(placeId);
-        return placeDetaislEntityMapper.getPlaceDetailsFromPlaceDetailsEntity(placeDetails);
+        return placeDetailsEntityMapper.getPlaceDetailsFromPlaceDetailsEntity(placeDetails);
     }
 
     @Override
