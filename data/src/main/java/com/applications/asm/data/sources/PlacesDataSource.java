@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PlacesDataSource {
-    List<PlaceEntity> getPlacesEntity(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws ConnectionServer;
-    PlaceDetailsEntity getPlaceDetailsEntity(String placeId) throws ConnectionServer;
-    List<ReviewEntity> getReviewsEntity(String placeId) throws ConnectionServer;
+    List<PlaceEntity> getPlacesEntity(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws IOException;
+    PlaceDetailsEntity getPlaceDetailsEntity(String placeId) throws IOException;
+    List<ReviewEntity> getReviewsEntity(String placeId) throws IOException;
 }

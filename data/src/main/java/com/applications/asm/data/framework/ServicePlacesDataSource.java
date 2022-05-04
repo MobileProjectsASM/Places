@@ -6,7 +6,6 @@ import com.applications.asm.data.entity.PlaceDetailsEntity;
 import com.applications.asm.data.entity.PlaceEntity;
 import com.applications.asm.data.entity.ReviewEntity;
 import com.applications.asm.data.sources.PlacesDataSource;
-import com.applications.asm.domain.exception.ConnectionServer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,60 +25,33 @@ public class ServicePlacesDataSource implements PlacesDataSource {
     }
 
     @Override
-    public List<PlaceEntity> getPlacesEntity(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws ConnectionServer {
+    public List<PlaceEntity> getPlacesEntity(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws IOException {
         Call<List<PlaceEntity>> placesEntity = placeService.getPlacesEntity(apiKey, placeToFind, longitude, latitude, radius, getCategories(categories));
-        try {
-            Response<List<PlaceEntity>> response = placesEntity.execute();
-            if(response.isSuccessful())
-                return response.body();
-            else {
-                Log.e(TAG, "Error " + response.code());
-                return new ArrayList<>();
-            }
-        } catch (IOException e) {
-            throw new ConnectionServer(e.getMessage());
-        } catch (RuntimeException runtimeException) {
-            Log.e(TAG, runtimeException.getMessage());
-            return new ArrayList<>();
-        }
+        Response<List<PlaceEntity>> response = placesEntity.execute();
+        if(response.isSuccessful())
+            return response.body();
+        Log.e(TAG, "Error " + response.code());
+        return new ArrayList<>();
     }
 
     @Override
-    public PlaceDetailsEntity getPlaceDetailsEntity(String placeId) throws ConnectionServer {
+    public PlaceDetailsEntity getPlaceDetailsEntity(String placeId) throws IOException {
         Call<PlaceDetailsEntity> placeDetailsEntity = placeService.getPlaceDetailEntity(apiKey, placeId);
-        try {
-            Response<PlaceDetailsEntity> response = placeDetailsEntity.execute();
-            if(response.isSuccessful())
-                return response.body();
-            else {
-                Log.e(TAG, "Error " + response.code());
-                return null;
-            }
-        } catch (IOException e) {
-            throw new ConnectionServer(e.getMessage());
-        } catch (RuntimeException runtimeException) {
-            Log.e(TAG, runtimeException.getMessage());
-            return null;
-        }
+        Response<PlaceDetailsEntity> response = placeDetailsEntity.execute();
+        if(response.isSuccessful())
+            return response.body();
+        Log.e(TAG, "Error " + response.code());
+        return null;
     }
 
     @Override
-    public List<ReviewEntity> getReviewsEntity(String placeId) throws ConnectionServer {
+    public List<ReviewEntity> getReviewsEntity(String placeId) throws IOException {
         Call<List<ReviewEntity>> reviewsEntity = placeService.getReviewsEntity(apiKey, placeId);
-        try {
-            Response<List<ReviewEntity>> response = reviewsEntity.execute();
-            if(response.isSuccessful())
-                return response.body();
-            else {
-                Log.e(TAG, "Error " + response.code());
-                return new ArrayList<>();
-            }
-        } catch (IOException ioException) {
-            throw new ConnectionServer(ioException.getMessage());
-        } catch (RuntimeException runtimeException) {
-            Log.e(TAG, runtimeException.getMessage());
-            return new ArrayList<>();
-        }
+        Response<List<ReviewEntity>> response = reviewsEntity.execute();
+        if(response.isSuccessful())
+            return response.body();
+        Log.e(TAG, "Error " + response.code());
+        return new ArrayList<>();
     }
 
     private String getCategories(List<String> categories) {
