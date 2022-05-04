@@ -1,4 +1,4 @@
-package com.applications.asm.places.view_model;
+package com.applications.asm.places.view;
 
 import androidx.appcompat.app.AppCompatActivity;
 
