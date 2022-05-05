@@ -43,7 +43,9 @@ public class PlaceDetailsModelMapperImpl implements PlaceDetailsModelMapper {
             return Price.EXPENSIVE;
         else if(price.compareTo("$$") == 0)
             return Price.REGULAR;
-        else return Price.CHEAP;
+        else if(price.compareTo("$") == 0)
+            return Price.CHEAP;
+        else return Price.UNKNOWN;
     }
 
     private List<WorkingHours> getWorkingHours(List<WorkingHoursModel> workingHoursModelList) {
