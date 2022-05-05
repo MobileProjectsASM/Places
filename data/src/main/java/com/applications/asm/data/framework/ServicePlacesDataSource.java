@@ -5,6 +5,7 @@ import android.util.Log;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.model.ReviewModel;
 import com.applications.asm.data.sources.PlacesDataSource;
 
@@ -27,7 +28,7 @@ public class ServicePlacesDataSource implements PlacesDataSource {
 
     @Override
     public ResponsePlacesModel getPlacesModel(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws IOException {
-        Call<ResponsePlacesModel> placesModel = placeService.getPlacesModel(apiKey, placeToFind, longitude, latitude, radius, getCategories(categories));
+        Call<ResponsePlacesModel> placesModel = placeService.getPlacesModel(apiKey, placeToFind, latitude, longitude, radius, getCategories(categories));
         Response<ResponsePlacesModel> response = placesModel.execute();
         if(response.isSuccessful())
             return response.body();
@@ -49,6 +50,16 @@ public class ServicePlacesDataSource implements PlacesDataSource {
     public ResponseReviewsModel getReviewsModel(String placeId) throws IOException {
         Call<ResponseReviewsModel> reviewsModel = placeService.getReviewsModel(apiKey, placeId);
         Response<ResponseReviewsModel> response = reviewsModel.execute();
+        if(response.isSuccessful())
+            return response.body();
+        Log.e(TAG, "Error " + response.code());
+        return null;
+    }
+
+    @Override
+    public ResponseSuggestedPlacesModel getSuggestedPlaces(String word, Double latitude, Double longitude) throws IOException {
+        Call<ResponseSuggestedPlacesModel> suggestedPlacesModel = placeService.getSuggestedPlacesModel(apiKey, word, latitude, longitude);
+        Response<ResponseSuggestedPlacesModel> response = suggestedPlacesModel.execute();
         if(response.isSuccessful())
             return response.body();
         Log.e(TAG, "Error " + response.code());

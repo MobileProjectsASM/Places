@@ -6,14 +6,18 @@ import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.PlaceModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.model.ReviewModel;
+import com.applications.asm.data.model.SuggestedPlaceModel;
 import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
+import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
 import com.applications.asm.data.sources.PlacesDataSource;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Review;
+import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.exception.ConnectionServer;
 import com.applications.asm.domain.repository.PlacesRepository;
 
@@ -26,13 +30,21 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlaceModelMapper placeModelMapper;
     private final PlaceDetailsModelMapper placeDetailsModelMapper;
     private final ReviewModelMapper reviewModelMapper;
+    private final SuggestedPlaceModelMapper suggestedPlaceModelMapper;
     private final String TAG = "PlacesRepositoryImpl";
 
-    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceModelMapper placeModelMapper, PlaceDetailsModelMapper placeDetailsModelMapper, ReviewModelMapper reviewModelMapper) {
+    public PlacesRepositoryImpl(
+        PlacesDataSource placeDataSource,
+        PlaceModelMapper placeModelMapper,
+        PlaceDetailsModelMapper placeDetailsModelMapper,
+        ReviewModelMapper reviewModelMapper,
+        SuggestedPlaceModelMapper suggestedPlaceModelMapper
+    ) {
         this.placeDataSource = placeDataSource;
         this.placeModelMapper = placeModelMapper;
         this.placeDetailsModelMapper = placeDetailsModelMapper;
         this.reviewModelMapper = reviewModelMapper;
+        this.suggestedPlaceModelMapper = suggestedPlaceModelMapper;
     }
 
     @Override
@@ -78,6 +90,24 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                 for (ReviewModel reviewModel : responseReviewsModel.getReviewModels())
                     reviews.add(reviewModelMapper.getReviewFromReviewModel(reviewModel));
                 return reviews;
+            }
+            return new ArrayList<>();
+        } catch (IOException ioException) {
+            throw new ConnectionServer(ioException.getMessage());
+        } catch (RuntimeException runtimeException) {
+            Log.e(TAG, runtimeException.getMessage());
+            return new ArrayList<>();
+        }
+    }
+
+    @Override
+    public List<SuggestedPlace> getSuggestedPlaces(String word, Double longitude, Double latitude) throws ConnectionServer {
+        try {
+            List<SuggestedPlace> suggestedPlaces = new ArrayList<>();
+            ResponseSuggestedPlacesModel responseSuggestedPlacesModel = placeDataSource.getSuggestedPlaces(word, longitude, latitude);
+            if(responseSuggestedPlacesModel != null) {
+                for(SuggestedPlaceModel suggestedPlaceModel: responseSuggestedPlacesModel.getSuggestPlacesModel())
+                    suggestedPlaces.add(suggestedPlaceModelMapper.getSuggestedPlaceFromSuggestedPlaceModel(suggestedPlaceModel));
             }
             return new ArrayList<>();
         } catch (IOException ioException) {
