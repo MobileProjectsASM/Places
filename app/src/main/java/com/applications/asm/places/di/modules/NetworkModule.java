@@ -46,12 +46,13 @@ public class NetworkModule {
     }
 
     @Provides
-    GsonConverterFactory provideGsonConverterFactory(Gson gson) {
+    GsonConverterFactory provideGsonConverterFactory(@Named("gson_deserializer") Gson gson) {
         return GsonConverterFactory.create(gson);
     }
 
+    @Named("gson_deserializer")
     @Provides
-    Gson provideGson(
+    Gson provideGsonDeserializer(
         @Named("places_deserializer") JsonDeserializer<ResponsePlacesModel> placesDeserializer,
         @Named("place_deserializer") JsonDeserializer<PlaceDetailsModel> placeDetailDeserializer,
         @Named("reviews_deserializer") JsonDeserializer<ResponseReviewsModel> reviewDeserializer,
