@@ -2,12 +2,14 @@ package com.applications.asm.data.repository;
 
 import android.util.Log;
 
-import com.applications.asm.data.entity.PlaceDetailsEntity;
-import com.applications.asm.data.entity.PlaceEntity;
-import com.applications.asm.data.entity.ReviewEntity;
-import com.applications.asm.data.entity.mapper.PlaceDetailsEntityMapper;
-import com.applications.asm.data.entity.mapper.PlaceEntityMapper;
-import com.applications.asm.data.entity.mapper.ReviewEntityMapper;
+import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.PlaceModel;
+import com.applications.asm.data.model.ResponsePlacesModel;
+import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ReviewModel;
+import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
+import com.applications.asm.data.model.mapper.PlaceModelMapper;
+import com.applications.asm.data.model.mapper.ReviewModelMapper;
 import com.applications.asm.data.sources.PlacesDataSource;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
@@ -21,41 +23,29 @@ import java.util.List;
 
 public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlacesDataSource placeDataSource;
-    private final PlaceEntityMapper placeEntityMapper;
-    private final PlaceDetailsEntityMapper placeDetailsEntityMapper;
-    private final ReviewEntityMapper reviewEntityMapper;
+    private final PlaceModelMapper placeModelMapper;
+    private final PlaceDetailsModelMapper placeDetailsModelMapper;
+    private final ReviewModelMapper reviewModelMapper;
     private final String TAG = "PlacesRepositoryImpl";
 
-    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceEntityMapper placeEntityMapper, PlaceDetailsEntityMapper placeDetailsEntityMapper, ReviewEntityMapper reviewEntityMapper) {
+    public PlacesRepositoryImpl(PlacesDataSource placeDataSource, PlaceModelMapper placeModelMapper, PlaceDetailsModelMapper placeDetailsModelMapper, ReviewModelMapper reviewModelMapper) {
         this.placeDataSource = placeDataSource;
-        this.placeEntityMapper = placeEntityMapper;
-        this.placeDetailsEntityMapper = placeDetailsEntityMapper;
-        this.reviewEntityMapper = reviewEntityMapper;
-    }
-
-    @Override
-    public PlaceDetails getPlaceDetails(String placeId) throws ConnectionServer {
-        try {
-            PlaceDetailsEntity placeDetails = placeDataSource.getPlaceDetailsEntity(placeId);
-            if(placeDetails != null)
-                return placeDetailsEntityMapper.getPlaceDetailsFromPlaceDetailsEntity(placeDetails);
-            return null;
-        } catch (IOException ioException) {
-            throw new ConnectionServer(ioException.getMessage());
-        } catch (RuntimeException runtimeException) {
-            Log.e(TAG, runtimeException.getMessage());
-            return null;
-        }
+        this.placeModelMapper = placeModelMapper;
+        this.placeDetailsModelMapper = placeDetailsModelMapper;
+        this.reviewModelMapper = reviewModelMapper;
     }
 
     @Override
     public List<Place> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws ConnectionServer {
         try {
             List<Place> places = new ArrayList<>();
-            List<PlaceEntity> placesEntity = placeDataSource.getPlacesEntity(placeToFind, longitude, latitude, radius, categories);
-            for (PlaceEntity placeEntity : placesEntity)
-                places.add(placeEntityMapper.getPlaceFromPlaceEntity(placeEntity));
-            return places;
+            ResponsePlacesModel responsePlacesModel = placeDataSource.getPlacesModel(placeToFind, longitude, latitude, radius, categories);
+            if(responsePlacesModel != null)  {
+                for (PlaceModel placeModel : responsePlacesModel.getPlaces())
+                    places.add(placeModelMapper.getPlaceFromPlaceModel(placeModel));
+                return places;
+            }
+            return new ArrayList<>();
         } catch (IOException ioException) {
             throw new ConnectionServer(ioException.getMessage());
         } catch (RuntimeException runtimeException) {
@@ -65,13 +55,31 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
+    public PlaceDetails getPlaceDetails(String placeId) throws ConnectionServer {
+        try {
+            PlaceDetailsModel placeDetails = placeDataSource.getPlaceDetailsModel(placeId);
+            if(placeDetails != null)
+                return placeDetailsModelMapper.getPlaceDetailsFromPlaceDetailsModel(placeDetails);
+            return null;
+        } catch (IOException ioException) {
+            throw new ConnectionServer(ioException.getMessage());
+        } catch (RuntimeException runtimeException) {
+            Log.e(TAG, runtimeException.getMessage());
+            return null;
+        }
+    }
+
+    @Override
     public List<Review> getReviews(String placeId) throws ConnectionServer {
         try {
             List<Review> reviews = new ArrayList<>();
-            List<ReviewEntity> reviewsEntities = placeDataSource.getReviewsEntity(placeId);
-            for (ReviewEntity reviewEntity : reviewsEntities)
-                reviews.add(reviewEntityMapper.getReviewFromReviewEntity(reviewEntity));
-            return reviews;
+            ResponseReviewsModel responseReviewsModel = placeDataSource.getReviewsModel(placeId);
+            if(responseReviewsModel != null) {
+                for (ReviewModel reviewModel : responseReviewsModel.getReviewModels())
+                    reviews.add(reviewModelMapper.getReviewFromReviewModel(reviewModel));
+                return reviews;
+            }
+            return new ArrayList<>();
         } catch (IOException ioException) {
             throw new ConnectionServer(ioException.getMessage());
         } catch (RuntimeException runtimeException) {

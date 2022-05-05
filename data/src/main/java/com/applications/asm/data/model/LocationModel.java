@@ -1,6 +1,6 @@
-package com.applications.asm.data.entity;
+package com.applications.asm.data.model;
 
-public class LocationEntity {
+public class LocationModel {
     private String country;
     private String state;
     private String city;
@@ -8,9 +8,9 @@ public class LocationEntity {
     private String suburb;
     private String address;
 
-    public LocationEntity() {}
+    public LocationModel() {}
 
-    public LocationEntity(String country, String state, String city, String zipCode, String suburb, String address) {
+    public LocationModel(String country, String state, String city, String zipCode, String suburb, String address) {
         this.country = country;
         this.state = state;
         this.city = city;

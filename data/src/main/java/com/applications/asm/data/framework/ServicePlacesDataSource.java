@@ -2,9 +2,10 @@ package com.applications.asm.data.framework;
 
 import android.util.Log;
 
-import com.applications.asm.data.entity.PlaceDetailsEntity;
-import com.applications.asm.data.entity.PlaceEntity;
-import com.applications.asm.data.entity.ReviewEntity;
+import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.ResponsePlacesModel;
+import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ReviewModel;
 import com.applications.asm.data.sources.PlacesDataSource;
 
 import java.io.IOException;
@@ -25,19 +26,9 @@ public class ServicePlacesDataSource implements PlacesDataSource {
     }
 
     @Override
-    public List<PlaceEntity> getPlacesEntity(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws IOException {
-        Call<List<PlaceEntity>> placesEntity = placeService.getPlacesEntity(apiKey, placeToFind, longitude, latitude, radius, getCategories(categories));
-        Response<List<PlaceEntity>> response = placesEntity.execute();
-        if(response.isSuccessful())
-            return response.body();
-        Log.e(TAG, "Error " + response.code());
-        return new ArrayList<>();
-    }
-
-    @Override
-    public PlaceDetailsEntity getPlaceDetailsEntity(String placeId) throws IOException {
-        Call<PlaceDetailsEntity> placeDetailsEntity = placeService.getPlaceDetailEntity(apiKey, placeId);
-        Response<PlaceDetailsEntity> response = placeDetailsEntity.execute();
+    public ResponsePlacesModel getPlacesModel(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws IOException {
+        Call<ResponsePlacesModel> placesModel = placeService.getPlacesModel(apiKey, placeToFind, longitude, latitude, radius, getCategories(categories));
+        Response<ResponsePlacesModel> response = placesModel.execute();
         if(response.isSuccessful())
             return response.body();
         Log.e(TAG, "Error " + response.code());
@@ -45,13 +36,23 @@ public class ServicePlacesDataSource implements PlacesDataSource {
     }
 
     @Override
-    public List<ReviewEntity> getReviewsEntity(String placeId) throws IOException {
-        Call<List<ReviewEntity>> reviewsEntity = placeService.getReviewsEntity(apiKey, placeId);
-        Response<List<ReviewEntity>> response = reviewsEntity.execute();
+    public PlaceDetailsModel getPlaceDetailsModel(String placeId) throws IOException {
+        Call<PlaceDetailsModel> placeDetailsModel = placeService.getPlaceDetailModel(apiKey, placeId);
+        Response<PlaceDetailsModel> response = placeDetailsModel.execute();
         if(response.isSuccessful())
             return response.body();
         Log.e(TAG, "Error " + response.code());
-        return new ArrayList<>();
+        return null;
+    }
+
+    @Override
+    public ResponseReviewsModel getReviewsModel(String placeId) throws IOException {
+        Call<ResponseReviewsModel> reviewsModel = placeService.getReviewsModel(apiKey, placeId);
+        Response<ResponseReviewsModel> response = reviewsModel.execute();
+        if(response.isSuccessful())
+            return response.body();
+        Log.e(TAG, "Error " + response.code());
+        return null;
     }
 
     private String getCategories(List<String> categories) {

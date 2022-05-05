@@ -1,29 +1,31 @@
-package com.applications.asm.data.entity;
+package com.applications.asm.data.model;
 
 import java.util.List;
 
-public class PlaceDetailsEntity {
+public class PlaceDetailsModel {
     private String id;
     private String name;
+    private CoordinatesModel coordinatesModel;
     private String imageUrl;
     private Double rating;
     private String price;
     private String phoneNumber;
     private Integer reviewCount;
-    private List<WorkingHoursEntity> workingHoursEntityDays;
+    private List<WorkingHoursModel> workingHoursModelDays;
     private Boolean isOpen;
 
-    public PlaceDetailsEntity() {}
+    public PlaceDetailsModel() {}
 
-    public PlaceDetailsEntity(String id, String name, String imageUrl, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursEntity> workingHoursEntityDays, Boolean isOpen) {
+    public PlaceDetailsModel(String id, String name, CoordinatesModel coordinatesModel, String imageUrl, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursModel> workingHoursModelDays, Boolean isOpen) {
         this.id = id;
         this.name = name;
+        this.coordinatesModel = coordinatesModel;
         this.imageUrl = imageUrl;
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
         this.reviewCount = reviewCount;
-        this.workingHoursEntityDays = workingHoursEntityDays;
+        this.workingHoursModelDays = workingHoursModelDays;
         this.isOpen = isOpen;
     }
 
@@ -41,6 +43,14 @@ public class PlaceDetailsEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public CoordinatesModel getCoordinatesModel() {
+        return coordinatesModel;
+    }
+
+    public void setCoordinatesModel(CoordinatesModel coordinatesModel) {
+        this.coordinatesModel = coordinatesModel;
     }
 
     public String getImageUrl() {
@@ -83,12 +93,12 @@ public class PlaceDetailsEntity {
         this.reviewCount = reviewCount;
     }
 
-    public List<WorkingHoursEntity> getWorkingHoursEntityDays() {
-        return workingHoursEntityDays;
+    public List<WorkingHoursModel> getWorkingHoursModelDays() {
+        return workingHoursModelDays;
     }
 
-    public void setWorkingHoursEntityDays(List<WorkingHoursEntity> workingHoursEntityDays) {
-        this.workingHoursEntityDays = workingHoursEntityDays;
+    public void setWorkingHoursModelDays(List<WorkingHoursModel> workingHoursModelDays) {
+        this.workingHoursModelDays = workingHoursModelDays;
     }
 
     public Boolean getOpen() {

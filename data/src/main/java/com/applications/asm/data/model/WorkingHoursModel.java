@@ -1,13 +1,13 @@
-package com.applications.asm.data.entity;
+package com.applications.asm.data.model;
 
-public class WorkingHoursEntity {
+public class WorkingHoursModel {
     private Integer day;
     private String hourOpen;
     private String hourClose;
 
-    public WorkingHoursEntity() {}
+    public WorkingHoursModel() {}
 
-    public WorkingHoursEntity(Integer day, String hourOpen, String hourClose) {
+    public WorkingHoursModel(Integer day, String hourOpen, String hourClose) {
         this.day = day;
         this.hourOpen = hourOpen;
         this.hourClose = hourClose;

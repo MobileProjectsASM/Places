@@ -1,12 +1,12 @@
-package com.applications.asm.data.entity;
+package com.applications.asm.data.model;
 
-public class CoordinatesEntity {
+public class CoordinatesModel {
     private Double latitude;
     private Double longitude;
 
-    public CoordinatesEntity() {}
+    public CoordinatesModel() {}
 
-    public CoordinatesEntity(Double latitude, Double longitude) {
+    public CoordinatesModel(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

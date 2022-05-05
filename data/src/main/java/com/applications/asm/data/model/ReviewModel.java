@@ -1,15 +1,15 @@
-package com.applications.asm.data.entity;
+package com.applications.asm.data.model;
 
-public class ReviewEntity {
+public class ReviewModel {
     private String userName;
     private String imageUrl;
     private String dateCreated;
     private Integer rate;
     private String description;
 
-    public ReviewEntity() {}
+    public ReviewModel() {}
 
-    public ReviewEntity(String userName, String imageUrl, String dateCreated, Integer rate, String description) {
+    public ReviewModel(String userName, String imageUrl, String dateCreated, Integer rate, String description) {
         this.userName = userName;
         this.imageUrl = imageUrl;
         this.dateCreated = dateCreated;

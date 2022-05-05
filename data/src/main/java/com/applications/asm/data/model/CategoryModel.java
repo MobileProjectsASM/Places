@@ -1,12 +1,12 @@
-package com.applications.asm.data.entity;
+package com.applications.asm.data.model;
 
-public class CategoryEntity {
+public class CategoryModel {
     private String id;
     private String name;
 
-    public CategoryEntity() {}
+    public CategoryModel() {}
 
-    public CategoryEntity(String id, String name) {
+    public CategoryModel(String id, String name) {
         this.id = id;
         this.name = name;
     }
