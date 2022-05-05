@@ -29,6 +29,11 @@ public class PlaceModelMapperImpl implements PlaceModelMapper {
     }
 
     private String getAddressFromLocation(LocationModel locationModel) {
-        return locationModel.getAddress() + ", " + locationModel.getSuburb() + ", " + locationModel.getZipCode() + " " + locationModel.getCity() + ", " + locationModel.getState() + " " + locationModel.getCountry();
+        return locationModel.getAddress() +
+                (locationModel.getSuburb().compareTo("") == 0 ? "" : ", " + locationModel.getSuburb()) +
+                (locationModel.getZipCode().compareTo("") == 0 ? "" : ", " + locationModel.getZipCode()) +
+                (locationModel.getCity().compareTo("") == 0 ? "" : " " + locationModel.getCity()) +
+                (locationModel.getState().compareTo("") == 0 ? "" : ", " + locationModel.getState() + ".") +
+                (locationModel.getCountry().compareTo("") == 0 ? "" : " " + locationModel.getCountry());
     }
 }
