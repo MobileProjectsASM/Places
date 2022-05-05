@@ -6,6 +6,8 @@ public class PlaceDetails {
     private String id;
     private String name;
     private String imageUrl;
+    private Double longitude;
+    private Double latitude;
     private Double rating;
     private Price price;
     private String phoneNumber;
@@ -14,10 +16,24 @@ public class PlaceDetails {
     private List<Review> reviews;
     private Boolean isOpen;
 
-    public PlaceDetails(String id, String name, String imageUrl, Double rating, Price price, String phoneNumber, Integer reviewsCounter, List<WorkingHours> workingHoursDays, Boolean isOpen) {
+    public PlaceDetails(
+        String id,
+        String name,
+        String imageUrl,
+        Double longitude,
+        Double latitude,
+        Double rating,
+        Price price,
+        String phoneNumber,
+        Integer reviewsCounter,
+        List<WorkingHours> workingHoursDays,
+        Boolean isOpen
+    ) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
+        this.longitude = longitude;
+        this.latitude = latitude;
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
@@ -48,6 +64,22 @@ public class PlaceDetails {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 
     public Double getRating() {
