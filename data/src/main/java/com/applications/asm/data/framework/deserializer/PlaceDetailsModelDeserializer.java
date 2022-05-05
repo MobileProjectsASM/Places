@@ -1,8 +1,11 @@
 package com.applications.asm.data.framework.deserializer;
 
+import android.util.Log;
+
 import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.WorkingHoursModel;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -15,8 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDetailsModel> {
+    private final String TAG = "PlaceDetailsModelDeserializer";
+    private final Gson gson;
+
+    public PlaceDetailsModelDeserializer(Gson gson) {
+        this.gson = gson;
+    }
+
     @Override
     public PlaceDetailsModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        Log.i(TAG, gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
 
         JsonObject hours = body.getAsJsonObject("hours");

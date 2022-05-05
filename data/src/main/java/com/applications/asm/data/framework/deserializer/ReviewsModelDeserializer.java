@@ -1,7 +1,10 @@
 package com.applications.asm.data.framework.deserializer;
 
+import android.util.Log;
+
 import com.applications.asm.data.model.ResponseReviewsModel;
 import com.applications.asm.data.model.ReviewModel;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -14,9 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewsModelDeserializer implements JsonDeserializer<ResponseReviewsModel> {
+    private final String TAG = "ReviewsModuleDeserializer";
+    private final Gson gson;
+
+    public ReviewsModelDeserializer(Gson gson) {
+        this.gson = gson;
+    }
 
     @Override
     public ResponseReviewsModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        Log.i(TAG, gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
 
         JsonArray reviews = body.getAsJsonArray("reviews");

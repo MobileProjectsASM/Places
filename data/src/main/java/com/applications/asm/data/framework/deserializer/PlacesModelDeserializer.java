@@ -1,10 +1,13 @@
 package com.applications.asm.data.framework.deserializer;
 
+import android.util.Log;
+
 import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -17,9 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesModel> {
+    private final String TAG = "PlacesModelDeserializer";
+    private final Gson gson;
+
+    public PlacesModelDeserializer(Gson gson) {
+        this.gson = gson;
+    }
 
     @Override
     public ResponsePlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        Log.i(TAG, gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
 
         JsonArray businesses = body.getAsJsonArray("businesses");
@@ -45,7 +55,7 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
 
         PlaceModel placeModel = new PlaceModel();
         placeModel.setId(place.get("id").getAsString());
-        placeModel.setName(place.get("alias").getAsString());
+        placeModel.setName(place.get("name").getAsString());
         placeModel.setImageUrl(place.get("image_url").getAsString());
         placeModel.setCoordinatesModel(coordinatesModel);
         placeModel.setCategories(categoriesModel);
@@ -81,8 +91,8 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         locationModel.setState(location.get("state").getAsString());
         locationModel.setCity(location.get("city").getAsString());
         locationModel.setZipCode(location.get("zip_code").getAsString());
-        locationModel.setSuburb(location.get("address2").getAsString());
-        locationModel.setAddress(location.get("address1").getAsString());
+        locationModel.setSuburb(location.get("address2").isJsonNull() ? "" : location.get("address2").getAsString());
+        locationModel.setAddress(location.get("address1").isJsonNull() ? "" : location.get("address1").getAsString());
         return locationModel;
     }
 }
