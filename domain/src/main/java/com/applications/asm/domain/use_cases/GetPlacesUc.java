@@ -49,7 +49,7 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
 
     private List<Place> getPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories) {
         try {
-            return placesRepository.getPlaces(placeToFind, latitude, longitude, radius, categories);
+            return placesRepository.getPlaces(placeToFind, longitude, latitude, radius, categories);
         } catch (ConnectionServer connectionServer) {
             Log.error(TAG + " : " + connectionServer.getMessage());
             return new ArrayList<>();
