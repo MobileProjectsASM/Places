@@ -68,13 +68,16 @@ public class ServicePlacesDataSource implements PlacesDataSource {
 
     private String getCategories(List<String> categories) {
         if(categories != null) {
-            StringBuilder cat = new StringBuilder();
-            for(int i = 0; i < categories.size(); i++) {
-                if(i < categories.size() - 1)
-                    cat.append(categories.get(i)).append(",");
-                else cat.append(categories.get(i));
+            if(!categories.isEmpty()) {
+                StringBuilder cat = new StringBuilder();
+                for(int i = 0; i < categories.size(); i++) {
+                    if(i < categories.size() - 1)
+                        cat.append(categories.get(i)).append(",");
+                    else cat.append(categories.get(i));
+                }
+                return cat.toString();
             }
-            return cat.toString();
+            return "";
         }
         return null;
     }
