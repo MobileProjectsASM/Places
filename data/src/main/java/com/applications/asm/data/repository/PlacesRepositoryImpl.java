@@ -104,10 +104,11 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     public List<SuggestedPlace> getSuggestedPlaces(String word, Double longitude, Double latitude) throws ConnectionServer {
         try {
             List<SuggestedPlace> suggestedPlaces = new ArrayList<>();
-            ResponseSuggestedPlacesModel responseSuggestedPlacesModel = placeDataSource.getSuggestedPlaces(word, longitude, latitude);
+            ResponseSuggestedPlacesModel responseSuggestedPlacesModel = placeDataSource.getSuggestedPlaces(word, latitude, longitude);
             if(responseSuggestedPlacesModel != null) {
                 for(SuggestedPlaceModel suggestedPlaceModel: responseSuggestedPlacesModel.getSuggestPlacesModel())
                     suggestedPlaces.add(suggestedPlaceModelMapper.getSuggestedPlaceFromSuggestedPlaceModel(suggestedPlaceModel));
+                return suggestedPlaces;
             }
             return new ArrayList<>();
         } catch (IOException ioException) {
