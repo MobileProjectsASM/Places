@@ -26,7 +26,7 @@ public class SuggestedPlacesModelDeserializer implements JsonDeserializer<Respon
 
     @Override
     public ResponseSuggestedPlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Log.e(TAG, gson.toJson(json));
+        Log.i(TAG, gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
 
         List<SuggestedPlaceModel> suggestedPlacesModel = deserializeSuggestedPlaces(body.getAsJsonArray("businesses"));

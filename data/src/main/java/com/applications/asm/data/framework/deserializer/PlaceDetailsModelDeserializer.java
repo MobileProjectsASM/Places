@@ -30,10 +30,11 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
         Log.i(TAG, gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
 
-        JsonObject hours = body.getAsJsonObject("hours");
-        Boolean isOpen = hours.get("is_open_now").getAsBoolean();
+        JsonArray hours = body.getAsJsonArray("hours");
+        JsonObject schedule = hours.get(0).getAsJsonObject();
+        Boolean isOpen = schedule.get("is_open_now").getAsBoolean();
 
-        List<WorkingHoursModel> workingHoursModelDays = deserializeWorkingHoursModelDays(hours.getAsJsonArray("open"));
+        List<WorkingHoursModel> workingHoursModelDays = deserializeWorkingHoursModelDays(schedule.getAsJsonArray("open"));
 
         CoordinatesModel coordinatesModel = deserializeCoordinatesModel(body.getAsJsonObject("coordinates"));
 
@@ -43,7 +44,7 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
         placeDetailsModel.setImageUrl(body.get("image_url").getAsString());
         placeDetailsModel.setCoordinatesModel(coordinatesModel);
         placeDetailsModel.setRating(body.get("rating").getAsDouble());
-        placeDetailsModel.setPrice(body.get("price").getAsString());
+        placeDetailsModel.setPrice(body.get("price") != null ? body.get("price").getAsString() : "");
         placeDetailsModel.setPhoneNumber(body.get("phone").getAsString());
         placeDetailsModel.setReviewCount(body.get("review_count").getAsInt());
         placeDetailsModel.setOpen(isOpen);
