@@ -13,6 +13,8 @@ import com.applications.asm.data.model.mapper.ReviewModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapperImpl;
 import com.applications.asm.data.framework.PlaceService;
 import com.applications.asm.data.framework.ServicePlacesDataSource;
+import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
+import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapperImpl;
 import com.applications.asm.data.repository.PlacesRepositoryImpl;
 import com.applications.asm.data.sources.PlacesDataSource;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -40,9 +42,10 @@ public class ServicesModule {
         PlacesDataSource placesDataSource,
         PlaceModelMapper placeModelMapper,
         PlaceDetailsModelMapper placeDetailsModelMapper,
-        ReviewModelMapper reviewModelMapper
+        ReviewModelMapper reviewModelMapper,
+        SuggestedPlaceModelMapper suggestedPlaceModelMapper
     ) {
-        return new PlacesRepositoryImpl(placesDataSource, placeModelMapper, placeDetailsModelMapper, reviewModelMapper);
+        return new PlacesRepositoryImpl(placesDataSource, placeModelMapper, placeDetailsModelMapper, reviewModelMapper, suggestedPlaceModelMapper);
     }
 
     @Provides
@@ -63,6 +66,11 @@ public class ServicesModule {
     @Provides
     ReviewModelMapper provideReviewEntityMapper() {
         return new ReviewModelMapperImpl();
+    }
+
+    @Provides
+    SuggestedPlaceModelMapper provideSuggestedPlaceModelMapper() {
+        return new SuggestedPlaceModelMapperImpl();
     }
 
     @Provides

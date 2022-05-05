@@ -1,8 +1,10 @@
 package com.applications.asm.places.di.modules;
 
+import com.applications.asm.data.framework.deserializer.SuggestedPlacesModelDeserializer;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.model.ReviewModel;
 import com.applications.asm.data.framework.deserializer.PlaceDetailsModelDeserializer;
 import com.applications.asm.data.framework.deserializer.PlacesModelDeserializer;
@@ -27,13 +29,19 @@ public class DeserializerModule {
 
     @Named("place_deserializer")
     @Provides
-    JsonDeserializer<PlaceDetailsModel> providePlaceDeserializer() {
+    JsonDeserializer<PlaceDetailsModel> providePlaceDetailsDeserializer() {
         return new PlaceDetailsModelDeserializer();
     }
 
-    @Named("review_deserializer")
+    @Named("reviews_deserializer")
     @Provides
-    JsonDeserializer<ResponseReviewsModel> provideReviewDeserializer() {
+    JsonDeserializer<ResponseReviewsModel> provideReviewsDeserializer() {
         return new ReviewsModelDeserializer();
+    }
+
+    @Named("suggested_places_deserializer")
+    @Provides
+    JsonDeserializer<ResponseSuggestedPlacesModel> provideSuggestedPlacesDeserializer() {
+        return new SuggestedPlacesModelDeserializer();
     }
 }
