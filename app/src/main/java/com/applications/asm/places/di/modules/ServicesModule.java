@@ -5,12 +5,12 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 
-import com.applications.asm.data.entity.mapper.PlaceDetailsEntityMapper;
-import com.applications.asm.data.entity.mapper.PlaceDetailsEntityMapperImpl;
-import com.applications.asm.data.entity.mapper.PlaceEntityMapper;
-import com.applications.asm.data.entity.mapper.PlaceEntityMapperImpl;
-import com.applications.asm.data.entity.mapper.ReviewEntityMapper;
-import com.applications.asm.data.entity.mapper.ReviewEntityMapperImpl;
+import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
+import com.applications.asm.data.model.mapper.PlaceDetailsModelMapperImpl;
+import com.applications.asm.data.model.mapper.PlaceModelMapper;
+import com.applications.asm.data.model.mapper.PlaceModelMapperImpl;
+import com.applications.asm.data.model.mapper.ReviewModelMapper;
+import com.applications.asm.data.model.mapper.ReviewModelMapperImpl;
 import com.applications.asm.data.framework.PlaceService;
 import com.applications.asm.data.framework.ServicePlacesDataSource;
 import com.applications.asm.data.repository.PlacesRepositoryImpl;
@@ -38,11 +38,11 @@ public class ServicesModule {
     @Provides
     PlacesRepository providePlacesRepository(
         PlacesDataSource placesDataSource,
-        PlaceEntityMapper placeEntityMapper,
-        PlaceDetailsEntityMapper placeDetailsEntityMapper,
-        ReviewEntityMapper reviewEntityMapper
+        PlaceModelMapper placeModelMapper,
+        PlaceDetailsModelMapper placeDetailsModelMapper,
+        ReviewModelMapper reviewModelMapper
     ) {
-        return new PlacesRepositoryImpl(placesDataSource, placeEntityMapper, placeDetailsEntityMapper, reviewEntityMapper);
+        return new PlacesRepositoryImpl(placesDataSource, placeModelMapper, placeDetailsModelMapper, reviewModelMapper);
     }
 
     @Provides
@@ -51,18 +51,18 @@ public class ServicesModule {
     }
 
     @Provides
-    PlaceEntityMapper providePlaceEntityMapper() {
-        return new PlaceEntityMapperImpl();
+    PlaceModelMapper providePlaceEntityMapper() {
+        return new PlaceModelMapperImpl();
     }
 
     @Provides
-    PlaceDetailsEntityMapper providePlaceDetailsEntityMapper(Context context) {
-        return new PlaceDetailsEntityMapperImpl(context);
+    PlaceDetailsModelMapper providePlaceDetailsEntityMapper(Context context) {
+        return new PlaceDetailsModelMapperImpl(context);
     }
 
     @Provides
-    ReviewEntityMapper provideReviewEntityMapper() {
-        return new ReviewEntityMapperImpl();
+    ReviewModelMapper provideReviewEntityMapper() {
+        return new ReviewModelMapperImpl();
     }
 
     @Provides

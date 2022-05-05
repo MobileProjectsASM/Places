@@ -1,11 +1,12 @@
 package com.applications.asm.places.di.modules;
 
-import com.applications.asm.data.entity.PlaceDetailsEntity;
-import com.applications.asm.data.entity.PlaceEntity;
-import com.applications.asm.data.entity.ReviewEntity;
-import com.applications.asm.data.framework.deserializer.PlaceDetailsEntityDeserializer;
-import com.applications.asm.data.framework.deserializer.PlaceEntityDeserializer;
-import com.applications.asm.data.framework.deserializer.ReviewsEntityDeserializer;
+import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.ResponsePlacesModel;
+import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ReviewModel;
+import com.applications.asm.data.framework.deserializer.PlaceDetailsModelDeserializer;
+import com.applications.asm.data.framework.deserializer.PlacesModelDeserializer;
+import com.applications.asm.data.framework.deserializer.ReviewsModelDeserializer;
 import com.google.gson.JsonDeserializer;
 
 import java.util.List;
@@ -20,19 +21,19 @@ public class DeserializerModule {
 
     @Named("places_deserializer")
     @Provides
-    JsonDeserializer<List<PlaceEntity>> providePlacesDeserializer() {
-        return new PlaceEntityDeserializer();
+    JsonDeserializer<ResponsePlacesModel> providePlacesDeserializer() {
+        return new PlacesModelDeserializer();
     }
 
     @Named("place_deserializer")
     @Provides
-    JsonDeserializer<PlaceDetailsEntity> providePlaceDeserializer() {
-        return new PlaceDetailsEntityDeserializer();
+    JsonDeserializer<PlaceDetailsModel> providePlaceDeserializer() {
+        return new PlaceDetailsModelDeserializer();
     }
 
     @Named("review_deserializer")
     @Provides
-    JsonDeserializer<List<ReviewEntity>> provideReviewDeserializer() {
-        return new ReviewsEntityDeserializer();
+    JsonDeserializer<ResponseReviewsModel> provideReviewDeserializer() {
+        return new ReviewsModelDeserializer();
     }
 }

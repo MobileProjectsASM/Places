@@ -1,8 +1,9 @@
 package com.applications.asm.places.di.modules;
 
-import com.applications.asm.data.entity.PlaceDetailsEntity;
-import com.applications.asm.data.entity.PlaceEntity;
-import com.applications.asm.data.entity.ReviewEntity;
+import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.ResponsePlacesModel;
+import com.applications.asm.data.model.ResponseReviewsModel;
+import com.applications.asm.data.model.ReviewModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -50,16 +51,14 @@ public class NetworkModule {
 
     @Provides
     Gson provideGson(
-        @Named("places_deserializer") JsonDeserializer<List<PlaceEntity>> placesDeserializer,
-        @Named("place_deserializer") JsonDeserializer<PlaceDetailsEntity> placeDetailDeserializer,
-        @Named("review_deserializer") JsonDeserializer<List<ReviewEntity>> reviewDeserializer
+        @Named("places_deserializer") JsonDeserializer<ResponsePlacesModel> placesDeserializer,
+        @Named("place_deserializer") JsonDeserializer<PlaceDetailsModel> placeDetailDeserializer,
+        @Named("review_deserializer") JsonDeserializer<ResponseReviewsModel> reviewDeserializer
     ) {
-        Type placeEntityListType = new TypeToken<ArrayList<PlaceEntity>>(){}.getType();
-        Type reviewEntityListType = new TypeToken<ArrayList<ReviewEntity>>(){}.getType();
         return new GsonBuilder()
-                .registerTypeAdapter(placeEntityListType, placesDeserializer)
-                .registerTypeAdapter(PlaceDetailsEntity.class, placeDetailDeserializer)
-                .registerTypeAdapter(reviewEntityListType, reviewDeserializer)
+                .registerTypeAdapter(ResponsePlacesModel.class, placesDeserializer)
+                .registerTypeAdapter(PlaceDetailsModel.class, placeDetailDeserializer)
+                .registerTypeAdapter(ResponseReviewsModel.class, reviewDeserializer)
                 .create();
     }
 }
