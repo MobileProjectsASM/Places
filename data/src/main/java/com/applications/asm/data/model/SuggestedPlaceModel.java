@@ -4,6 +4,8 @@ public class SuggestedPlaceModel {
     private String id;
     private String name;
 
+    public SuggestedPlaceModel() {}
+
     public SuggestedPlaceModel(String id, String name) {
         this.id = id;
         this.name = name;

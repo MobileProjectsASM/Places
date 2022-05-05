@@ -8,6 +8,8 @@ public class ResponseSuggestedPlacesModel {
     private List<SuggestedPlaceModel> suggestPlacesModel;
     private Integer total;
 
+    public ResponseSuggestedPlacesModel() {}
+
     public ResponseSuggestedPlacesModel(List<SuggestedPlaceModel> suggestPlacesModel, Integer total) {
         this.suggestPlacesModel = suggestPlacesModel;
         this.total = total;
