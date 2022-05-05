@@ -28,7 +28,7 @@ public class GetSuggestedPlaces extends UseCase<List<SuggestedPlace>, GetSuggest
             this.latitude = latitude;
         }
 
-        public Params forSuggestedPlaces(String place, Double longitude, Double latitude) {
+        public static Params forSuggestedPlaces(String place, Double longitude, Double latitude) {
             return new Params(place, longitude, latitude);
         }
     }
