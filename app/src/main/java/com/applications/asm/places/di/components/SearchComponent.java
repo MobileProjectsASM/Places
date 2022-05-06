@@ -2,7 +2,7 @@ package com.applications.asm.places.di.components;
 
 import com.applications.asm.places.di.modules.UseCasesModule;
 import com.applications.asm.places.di.scopes.ActivityScope;
-import com.applications.asm.places.view.MainActivity;
+import com.applications.asm.places.view.activities.MainActivity;
 
 import dagger.Subcomponent;
 

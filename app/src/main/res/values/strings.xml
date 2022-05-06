@@ -2,4 +2,7 @@
     <string name="app_name">Places</string>
     <string name="places_service_base_url">https://api.yelp.com/</string>
     <string name="places_service_api_key">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
+
+    <string name="fragment_search_label">fragment_search</string>
+    <string name="fragment_list_label">fragment_list</string>
 </resources>
