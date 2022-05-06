@@ -1,8 +1,40 @@
 <resources>
     <string name="app_name">Places</string>
-    <string name="places_service_base_url">https://api.yelp.com/</string>
-    <string name="places_service_api_key">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
+    <!--TEXT HELPERS -->
+    <string name="text_helper_place_to_find">Lugar a buscar</string>
+    <string name="text_helper_origin_coordinates">Coordenadas de origen</string>
+    <string name="text_helper_radio_to_find">Radio de busqueda</string>
+    <string name="text_helper_category_selected">Selecciona las categorias</string>
+
+    <!--TEXT TEXTS-INPUT-->
+    <string name="text_text_input_place">Lugar</string>
+    <string name="text_text_input_latitude">Latitude</string>
+    <string name="text_text_input_longitude">Longitude</string>
+    <string name="text_text_input_radius">Radio</string>
+    <string name="text_text_input_category">Categoria</string>
+    <string name="category_mexican">Mexico</string>
+    <string name="category_sports">Deportes</string>
+    <string name="category_health">Salud</string>
+    <string name="category_entertainment">Entretenimiento</string>
+    <string name="category_culture">Cultura</string>
+    <string name="category_shopping">Compras</string>
+    <string name="category_education">Educacion</string>
+    <string name="category_government">Servicios publicos</string>
+
+    <!--TEXT BUTTONS-->
+    <string name="text_contained_button_get_coordinates">My ubicacion</string>
+    <string name="text_contained_button_search_places">Buscar</string>
+
+    <!--TEXT ERRORS -->
+    <string name="text_error_text_input_only_int_numbers">Solo numeros naturales</string>
+    <string name="text_error_text_input_only_decimal_numbers">Solo numeros</string>
+    <string name="text_error_text_input_empty">Campo vacio</string>
+
 
     <string name="fragment_search_label">fragment_search</string>
     <string name="fragment_list_label">fragment_list</string>
+
+    <!--KEYS-->
+    <string name="places_service_base_url">https://api.yelp.com/</string>
+    <string name="places_service_api_key">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
 </resources>
