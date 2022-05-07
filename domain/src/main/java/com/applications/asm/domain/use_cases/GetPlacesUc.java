@@ -26,8 +26,8 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
 
         private Params(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories) {
             this.placeToFind = placeToFind;
-            this.latitude = latitude;
-            this.longitude = longitude;
+            this.latitude = latitude == null || latitude <= 0 ? 19.441876 : latitude;
+            this.longitude = longitude == null || longitude <= 0 ? -99.203783 : longitude;
             this.radius = radius;
             this.categories = categories;
         }
