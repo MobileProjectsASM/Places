@@ -38,8 +38,8 @@
                     style="@style/text_input_layout_style"
                     android:id="@+id/latitude_text_input_layout"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_marginEnd="10dp"
+                    android:layout_weight="0.42"
+                    android:layout_marginEnd="5dp"
                     app:startIconDrawable="@drawable/ic_baseline_place_24"
                     app:errorTextAppearance="@style/text_input_text_error_style"
                     android:hint="@string/text_text_input_latitude">
@@ -54,8 +54,9 @@
                     style="@style/text_input_layout_style"
                     android:id="@+id/longitude_text_input_layout"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:layout_marginStart="10dp"
+                    android:layout_weight="0.42"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
                     app:startIconDrawable="@drawable/ic_baseline_place_24"
                     app:errorTextAppearance="@style/text_input_text_error_style"
                     android:hint="@string/text_text_input_longitude">
@@ -66,14 +67,22 @@
                         android:inputType="numberSigned|numberDecimal"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.button.MaterialButton
+                    style="@style/icon_button"
+                    android:id="@+id/my_location_button"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.16"
+                    android:layout_marginStart="5dp"
+                    app:icon="@drawable/ic_baseline_my_location_24"/>
+
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
-                style="@style/icon_button"
-                android:id="@+id/my_location_button"
+                style="@style/contained_button_container_style"
+                android:id="@+id/set_coordinates_button"
                 android:layout_marginTop="20dp"
-                android:text="@string/text_contained_button_get_coordinates"
-                app:icon="@drawable/ic_baseline_my_location_24"/>
+                android:text="@string/text_contained_button_set_coordinates"/>
 
         </LinearLayout>
 

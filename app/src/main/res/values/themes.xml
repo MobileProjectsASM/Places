@@ -90,9 +90,9 @@
         <item name="android:textAppearance">@style/text_contained_button_style</item>
     </style>
 
-    <style name="icon_button" parent="default_size_height_style">
+    <style name="icon_button" parent="default_size_fit_style">
         <item name="iconGravity">textStart</item>
-        <item name="android:textAppearance">@style/text_contained_button_style</item>
+        <item name="iconPadding">2dp</item>
     </style>
 
     <!-- DIVIDERS -->

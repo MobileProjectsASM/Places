@@ -8,8 +8,8 @@
 
     <!--TEXT TEXTS-INPUT-->
     <string name="text_text_input_place">Lugar</string>
-    <string name="text_text_input_latitude">Latitude</string>
-    <string name="text_text_input_longitude">Longitude</string>
+    <string name="text_text_input_latitude">Latitud</string>
+    <string name="text_text_input_longitude">Longitud</string>
     <string name="text_text_input_radius">Radio</string>
     <string name="text_text_input_category">Categoria</string>
     <string name="category_active_life">Vida activa</string>
@@ -26,6 +26,7 @@
     <!--TEXT BUTTONS-->
     <string name="text_contained_button_get_coordinates">My ubicacion</string>
     <string name="text_contained_button_search_places">Buscar</string>
+    <string name="text_contained_button_set_coordinates">Establecer coordenadas</string>
 
     <!--TEXT ERRORS -->
     <string name="text_error_text_input_only_int_numbers">Solo numeros naturales</string>
