@@ -19,5 +19,5 @@ import dagger.Component;
     SubcomponentsApplicationModule.class
 })
 public interface ApplicationComponent {
-    SearchComponent.Factory searchComponentFactory();
+    MainComponent.Factory mainComponentFactory();
 }

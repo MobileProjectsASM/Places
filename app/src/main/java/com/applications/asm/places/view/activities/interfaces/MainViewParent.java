@@ -1,5 +1,7 @@
 package com.applications.asm.places.view.activities.interfaces;
 
-public interface MainViewParent {
+import com.applications.asm.places.di.components.MainComponent;
 
+public interface MainViewParent {
+    MainComponent getMainComponent();
 }

@@ -2,28 +2,41 @@ package com.applications.asm.places.view.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.applications.asm.domain.entities.Category;
+import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentSearchBinding;
 import com.applications.asm.places.model.CategoriesConstants;
+import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view.utils.AfterTextChanged;
+import com.applications.asm.places.view_model.SearchViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 public class SearchFragment extends Fragment {
     private FragmentSearchBinding binding;
+    private MainViewParent mainViewParent;
     private final String TAG = "SearchFragment";
+    private SearchViewModel searchViewModel;
+    private Boolean doSearch = true;
+
+    @Named("search_view_model")
+    @Inject
+    ViewModelProvider.Factory factory;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -32,6 +45,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        mainViewParent = (MainViewParent) context;
     }
 
     @Override
@@ -43,6 +57,20 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
+        mainViewParent.getMainComponent().inject(this);
+        searchViewModel = new ViewModelProvider(this, factory).get(SearchViewModel.class);
+        searchViewModel.suggestedPlaces().observe(getViewLifecycleOwner(), namePlaces -> {
+            if(doSearch) {
+                ArrayAdapter<String> placeAutocompleteAdapter = new ArrayAdapter<>(requireContext(), R.layout.place_suggested_item_layout, namePlaces);
+                AutoCompleteTextView autoCompleteSearchPlace = (AutoCompleteTextView) binding.placeTextInputLayout.getEditText();
+                if(autoCompleteSearchPlace != null) {
+                    autoCompleteSearchPlace.setAdapter(placeAutocompleteAdapter);
+                    if(!namePlaces.isEmpty())
+                        autoCompleteSearchPlace.showDropDown();
+                    else autoCompleteSearchPlace.dismissDropDown();
+                }
+            } else doSearch = true;
+        });
         return binding.getRoot();
     }
 
@@ -74,8 +102,10 @@ public class SearchFragment extends Fragment {
 
     private void setListeners() {
         AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) binding.placeTextInputLayout.getEditText();
-        if(autoCompleteTextView != null)
-            autoCompleteTextView.addTextChangedListener((AfterTextChanged) editable -> Log.i(TAG, editable.toString()));
+        if(autoCompleteTextView != null) {
+            autoCompleteTextView.addTextChangedListener((AfterTextChanged) editable -> searchViewModel.getSuggestedPlaces(editable.toString()));
+            autoCompleteTextView.setOnItemClickListener((adapterView, view, i, l) -> doSearch = false);
+        }
     }
 
     private List<String> getCategories() {
