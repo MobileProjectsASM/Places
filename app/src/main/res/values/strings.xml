@@ -12,14 +12,16 @@
     <string name="text_text_input_longitude">Longitude</string>
     <string name="text_text_input_radius">Radio</string>
     <string name="text_text_input_category">Categoria</string>
-    <string name="category_mexican">Mexico</string>
-    <string name="category_sports">Deportes</string>
+    <string name="category_active_life">Vida activa</string>
+    <string name="category_food">Comida</string>
+    <string name="category_arts_entertainment">Artes</string>
     <string name="category_health">Salud</string>
-    <string name="category_entertainment">Entretenimiento</string>
-    <string name="category_culture">Cultura</string>
-    <string name="category_shopping">Compras</string>
+    <string name="category_automotive">Automotriz</string>
+    <string name="category_beauty_spas">Belleza</string>
+    <string name="category_nightlife">Vida nocturna</string>
     <string name="category_education">Educacion</string>
-    <string name="category_government">Servicios publicos</string>
+    <string name="category_public_services">Servicios publicos</string>
+    <string name="category_pets">Mascotas</string>
 
     <!--TEXT BUTTONS-->
     <string name="text_contained_button_get_coordinates">My ubicacion</string>

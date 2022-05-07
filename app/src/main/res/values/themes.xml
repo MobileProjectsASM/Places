@@ -11,8 +11,6 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="default_size_height_style">
@@ -60,6 +58,12 @@
     </style>
 
     <style name="text_subtitle_style" parent="regular_text_style">
+        <item name="android:textSize">@dimen/text_subtitle_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="text_chip_style" parent="regular_text_style">
+        <item name="android:textSize">@dimen/text_chip_size</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -96,5 +100,13 @@
         <item name="dividerColor">@color/secondary_color</item>
         <item name="dividerInsetStart">15dp</item>
         <item name="dividerInsetEnd">15dp</item>
+    </style>
+
+    <!-- CHIP -->
+    <style name="default_chip_style" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="checkedIconVisible">true</item>
+        <item name="android:textAppearance">@style/text_chip_style</item>
     </style>
 </resources>
