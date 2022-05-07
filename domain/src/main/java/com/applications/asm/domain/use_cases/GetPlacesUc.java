@@ -1,5 +1,8 @@
 package com.applications.asm.domain.use_cases;
 
+import static com.applications.asm.domain.entities.Constants.DEFAULT_LATITUDE;
+import static com.applications.asm.domain.entities.Constants.DEFAULT_LONGITUDE;
+
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.exception.ConnectionServer;
 import com.applications.asm.domain.executor.PostExecutionThread;
@@ -26,8 +29,8 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
 
         private Params(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories) {
             this.placeToFind = placeToFind;
-            this.latitude = latitude == null || latitude <= 0 ? 19.441876 : latitude;
-            this.longitude = longitude == null || longitude <= 0 ? -99.203783 : longitude;
+            this.latitude = latitude;
+            this.longitude = longitude;
             this.radius = radius;
             this.categories = categories;
         }
@@ -49,6 +52,10 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
 
     private List<Place> getPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories) {
         try {
+            if((latitude == null || latitude < -90 || latitude > 90) || (longitude == null || longitude < -180 || longitude > 180)) {
+                latitude = DEFAULT_LATITUDE;
+                longitude = DEFAULT_LONGITUDE;
+            }
             return placesRepository.getPlaces(placeToFind, longitude, latitude, radius, categories);
         } catch (ConnectionServer connectionServer) {
             Log.error(TAG + " : " + connectionServer.getMessage());

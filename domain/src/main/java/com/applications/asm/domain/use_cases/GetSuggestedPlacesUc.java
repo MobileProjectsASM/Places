@@ -1,5 +1,8 @@
 package com.applications.asm.domain.use_cases;
 
+import static com.applications.asm.domain.entities.Constants.DEFAULT_LATITUDE;
+import static com.applications.asm.domain.entities.Constants.DEFAULT_LONGITUDE;
+
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.exception.ConnectionServer;
 import com.applications.asm.domain.executor.PostExecutionThread;
@@ -24,8 +27,8 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
 
         private Params(String place, Double longitude, Double latitude) {
             this.place = place;
-            this.longitude = longitude;
             this.latitude = latitude;
+            this.longitude = longitude;
         }
 
         public static Params forSuggestedPlaces(String place, Double longitude, Double latitude) {
@@ -45,6 +48,10 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
 
     private List<SuggestedPlace> getSuggestedPlaces(String place, Double longitude, Double latitude) {
         try {
+            if((latitude == null || latitude < -90 || latitude > 90) || (longitude == null || longitude < -180 || longitude > 180)) {
+                latitude = DEFAULT_LATITUDE;
+                longitude = DEFAULT_LONGITUDE;
+            }
             return placesRepository.getSuggestedPlaces(place, longitude, latitude);
         } catch (ConnectionServer connectionServer) {
             Log.error(TAG + " : " + connectionServer.getMessage());
