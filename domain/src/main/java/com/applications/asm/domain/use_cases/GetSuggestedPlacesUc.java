@@ -13,7 +13,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Observable;
 import jdk.internal.org.jline.utils.Log;
 
-public class GetSuggestedPlaces extends UseCase<List<SuggestedPlace>, GetSuggestedPlaces.Params> {
+public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSuggestedPlacesUc.Params> {
     private final PlacesRepository placesRepository;
     private final String TAG = "GetSuggestedPlaces";
 
@@ -33,7 +33,7 @@ public class GetSuggestedPlaces extends UseCase<List<SuggestedPlace>, GetSuggest
         }
     }
 
-    public GetSuggestedPlaces(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository) {
+    public GetSuggestedPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository) {
         super(threadExecutor, postExecutionThread);
         this.placesRepository = placesRepository;
     }
