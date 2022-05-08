@@ -75,4 +75,7 @@ dependencies {
 
     //Retrofit para el consumo de servicios
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
+    //Picasso para el renderizado de imagenes
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }

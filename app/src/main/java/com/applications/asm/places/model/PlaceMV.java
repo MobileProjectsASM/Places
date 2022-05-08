@@ -1,17 +1,15 @@
 package com.applications.asm.places.model;
 
-import java.util.List;
-
 public class PlaceMV {
     private String id;
     private String name;
     private Double latitude;
     private Double longitude;
     private String imageUrl;
-    private List<String> categories;
+    private String categories;
     private String address;
 
-    public PlaceMV(String id, String name, Double latitude, Double longitude, String imageUrl, List<String> categories, String address) {
+    public PlaceMV(String id, String name, Double latitude, Double longitude, String imageUrl, String categories, String address) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -61,11 +59,11 @@ public class PlaceMV {
         this.imageUrl = imageUrl;
     }
 
-    public List<String> getCategories() {
+    public String getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(String categories) {
         this.categories = categories;
     }
 

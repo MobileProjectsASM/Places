@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentSearchBinding;
@@ -169,5 +170,6 @@ public class SearchFragment extends Fragment {
         if(editTextRadius != null && editTextRadius.getText().toString().compareTo("") != 0)
             radius = Integer.parseInt(editTextRadius.getText().toString());
         mainViewModel.searchNearPlaces(place, latitude, longitude, radius, categories);
+        Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_listFragment);
     }
 }

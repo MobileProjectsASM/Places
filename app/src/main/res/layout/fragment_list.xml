@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    style="@style/default_size_expanded_style"
     tools:context=".view.fragments.ListFragment">
 
+    <androidx.recyclerview.widget.RecyclerView
+        style="@style/default_size_expanded_style"
+        android:id="@+id/places_recycler_view"/>
 </FrameLayout>
