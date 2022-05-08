@@ -2,7 +2,6 @@ package com.applications.asm.places.view_model;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.applications.asm.domain.entities.SuggestedPlace;
@@ -17,7 +16,9 @@ public class SearchViewModel extends ViewModel {
     private final GetSuggestedPlacesUc getSuggestedPlacesUc;
     private final PlaceNameMapper placeNameMapper;
 
-    private MutableLiveData<List<String>> _placesSuggested;
+    private final MutableLiveData<List<String>> _placesSuggested;
+    private Double latitude;
+    private Double longitude;
 
     public SearchViewModel(GetSuggestedPlacesUc getSuggestedPlacesUc, PlaceNameMapper placeNameMapper) {
         this.getSuggestedPlacesUc = getSuggestedPlacesUc;
@@ -26,9 +27,8 @@ public class SearchViewModel extends ViewModel {
     }
 
     public void getSuggestedPlaces(String word) {
-        getSuggestedPlacesUc.execute(new GetSuggestedPlacesObserver(), GetSuggestedPlacesUc.Params.forSuggestedPlaces(word, -98.12419, 19.07008));
+        getSuggestedPlacesUc.execute(new GetSuggestedPlacesObserver(), GetSuggestedPlacesUc.Params.forSuggestedPlaces(word, longitude, latitude));
     }
-
 
     private class GetSuggestedPlacesObserver extends DefaultObserver<List<SuggestedPlace>> {
         @Override
@@ -52,5 +52,13 @@ public class SearchViewModel extends ViewModel {
 
     public LiveData<List<String>> suggestedPlaces() {
         return _placesSuggested;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 }

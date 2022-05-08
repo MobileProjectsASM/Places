@@ -5,9 +5,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +19,7 @@ import com.applications.asm.places.databinding.FragmentSearchBinding;
 import com.applications.asm.places.model.CategoriesConstants;
 import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view.utils.AfterTextChanged;
+import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.SearchViewModel;
 
 import java.util.ArrayList;
@@ -101,6 +102,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void setListeners() {
+        binding.setCoordinatesButton.setOnClickListener(this::setCoordinates);
         AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) binding.placeTextInputLayout.getEditText();
         if(autoCompleteTextView != null) {
             autoCompleteTextView.addTextChangedListener((AfterTextChanged) editable -> searchViewModel.getSuggestedPlaces(editable.toString()));
@@ -121,5 +123,18 @@ public class SearchFragment extends Fragment {
         if(binding.petsChip.isChecked()) categories.add(CategoriesConstants.PETS);
         if(binding.publicServicesChip.isChecked()) categories.add(CategoriesConstants.PUBLIC_SERVICES);
         return categories;
+    }
+
+    private void setCoordinates(View view) {
+        EditText editTextLatitude = binding.latitudeTextInputLayout.getEditText();
+        EditText editTextLongitude = binding.longitudeTextInputLayout.getEditText();
+        if (editTextLatitude != null && editTextLatitude.getText().toString().compareTo("") != 0) {
+            double latitude = Double.parseDouble(editTextLatitude.getText().toString());
+            searchViewModel.setLatitude(latitude);
+        } else searchViewModel.setLatitude(null);
+        if (editTextLongitude != null && editTextLongitude.getText().toString().compareTo("") != 0) {
+            double longitude = Double.parseDouble(editTextLongitude.getText().toString());
+            searchViewModel.setLongitude(longitude);
+        } else searchViewModel.setLongitude(null);
     }
 }
