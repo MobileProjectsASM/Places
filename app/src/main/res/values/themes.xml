@@ -57,6 +57,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="text_title_style" parent="regular_text_style">
+        <item name="android:textSize">@dimen/text_title_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="text_subtitle_style" parent="regular_text_style">
         <item name="android:textSize">@dimen/text_subtitle_size</item>
         <item name="android:textStyle">bold</item>

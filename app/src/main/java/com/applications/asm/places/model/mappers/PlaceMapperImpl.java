@@ -2,17 +2,16 @@ package com.applications.asm.places.model.mappers;
 
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Place;
-import com.applications.asm.places.model.PlaceMV;
+import com.applications.asm.places.model.PlaceM;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class PlaceMVMapperImpl implements PlaceMVMapper {
+public class PlaceMapperImpl implements PlaceMapper {
 
     @Override
-    public PlaceMV getPlaceMVFromPlace(Place place) {
+    public PlaceM getPlaceMVFromPlace(Place place) {
         String categories = getCategories(place.getCategories());
-        return new PlaceMV(place.getId(), place.getName(), place.getLatitude(), place.getLongitude(), place.getImageUrl(), categories, place.getAddress());
+        return new PlaceM(place.getId(), place.getName(), place.getLatitude(), place.getLongitude(), place.getImageUrl(), categories, place.getAddress());
     }
 
     private String getCategories(List<Category> categories) {

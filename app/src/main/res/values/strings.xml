@@ -7,6 +7,15 @@
     <string name="text_helper_category_selected">Selecciona las categorias</string>
     <string name="text_helper_address">Direccion:</string>
     <string name="text_helper_categories">Categories:</string>
+    <string name="text_helper_schedule">Horario</string>
+    <string name="text_helper_place_open">Abierto</string>
+    <string name="text_helper_place_close">Cerrado</string>
+    <string name="text_subtitle_Reviews">Opiniones</string>
+
+    <string name="text_value_price_very_expensive">Muy Caro</string>
+    <string name="text_value_price_expensive">Caro</string>
+    <string name="text_value_price_regular">Regular</string>
+    <string name="text_value_price_cheap">Barato</string>
 
     <!--TEXT TEXTS-INPUT-->
     <string name="text_text_input_place">Lugar</string>
@@ -42,4 +51,6 @@
     <!--KEYS-->
     <string name="places_service_base_url">https://api.yelp.com/</string>
     <string name="places_service_api_key">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

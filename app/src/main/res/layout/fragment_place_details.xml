@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/default_size_expanded_style"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.fragments.PlaceDetailsFragment">
+
+        <ImageView
+            android:id="@+id/placeDetailsImageView"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/place" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/default_size_height_style"
+            android:id="@+id/namePlaceTitle"
+            android:textAppearance="@style/text_title_style"
+            android:textColor="?attr/colorOnPrimary"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Este es el ejemplo de un titulo"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/default_size_fit_style"
+            android:id="@+id/ratingPlaceText"
+            android:textAppearance="@style/regular_text_style"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            tools:text="5.4" />
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            style="?android:attr/ratingBarStyleSmall"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingPlaceText"
+            app:layout_constraintStart_toEndOf="@+id/ratingPlaceText"
+            app:layout_constraintTop_toTopOf="@+id/ratingPlaceText"
+            android:isIndicator="true"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/default_size_fit_style"
+            android:id="@+id/countReviewsPlaceText"
+            android:textAppearance="@style/regular_text_style"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
+            app:layout_constraintStart_toEndOf="@+id/ratingBar"
+            app:layout_constraintTop_toTopOf="@+id/ratingBar"
+            tools:text="300 opiniones" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/pricePlaceText"
+            style="@style/default_size_fit_style"
+            android:layout_height="0dp"
+            android:layout_marginEnd="10dp"
+            android:textAppearance="@style/regular_text_style"
+            app:layout_constraintBottom_toBottomOf="@+id/countReviewsPlaceText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/countReviewsPlaceText"
+            tools:text="Muy Caro" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/phoneNumberPlaceText"
+            style="@style/default_size_fit_style"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/regular_text_style"
+            app:layout_constraintStart_toStartOf="@+id/ratingPlaceText"
+            app:layout_constraintTop_toBottomOf="@+id/ratingPlaceText"
+            tools:text="2223881589" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/materialDivider"
+            style="@style/default_middle_divider"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/phoneNumberPlaceText" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/scheduleSubtitleText"
+            style="@style/default_size_fit_style"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:textAppearance="@style/text_subtitle_style"
+            android:textColor="@color/primary_color"
+            app:layout_constraintStart_toStartOf="@+id/phoneNumberPlaceText"
+            app:layout_constraintTop_toBottomOf="@+id/materialDivider"
+            tools:text="@string/text_helper_schedule" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/isOpenText"
+            style="@style/default_size_fit_style"
+            android:layout_height="0dp"
+            android:textAppearance="@style/regular_text_style"
+            android:layout_marginStart="10dp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/scheduleSubtitleText"
+            app:layout_constraintStart_toEndOf="@+id/scheduleSubtitleText"
+            tools:text="Abierto" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/scheduleText"
+            style="@style/default_size_fit_style"
+            android:layout_height="0dp"
+            android:textAlignment="textStart"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/regular_text_style"
+            app:layout_constraintStart_toStartOf="@+id/scheduleSubtitleText"
+            app:layout_constraintTop_toBottomOf="@+id/scheduleSubtitleText"
+            tools:text="Lunes: 10:00 - 11:00\nMartes: 08:00 - 12:00" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/materialDivider2"
+            style="@style/default_middle_divider"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scheduleText" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/reviewsTitleText"
+            style="@style/default_size_fit_style"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:textAppearance="@style/text_subtitle_style"
+            android:textColor="@color/primary_color"
+            app:layout_constraintStart_toStartOf="@+id/scheduleText"
+            app:layout_constraintTop_toBottomOf="@+id/materialDivider2"
+            tools:text="@string/text_subtitle_Reviews" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/reviewsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/pricePlaceText"
+            app:layout_constraintStart_toStartOf="@+id/reviewsTitleText"
+            app:layout_constraintTop_toBottomOf="@+id/reviewsTitleText" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.core.widget.NestedScrollView>

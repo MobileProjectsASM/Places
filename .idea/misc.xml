@@ -7,9 +7,11 @@
         <entry key="app/src/main/res/font/font.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_place_details.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.27414330218068533" />
         <entry key="app/src/main/res/layout/place_item_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/place_suggested_item_layout.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/review_item_layout.xml" value="0.32760416666666664" />
       </map>
     </option>
   </component>

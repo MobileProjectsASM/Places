@@ -1,14 +1,12 @@
 package com.applications.asm.places.view.view_holders;
 
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.PlaceItemLayoutBinding;
-import com.applications.asm.places.model.PlaceMV;
+import com.applications.asm.places.model.PlaceM;
 import com.applications.asm.places.view.events.PlaceClickListener;
 import com.squareup.picasso.Picasso;
 
@@ -20,13 +18,13 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         binding = PlaceItemLayoutBinding.bind(view);
     }
 
-    public void render(PlaceMV placeMV, PlaceClickListener placeClickListener) {
-        if(placeMV.getImageUrl().compareTo("") != 0) Picasso.get().load(placeMV.getImageUrl()).fit().centerCrop().into(binding.placeImageView);
+    public void render(PlaceM placeM, PlaceClickListener placeClickListener) {
+        if(placeM.getImageUrl().compareTo("") != 0) Picasso.get().load(placeM.getImageUrl()).fit().centerCrop().into(binding.placeImageView);
         else Picasso.get().load(R.drawable.place).fit().centerCrop().into(binding.placeImageView);
-        binding.namePlaceTextView.setText(placeMV.getName());
-        binding.addressPlaceTextView.setText(placeMV.getAddress());
-        binding.categoriesPlaceTextView.setText(placeMV.getCategories());
+        binding.namePlaceTextView.setText(placeM.getName());
+        binding.addressPlaceTextView.setText(placeM.getAddress());
+        binding.categoriesPlaceTextView.setText(placeM.getCategories());
 
-        itemView.setOnClickListener(view -> placeClickListener.onPlaceClickListener(placeMV));
+        itemView.setOnClickListener(view -> placeClickListener.onPlaceClickListener(placeM));
     }
 }

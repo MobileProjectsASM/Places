@@ -8,15 +8,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import com.applications.asm.places.databinding.FragmentListBinding;
-import com.applications.asm.places.model.PlaceMV;
+import com.applications.asm.places.model.PlaceM;
 import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view.adapters.PlaceAdapter;
 import com.applications.asm.places.view_model.MainViewModel;
@@ -91,7 +89,7 @@ public class ListFragment extends Fragment {
         });
     }
 
-    private void clickOnItemList(PlaceMV placeMV) {
+    private void clickOnItemList(PlaceM placeM) {
 
     }
 }

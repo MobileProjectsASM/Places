@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.applications.asm.domain.use_cases.GetPlacesUc;
 import com.applications.asm.domain.use_cases.GetSuggestedPlacesUc;
 import com.applications.asm.places.di.scopes.ActivityScope;
-import com.applications.asm.places.model.mappers.PlaceMVMapper;
-import com.applications.asm.places.model.mappers.PlaceMVMapperImpl;
+import com.applications.asm.places.model.mappers.PlaceMapper;
+import com.applications.asm.places.model.mappers.PlaceMapperImpl;
 import com.applications.asm.places.model.mappers.PlaceNameMapper;
 import com.applications.asm.places.model.mappers.PlaceNameMapperImpl;
 import com.applications.asm.places.view_model.factories.MainViewModelFactory;
@@ -35,12 +35,12 @@ public class ViewModelsModule {
     @ActivityScope
     @Named("main_view_model")
     @Provides
-    ViewModelProvider.Factory provideMainViewModel(GetPlacesUc getPlacesUc, PlaceMVMapper placeMVMapper) {
-        return new MainViewModelFactory(getPlacesUc, placeMVMapper);
+    ViewModelProvider.Factory provideMainViewModel(GetPlacesUc getPlacesUc, PlaceMapper placeMapper) {
+        return new MainViewModelFactory(getPlacesUc, placeMapper);
     }
 
     @Provides
-    PlaceMVMapper providePlaceMVMapper() {
-        return new PlaceMVMapperImpl();
+    PlaceMapper providePlaceMVMapper() {
+        return new PlaceMapperImpl();
     }
 }
