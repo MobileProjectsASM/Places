@@ -56,6 +56,7 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
                 latitude = DEFAULT_LATITUDE;
                 longitude = DEFAULT_LONGITUDE;
             }
+            if(radius == null) radius = 0;
             return placesRepository.getPlaces(placeToFind, longitude, latitude, radius, categories);
         } catch (ConnectionServer connectionServer) {
             Log.error(TAG + " : " + connectionServer.getMessage());
