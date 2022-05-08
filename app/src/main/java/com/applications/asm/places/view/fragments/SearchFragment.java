@@ -20,6 +20,7 @@ import com.applications.asm.places.model.CategoriesConstants;
 import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view.utils.AfterTextChanged;
 import com.applications.asm.places.view.utils.ViewUtils;
+import com.applications.asm.places.view_model.MainViewModel;
 import com.applications.asm.places.view_model.SearchViewModel;
 
 import java.util.ArrayList;
@@ -33,11 +34,16 @@ public class SearchFragment extends Fragment {
     private MainViewParent mainViewParent;
     private final String TAG = "SearchFragment";
     private SearchViewModel searchViewModel;
+    private MainViewModel mainViewModel;
     private Boolean doSearch = true;
 
     @Named("search_view_model")
     @Inject
-    ViewModelProvider.Factory factory;
+    ViewModelProvider.Factory factorySearchViewModel;
+
+    @Named("main_view_model")
+    @Inject
+    ViewModelProvider.Factory factoryMainViewModel;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -59,19 +65,9 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         mainViewParent.getMainComponent().inject(this);
-        searchViewModel = new ViewModelProvider(this, factory).get(SearchViewModel.class);
-        searchViewModel.suggestedPlaces().observe(getViewLifecycleOwner(), namePlaces -> {
-            if(doSearch) {
-                ArrayAdapter<String> placeAutocompleteAdapter = new ArrayAdapter<>(requireContext(), R.layout.place_suggested_item_layout, namePlaces);
-                AutoCompleteTextView autoCompleteSearchPlace = (AutoCompleteTextView) binding.placeTextInputLayout.getEditText();
-                if(autoCompleteSearchPlace != null) {
-                    autoCompleteSearchPlace.setAdapter(placeAutocompleteAdapter);
-                    if(!namePlaces.isEmpty())
-                        autoCompleteSearchPlace.showDropDown();
-                    else autoCompleteSearchPlace.dismissDropDown();
-                }
-            } else doSearch = true;
-        });
+        searchViewModel = new ViewModelProvider(this, factorySearchViewModel).get(SearchViewModel.class);
+        mainViewModel = new ViewModelProvider(requireActivity(), factoryMainViewModel).get(MainViewModel.class);
+        setObservables();
         return binding.getRoot();
     }
 
@@ -103,11 +99,27 @@ public class SearchFragment extends Fragment {
 
     private void setListeners() {
         binding.setCoordinatesButton.setOnClickListener(this::setCoordinates);
+        binding.searchButton.setOnClickListener(this::filterPlaces);
         AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) binding.placeTextInputLayout.getEditText();
         if(autoCompleteTextView != null) {
             autoCompleteTextView.addTextChangedListener((AfterTextChanged) editable -> searchViewModel.getSuggestedPlaces(editable.toString()));
             autoCompleteTextView.setOnItemClickListener((adapterView, view, i, l) -> doSearch = false);
         }
+    }
+
+    private void setObservables() {
+        searchViewModel.suggestedPlaces().observe(getViewLifecycleOwner(), namePlaces -> {
+            if(doSearch) {
+                ArrayAdapter<String> placeAutocompleteAdapter = new ArrayAdapter<>(requireContext(), R.layout.place_suggested_item_layout, namePlaces);
+                AutoCompleteTextView autoCompleteSearchPlace = (AutoCompleteTextView) binding.placeTextInputLayout.getEditText();
+                if(autoCompleteSearchPlace != null) {
+                    autoCompleteSearchPlace.setAdapter(placeAutocompleteAdapter);
+                    if(!namePlaces.isEmpty())
+                        autoCompleteSearchPlace.showDropDown();
+                    else autoCompleteSearchPlace.dismissDropDown();
+                }
+            } else doSearch = true;
+        });
     }
 
     private List<String> getCategories() {
@@ -136,5 +148,26 @@ public class SearchFragment extends Fragment {
             double longitude = Double.parseDouble(editTextLongitude.getText().toString());
             searchViewModel.setLongitude(longitude);
         } else searchViewModel.setLongitude(null);
+    }
+
+    private void filterPlaces(View view) {
+        List<String> categories = getCategories();
+        String place = null;
+        Double latitude = null;
+        Double longitude = null;
+        Integer radius = null;
+        EditText editTextPlace = binding.placeTextInputLayout.getEditText();
+        EditText editTextLatitude = binding.latitudeTextInputLayout.getEditText();
+        EditText editTextLongitude = binding.longitudeTextInputLayout.getEditText();
+        EditText editTextRadius = binding.radiusTextInputLayout.getEditText();
+        if(editTextPlace != null)
+            place = editTextPlace.getText().toString();
+        if (editTextLatitude != null && editTextLatitude.getText().toString().compareTo("") != 0)
+            latitude = Double.parseDouble(editTextLatitude.getText().toString());
+        if (editTextLongitude != null && editTextLongitude.getText().toString().compareTo("") != 0)
+            longitude = Double.parseDouble(editTextLongitude.getText().toString());;
+        if(editTextRadius != null && editTextRadius.getText().toString().compareTo("") != 0)
+            radius = Integer.parseInt(editTextRadius.getText().toString());
+        mainViewModel.searchNearPlaces(place, latitude, longitude, radius, categories);
     }
 }
