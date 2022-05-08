@@ -5,6 +5,8 @@
     <string name="text_helper_origin_coordinates">Coordenadas de origen</string>
     <string name="text_helper_radio_to_find">Radio de busqueda</string>
     <string name="text_helper_category_selected">Selecciona las categorias</string>
+    <string name="text_helper_address">Direccion:</string>
+    <string name="text_helper_categories">Categories:</string>
 
     <!--TEXT TEXTS-INPUT-->
     <string name="text_text_input_place">Lugar</string>

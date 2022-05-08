@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/default_size_height_style"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        style="@style/default_size_height_style"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/placeImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            tools:src="@drawable/ic_baseline_checklist_24"/>
+
+        <LinearLayout
+            style="@style/default_size_height_style"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/default_size_height_style"
+                android:id="@+id/namePlaceTextView"
+                android:layout_marginStart="10dp"
+                android:textAppearance="@style/text_subtitle_style"
+                android:textColor="@color/primary_color"
+                tools:text="@tools:sample/lorem"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/default_size_height_style"
+                android:id="@+id/addressPlaceTextView"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/text_info_place_style"
+                tools:text="@tools:sample/lorem/random"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/default_size_height_style"
+                android:id="@+id/categoriesPlaceTextView"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/text_info_place_style"
+                tools:text="@tools:sample/lorem/random"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        style="@style/default_inset_divider"
+        android:layout_marginTop="10dp"/>
+</LinearLayout>

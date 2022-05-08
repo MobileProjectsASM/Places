@@ -20,6 +20,7 @@
             android:hint="@string/text_text_input_place">
             <AutoCompleteTextView
                 style="@style/default_size_height_style"
+                android:ellipsize="end"
                 android:textAppearance="@style/regular_text_style"/>
         </com.google.android.material.textfield.TextInputLayout>
 
