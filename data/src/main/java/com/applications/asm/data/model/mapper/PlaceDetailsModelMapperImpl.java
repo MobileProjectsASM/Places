@@ -61,7 +61,7 @@ public class PlaceDetailsModelMapperImpl implements PlaceDetailsModelMapper {
             case 1: return context.getString(R.string.tuesday);
             case 2: return context.getString(R.string.wednesday);
             case 3: return context.getString(R.string.thursday);
-            case 4: return context.getString(R.string.thursday);
+            case 4: return context.getString(R.string.friday);
             case 5: return context.getString(R.string.saturday);
             default: return context.getString(R.string.sunday);
         }
