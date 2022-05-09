@@ -191,6 +191,21 @@
                 android:text="@string/category_public_services"/>
         </com.google.android.material.chip.ChipGroup>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/exposed_drop_down_menu"
+            android:id="@+id/show_mode_text_input_layout"
+            android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="20dp"
+            app:startIconDrawable="@drawable/ic_baseline_preview_24"
+            android:hint="@string/text_text_input_show_mode">
+            <AutoCompleteTextView
+                style="@style/default_size_height_style"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textAppearance="@style/regular_text_style"
+                android:inputType="none"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
         <com.google.android.material.button.MaterialButton
             style="@style/contained_button_container_style"
             android:id="@+id/search_button"

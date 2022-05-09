@@ -23,12 +23,16 @@
     <string name="text_value_price_cheap">Barato</string>
     <string name="text_value_price_unknown">Desconocido</string>
 
+    <string name="text_value_mode_list">Modo Lista</string>
+    <string name="text_value_mode_map">Modo Mapa</string>
+
     <!--TEXT TEXTS-INPUT-->
     <string name="text_text_input_place">Lugar</string>
     <string name="text_text_input_latitude">Latitud</string>
     <string name="text_text_input_longitude">Longitud</string>
     <string name="text_text_input_radius">Radio</string>
     <string name="text_text_input_category">Categoria</string>
+    <string name="text_text_input_show_mode">Modo vista</string>
     <string name="category_active_life">Vida activa</string>
     <string name="category_food">Comida</string>
     <string name="category_arts_entertainment">Artes</string>

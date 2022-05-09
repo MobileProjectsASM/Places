@@ -37,6 +37,7 @@ public class SearchFragment extends Fragment {
     private SearchViewModel searchViewModel;
     private MainViewModel mainViewModel;
     private Boolean doSearch = true;
+    private String[] modeView;
 
     @Named("search_view_model")
     @Inject
@@ -59,6 +60,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        modeView = new String[] {getString(R.string.text_value_mode_list), getString(R.string.text_value_mode_map)};
     }
 
     @Override
@@ -75,7 +77,17 @@ public class SearchFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initInputTextChooseMode();
         setListeners();
+    }
+
+    private void initInputTextChooseMode() {
+        AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) binding.showModeTextInputLayout.getEditText();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), R.layout.place_suggested_item_layout, modeView);
+        if(autoCompleteTextView != null) {
+            autoCompleteTextView.setAdapter(adapter);
+            autoCompleteTextView.setText(modeView[0], false);
+        }
     }
 
     @Override
@@ -170,6 +182,11 @@ public class SearchFragment extends Fragment {
         if(editTextRadius != null && editTextRadius.getText().toString().compareTo("") != 0)
             radius = Integer.parseInt(editTextRadius.getText().toString());
         mainViewModel.searchNearPlaces(place, latitude, longitude, radius, categories);
-        Navigation.findNavController(view).navigate(R.id.action_searchFragment_to_listFragment);
+
+        int action = R.id.action_searchFragment_to_listFragment;
+        AutoCompleteTextView autoCompleteTextView = (AutoCompleteTextView) binding.showModeTextInputLayout.getEditText();
+        if(autoCompleteTextView != null)
+            if(autoCompleteTextView.getText().toString().compareTo(modeView[1]) == 0) action = R.id.action_searchFragment_to_placesMapFragment;
+        Navigation.findNavController(view).navigate(action);
     }
 }

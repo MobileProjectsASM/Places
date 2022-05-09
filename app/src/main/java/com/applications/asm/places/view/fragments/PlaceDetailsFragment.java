@@ -92,7 +92,8 @@ public class PlaceDetailsFragment extends Fragment implements OnMapReadyCallback
 
     private void createMapFragment() {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
-        mapFragment.getMapAsync(this);
+        if(mapFragment != null)
+            mapFragment.getMapAsync(this);
     }
 
     private void setListeners() {
@@ -133,13 +134,13 @@ public class PlaceDetailsFragment extends Fragment implements OnMapReadyCallback
     }
 
     private String getSchedule(List<ScheduleM> schedule) {
-        String aux = "";
+        StringBuilder aux = new StringBuilder();
         for (int i = 0; i < schedule.size(); i++) {
-            aux += (schedule.get(i).getDay() + ": " + schedule.get(i).getHours());
-            if(i < schedule.size() - 1) aux += "\n";
+            aux.append(schedule.get(i).getDay()).append(": ").append(schedule.get(i).getHours());
+            if(i < schedule.size() - 1) aux.append("\n");
         }
 
-        return aux;
+        return aux.toString();
     }
 
     private void createMarker(Double latitude, Double longitude, String title) {

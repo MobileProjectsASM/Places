@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_searchFragment_to_listFragment"
             app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_placesMapFragment"
+            app:destination="@id/placesMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -28,4 +31,13 @@
         android:name="com.applications.asm.places.view.fragments.PlaceDetailsFragment"
         android:label="fragment_place_details"
         tools:layout="@layout/fragment_place_details" />
+    <fragment
+        android:id="@+id/placesMapFragment"
+        android:name="com.applications.asm.places.view.fragments.PlacesMapFragment"
+        android:label="fragment_places_map"
+        tools:layout="@layout/fragment_places_map" >
+        <action
+            android:id="@+id/action_placesMapFragment_to_placeDetailsFragment"
+            app:destination="@id/placeDetailsFragment" />
+    </fragment>
 </navigation>
