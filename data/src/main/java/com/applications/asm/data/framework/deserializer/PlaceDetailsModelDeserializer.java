@@ -31,10 +31,11 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
         JsonObject body = json.getAsJsonObject();
 
         JsonArray hours = body.getAsJsonArray("hours");
-        JsonObject schedule = hours.get(0).getAsJsonObject();
-        Boolean isOpen = schedule.get("is_open_now").getAsBoolean();
+        JsonObject schedule = hours != null ? hours.get(0).getAsJsonObject() : null;
+        Boolean isOpen = (schedule == null || schedule.get("is_open_now").getAsBoolean());
 
-        List<WorkingHoursModel> workingHoursModelDays = deserializeWorkingHoursModelDays(schedule.getAsJsonArray("open"));
+        List<WorkingHoursModel> workingHoursModelDays = new ArrayList<>();
+        if(schedule != null) workingHoursModelDays = deserializeWorkingHoursModelDays(schedule.getAsJsonArray("open"));
 
         CoordinatesModel coordinatesModel = deserializeCoordinatesModel(body.getAsJsonObject("coordinates"));
 

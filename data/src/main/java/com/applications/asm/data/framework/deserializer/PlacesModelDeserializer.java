@@ -56,7 +56,7 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         PlaceModel placeModel = new PlaceModel();
         placeModel.setId(place.get("id").getAsString());
         placeModel.setName(place.get("name").getAsString());
-        placeModel.setImageUrl(place.get("image_url").getAsString());
+        placeModel.setImageUrl(place.get("image_url").isJsonNull() ? "" : place.get("image_url").getAsString());
         placeModel.setCoordinatesModel(coordinatesModel);
         placeModel.setCategories(categoriesModel);
         placeModel.setLocationModel(locationModel);
@@ -87,10 +87,10 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
 
     private LocationModel deserializeLocation(JsonObject location) {
         LocationModel locationModel = new LocationModel();
-        locationModel.setCountry(location.get("country").getAsString());
-        locationModel.setState(location.get("state").getAsString());
-        locationModel.setCity(location.get("city").getAsString());
-        locationModel.setZipCode(location.get("zip_code").getAsString());
+        locationModel.setCountry(location.get("country").isJsonNull() ? "" : location.get("country").getAsString());
+        locationModel.setState(location.get("state").isJsonNull() ? "" : location.get("state").getAsString());
+        locationModel.setCity(location.get("city").isJsonNull() ? "" : location.get("city").getAsString());
+        locationModel.setZipCode(location.get("zip_code").isJsonNull() ? "" : location.get("zip_code").getAsString());
         locationModel.setSuburb(location.get("address2").isJsonNull() ? "" : location.get("address2").getAsString());
         locationModel.setAddress(location.get("address1").isJsonNull() ? "" : location.get("address1").getAsString());
         return locationModel;
