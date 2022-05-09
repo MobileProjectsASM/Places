@@ -67,7 +67,7 @@
             android:id="@+id/descriptionReviewTextView"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-            android:maxLines="2"
+            android:maxLines="3"
             android:textAppearance="@style/text_info_place_style"
             tools:text="@tools:sample/lorem/random"/>
 

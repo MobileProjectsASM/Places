@@ -70,7 +70,7 @@ public class MainViewModel extends ViewModel {
 
     public LiveData<PlaceDetailsM> placeDetail() { return _placeDetailsM; }
 
-    public LiveData<List<ReviewM>> review() { return _reviewsM; }
+    public LiveData<List<ReviewM>> reviews() { return _reviewsM; }
 
     private class GetPlacesObserver extends DefaultObserver<List<Place>> {
         @Override

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +39,7 @@ public class PlaceDetailsFragment extends Fragment implements OnMapReadyCallback
     private MainViewParent mainViewParent;
     private MainViewModel mainViewModel;
     private GoogleMap map;
+    private String currentPlace;
 
     @Named("main_view_model")
     @Inject
@@ -97,7 +99,12 @@ public class PlaceDetailsFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void setListeners() {
-        binding.showReviewsButton.setOnClickListener(view -> {});
+        binding.showReviewsButton.setOnClickListener(this::onClickReviewsButton);
+    }
+
+    private void onClickReviewsButton(View view) {
+        mainViewModel.getReviews(currentPlace);
+        Navigation.findNavController(view).navigate(R.id.action_placeDetailsFragment_to_reviewsFragment);
     }
 
     private void setObservables() {
@@ -106,6 +113,7 @@ public class PlaceDetailsFragment extends Fragment implements OnMapReadyCallback
 
     private void renderView(PlaceDetailsM placeDetailsM) {
         if(placeDetailsM != null) {
+            currentPlace = placeDetailsM.getId();
             if(placeDetailsM.getImageUrl() != null) Picasso.get().load(placeDetailsM.getImageUrl()).fit().centerCrop().into(binding.placeDetailsImageView);
             else Picasso.get().load(R.drawable.place).fit().centerCrop().into(binding.placeDetailsImageView);
             binding.namePlaceTitle.setText(placeDetailsM.getName());

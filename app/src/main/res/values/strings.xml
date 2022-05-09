@@ -12,6 +12,7 @@
     <string name="text_helper_schedule">Horario</string>
     <string name="text_helper_place_open">Abierto</string>
     <string name="text_helper_place_close">Cerrado</string>
+    <string name="text_helper_button_set_coordinates">Establece las coordenadas para que el campo de autocompletado muestre lugares de tu zona</string>
 
     <!-- Text Subtitle -->
     <string name="text_subtitle_schedule">Horario</string>
@@ -25,6 +26,11 @@
 
     <string name="text_value_mode_list">Modo Lista</string>
     <string name="text_value_mode_map">Modo Mapa</string>
+
+    <!--INFO-->
+    <string name="text_info_coordinates_set">Coordenadas establecidas</string>
+    <string name="text_info_not_found_places">No se encontraron lugares intente con otra ubicacion o cambie los filtros de busqueda</string>
+    <string name="text_info_not_found_reviews">No se encontraron reseñas</string>
 
     <!--TEXT TEXTS-INPUT-->
     <string name="text_text_input_place">Lugar</string>

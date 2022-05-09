@@ -161,6 +161,7 @@ public class SearchFragment extends Fragment {
             double longitude = Double.parseDouble(editTextLongitude.getText().toString());
             searchViewModel.setLongitude(longitude);
         } else searchViewModel.setLongitude(null);
+        ViewUtils.showSnackBar(binding.getRoot(), getString(R.string.text_info_coordinates_set));
     }
 
     private void filterPlaces(View view) {

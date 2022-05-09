@@ -76,6 +76,10 @@
         <item name="android:textSize">@dimen/small_text_size</item>
     </style>
 
+    <style name="text_helper_style" parent="regular_text_style">
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
     <!-- TEXT-INPUT STYLES -->
     <style name="text_input_layout_style" parent="default_size_height_style">
         <item name="android:textColorHint">@color/primary_color</item>

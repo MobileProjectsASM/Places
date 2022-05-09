@@ -6,19 +6,16 @@ import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
 import com.applications.asm.domain.use_cases.base.UseCase;
-import com.sun.org.slf4j.internal.Logger;
-import com.sun.org.slf4j.internal.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import jdk.internal.org.jline.utils.Log;
 
 public class GetReviewsUc extends UseCase<List<Review>, String> {
     private final PlacesRepository placesRepository;
     private final String TAG = "GetReviewsUc";
-    private final static Logger logger = LoggerFactory.getLogger(GetReviewsUc.class);
-
 
     public GetReviewsUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository) {
         super(threadExecutor, postExecutionThread);
@@ -34,7 +31,7 @@ public class GetReviewsUc extends UseCase<List<Review>, String> {
         try {
             return placesRepository.getReviews(placeId);
         } catch (ConnectionServer connectionServer) {
-            logger.error(TAG, connectionServer);
+            Log.error(TAG + " : " + connectionServer.getMessage());
             return new ArrayList<>();
         }
     }

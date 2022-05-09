@@ -86,8 +86,15 @@ public class ListFragment extends Fragment {
 
     private void setObservables() {
         mainViewModel.places().observe(getViewLifecycleOwner(), places -> {
-            PlaceAdapter adapter = new PlaceAdapter(places, this::clickOnItemList);
-            binding.placesRecyclerView.setAdapter(adapter);
+            if(places.isEmpty()) {
+                binding.infoPlacesList.setVisibility(View.VISIBLE);
+                binding.placesRecyclerView.setVisibility(View.GONE);
+            } else  {
+                PlaceAdapter adapter = new PlaceAdapter(places, this::clickOnItemList);
+                binding.placesRecyclerView.setAdapter(adapter);
+                binding.infoPlacesList.setVisibility(View.GONE);
+                binding.placesRecyclerView.setVisibility(View.VISIBLE);
+            }
         });
     }
 

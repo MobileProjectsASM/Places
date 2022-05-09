@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".view.fragments.ReviewsFragment">
 
+    <com.google.android.material.textview.MaterialTextView
+        style="@style/default_size_fit_style"
+        android:id="@+id/infoReviewsList"
+        android:layout_marginHorizontal="20dp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:textAppearance="@style/regular_text_style"
+        android:text="@string/text_info_not_found_reviews"/>
+
     <androidx.recyclerview.widget.RecyclerView
         style="@style/default_size_expanded_style"
         android:id="@+id/reviewsRecyclerView"/>
