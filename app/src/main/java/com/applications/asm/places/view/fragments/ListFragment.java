@@ -7,12 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentListBinding;
 import com.applications.asm.places.model.PlaceM;
 import com.applications.asm.places.view.activities.interfaces.MainViewParent;
@@ -90,6 +92,7 @@ public class ListFragment extends Fragment {
     }
 
     private void clickOnItemList(PlaceM placeM) {
-
+        mainViewModel.getPlaceDetail(placeM.getId());
+        NavHostFragment.findNavController(this).navigate(R.id.action_listFragment_to_placeDetailsFragment);
     }
 }

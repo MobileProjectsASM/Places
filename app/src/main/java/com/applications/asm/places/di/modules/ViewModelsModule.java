@@ -2,9 +2,12 @@ package com.applications.asm.places.di.modules;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import com.applications.asm.domain.use_cases.GetPlaceDetailsUc;
 import com.applications.asm.domain.use_cases.GetPlacesUc;
 import com.applications.asm.domain.use_cases.GetSuggestedPlacesUc;
 import com.applications.asm.places.di.scopes.ActivityScope;
+import com.applications.asm.places.model.mappers.PlaceDetailsMapper;
+import com.applications.asm.places.model.mappers.PlaceDetailsMapperImpl;
 import com.applications.asm.places.model.mappers.PlaceMapper;
 import com.applications.asm.places.model.mappers.PlaceMapperImpl;
 import com.applications.asm.places.model.mappers.PlaceNameMapper;
@@ -35,12 +38,15 @@ public class ViewModelsModule {
     @ActivityScope
     @Named("main_view_model")
     @Provides
-    ViewModelProvider.Factory provideMainViewModel(GetPlacesUc getPlacesUc, PlaceMapper placeMapper) {
-        return new MainViewModelFactory(getPlacesUc, placeMapper);
+    ViewModelProvider.Factory provideMainViewModel(GetPlacesUc getPlacesUc, GetPlaceDetailsUc getPlaceDetailsUc, PlaceMapper placeMapper, PlaceDetailsMapper placeDetailsMapper) {
+        return new MainViewModelFactory(getPlacesUc, getPlaceDetailsUc, placeMapper, placeDetailsMapper);
     }
 
     @Provides
     PlaceMapper providePlaceMVMapper() {
         return new PlaceMapperImpl();
     }
+
+    @Provides
+    PlaceDetailsMapper providePlaceDetailsMapper() { return new PlaceDetailsMapperImpl(); }
 }

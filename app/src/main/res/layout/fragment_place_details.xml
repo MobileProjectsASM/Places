@@ -69,9 +69,9 @@
             android:layout_height="0dp"
             android:layout_marginEnd="10dp"
             android:textAppearance="@style/regular_text_style"
-            app:layout_constraintBottom_toBottomOf="@+id/countReviewsPlaceText"
+            app:layout_constraintBottom_toBottomOf="@+id/phoneNumberPlaceText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/countReviewsPlaceText"
+            app:layout_constraintTop_toTopOf="@+id/phoneNumberPlaceText"
             tools:text="Muy Caro" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -99,9 +99,9 @@
             android:layout_marginTop="20dp"
             android:textAppearance="@style/text_subtitle_style"
             android:textColor="@color/primary_color"
+            android:text="@string/text_helper_schedule"
             app:layout_constraintStart_toStartOf="@+id/phoneNumberPlaceText"
-            app:layout_constraintTop_toBottomOf="@+id/materialDivider"
-            tools:text="@string/text_helper_schedule" />
+            app:layout_constraintTop_toBottomOf="@+id/materialDivider"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/isOpenText"
@@ -139,10 +139,10 @@
             android:layout_marginTop="20dp"
             android:textAppearance="@style/text_subtitle_style"
             android:textColor="@color/primary_color"
+            android:text="@string/text_subtitle_map"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/scheduleText"
-            app:layout_constraintTop_toBottomOf="@+id/materialDivider2"
-            tools:text="@string/text_subtitle_map" />
+            app:layout_constraintTop_toBottomOf="@+id/materialDivider2"/>
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentMap"
@@ -156,6 +156,7 @@
             app:layout_constraintTop_toBottomOf="@+id/reviewsTitleText" />
 
         <Button
+            android:id="@+id/showReviewsButton"
             style="@style/contained_button_container_style"
             android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"

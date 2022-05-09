@@ -3,8 +3,10 @@ package com.applications.asm.places.di.components;
 import com.applications.asm.places.di.modules.UseCasesModule;
 import com.applications.asm.places.di.modules.ViewModelsModule;
 import com.applications.asm.places.di.scopes.ActivityScope;
+import com.applications.asm.places.model.mappers.PlaceDetailsMapper;
 import com.applications.asm.places.view.activities.MainActivity;
 import com.applications.asm.places.view.fragments.ListFragment;
+import com.applications.asm.places.view.fragments.PlaceDetailsFragment;
 import com.applications.asm.places.view.fragments.SearchFragment;
 
 import dagger.Subcomponent;
@@ -23,4 +25,5 @@ public interface MainComponent {
 
     void inject(SearchFragment searchFragment);
     void inject(ListFragment listFragment);
+    void inject(PlaceDetailsFragment placeDetailsFragment);
 }
