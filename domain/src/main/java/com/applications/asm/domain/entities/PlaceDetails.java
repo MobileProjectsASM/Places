@@ -13,7 +13,6 @@ public class PlaceDetails {
     private String phoneNumber;
     private Integer reviewsCounter;
     private List<WorkingHours> workingHoursDays;
-    private List<Review> reviews;
     private Boolean isOpen;
 
     public PlaceDetails(
@@ -120,14 +119,6 @@ public class PlaceDetails {
 
     public void setWorkingHoursDays(List<WorkingHours> workingHoursDays) {
         this.workingHoursDays = workingHoursDays;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
     }
 
     public Boolean getOpen() {
