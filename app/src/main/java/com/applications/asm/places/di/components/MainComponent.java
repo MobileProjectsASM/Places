@@ -8,6 +8,7 @@ import com.applications.asm.places.view.activities.MainActivity;
 import com.applications.asm.places.view.fragments.ListFragment;
 import com.applications.asm.places.view.fragments.PlaceDetailsFragment;
 import com.applications.asm.places.view.fragments.PlacesMapFragment;
+import com.applications.asm.places.view.fragments.ReviewsFragment;
 import com.applications.asm.places.view.fragments.SearchFragment;
 
 import dagger.Subcomponent;
@@ -28,4 +29,5 @@ public interface MainComponent {
     void inject(ListFragment listFragment);
     void inject(PlaceDetailsFragment placeDetailsFragment);
     void inject(PlacesMapFragment placesMapFragment);
+    void inject(ReviewsFragment reviewsFragment);
 }

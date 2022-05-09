@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/default_size_height_style"
     android:layout_margin="10dp"
@@ -7,9 +8,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/placeImageView"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         tools:src="@drawable/ic_baseline_checklist_24"/>
 
     <LinearLayout
@@ -23,6 +23,44 @@
             android:textAppearance="@style/text_subtitle_style"
             android:textColor="@color/primary_color"
             tools:text="@tools:sample/lorem"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/default_size_height_style">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/rateReviewTextView"
+                style="@style/default_size_fit_style"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAppearance="@style/text_info_place_style"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="4.5" />
+
+            <RatingBar
+                android:id="@+id/ratingBarReview"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:isIndicator="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rateReviewTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/dateReviewTextView"
+                style="@style/default_size_fit_style"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textAppearance="@style/text_info_place_style"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="15 de Marzo del 2021" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/default_size_height_style"

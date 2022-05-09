@@ -13,10 +13,9 @@ public class PlaceDetailsM {
     private String phoneNumber;
     private Integer reviewsCounter;
     private List<ScheduleM> schedule;
-    private List<ReviewM> review;
     private Boolean isOpen;
 
-    public PlaceDetailsM(String id, String name, String imageUrl, Double longitude, Double latitude, Double rating, PriceM price, String phoneNumber, Integer reviewsCounter, List<ScheduleM> schedule, List<ReviewM> review, Boolean isOpen) {
+    public PlaceDetailsM(String id, String name, String imageUrl, Double longitude, Double latitude, Double rating, PriceM price, String phoneNumber, Integer reviewsCounter, List<ScheduleM> schedule, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -27,7 +26,6 @@ public class PlaceDetailsM {
         this.phoneNumber = phoneNumber;
         this.reviewsCounter = reviewsCounter;
         this.schedule = schedule;
-        this.review = review;
         this.isOpen = isOpen;
     }
 
@@ -109,14 +107,6 @@ public class PlaceDetailsM {
 
     public void setSchedule(List<ScheduleM> schedule) {
         this.schedule = schedule;
-    }
-
-    public List<ReviewM> getReview() {
-        return review;
-    }
-
-    public void setReview(List<ReviewM> review) {
-        this.review = review;
     }
 
     public Boolean getOpen() {

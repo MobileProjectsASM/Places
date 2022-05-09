@@ -18,7 +18,6 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
     public PlaceDetailsM getPlaceDetailsMFromPlaceDetails(PlaceDetails placeDetails) {
         PriceM price = getPrice(placeDetails.getPrice());
         List<ScheduleM> schedule = getSchedule(placeDetails.getWorkingHoursDays());
-        List<ReviewM> review = getReviews(placeDetails.getReviews());
         return new PlaceDetailsM(
                 placeDetails.getId(),
                 placeDetails.getName(),
@@ -30,7 +29,6 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
                 placeDetails.getPhoneNumber(),
                 placeDetails.getReviewsCounter(), 
                 schedule,
-                review,
                 placeDetails.getOpen()
         );
     }
@@ -50,17 +48,6 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
         for(WorkingHours workingHours: workingHoursDays)
             schedule.add(mapSchedule(workingHours));
         return schedule;
-    }
-
-    private List<ReviewM> getReviews(List<Review> reviews) {
-        List<ReviewM> listReview = new ArrayList<>();
-        for(Review review: reviews)
-            listReview.add(mapReview(review));
-        return listReview;
-    }
-
-    private ReviewM mapReview(Review review) {
-        return new ReviewM(review.getUserName(), review.getImageUrl(), review.getDate(), review.getRate(), review.getDescription());
     }
 
     private ScheduleM mapSchedule(WorkingHours workingHours) {

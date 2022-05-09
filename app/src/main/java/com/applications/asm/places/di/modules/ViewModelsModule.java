@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.applications.asm.domain.use_cases.GetPlaceDetailsUc;
 import com.applications.asm.domain.use_cases.GetPlacesUc;
+import com.applications.asm.domain.use_cases.GetReviewsUc;
 import com.applications.asm.domain.use_cases.GetSuggestedPlacesUc;
 import com.applications.asm.places.di.scopes.ActivityScope;
 import com.applications.asm.places.model.mappers.PlaceDetailsMapper;
@@ -12,6 +13,8 @@ import com.applications.asm.places.model.mappers.PlaceMapper;
 import com.applications.asm.places.model.mappers.PlaceMapperImpl;
 import com.applications.asm.places.model.mappers.PlaceNameMapper;
 import com.applications.asm.places.model.mappers.PlaceNameMapperImpl;
+import com.applications.asm.places.model.mappers.ReviewMapper;
+import com.applications.asm.places.model.mappers.ReviewMapperImpl;
 import com.applications.asm.places.view_model.factories.MainViewModelFactory;
 import com.applications.asm.places.view_model.factories.SearchViewModelFactory;
 
@@ -38,8 +41,8 @@ public class ViewModelsModule {
     @ActivityScope
     @Named("main_view_model")
     @Provides
-    ViewModelProvider.Factory provideMainViewModel(GetPlacesUc getPlacesUc, GetPlaceDetailsUc getPlaceDetailsUc, PlaceMapper placeMapper, PlaceDetailsMapper placeDetailsMapper) {
-        return new MainViewModelFactory(getPlacesUc, getPlaceDetailsUc, placeMapper, placeDetailsMapper);
+    ViewModelProvider.Factory provideMainViewModel(GetPlacesUc getPlacesUc, GetPlaceDetailsUc getPlaceDetailsUc, GetReviewsUc getReviewsUc, PlaceMapper placeMapper, PlaceDetailsMapper placeDetailsMapper, ReviewMapper reviewMapper) {
+        return new MainViewModelFactory(getPlacesUc, getPlaceDetailsUc, getReviewsUc, placeMapper, placeDetailsMapper, reviewMapper);
     }
 
     @Provides
@@ -49,4 +52,7 @@ public class ViewModelsModule {
 
     @Provides
     PlaceDetailsMapper providePlaceDetailsMapper() { return new PlaceDetailsMapperImpl(); }
+
+    @Provides
+    ReviewMapper provideReviewsMapper() { return new ReviewMapperImpl(); }
 }

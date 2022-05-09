@@ -7,25 +7,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.applications.asm.places.R;
-import com.applications.asm.places.databinding.FragmentListBinding;
-import com.applications.asm.places.model.PlaceM;
+import com.applications.asm.places.databinding.FragmentReviewsBinding;
 import com.applications.asm.places.view.activities.interfaces.MainViewParent;
-import com.applications.asm.places.view.adapters.PlaceAdapter;
 import com.applications.asm.places.view_model.MainViewModel;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class ListFragment extends Fragment {
-    private FragmentListBinding binding;
+public class ReviewsFragment extends Fragment {
+    private FragmentReviewsBinding binding;
     private MainViewParent mainViewParent;
     private MainViewModel mainViewModel;
 
@@ -33,7 +29,7 @@ public class ListFragment extends Fragment {
     @Inject
     ViewModelProvider.Factory factoryMainViewModel;
 
-    public ListFragment() {
+    public ReviewsFragment() {
         // Required empty public constructor
     }
 
@@ -51,7 +47,7 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentListBinding.inflate(inflater, container, false);
+        binding = FragmentReviewsBinding.inflate(inflater, container, false);
         mainViewParent.getMainComponent().inject(this);
         mainViewModel = new ViewModelProvider(requireActivity(), factoryMainViewModel).get(MainViewModel.class);
         setObservables();
@@ -61,38 +57,9 @@ public class ListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.placesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 
     private void setObservables() {
-        mainViewModel.places().observe(getViewLifecycleOwner(), places -> {
-            PlaceAdapter adapter = new PlaceAdapter(places, this::clickOnItemList);
-            binding.placesRecyclerView.setAdapter(adapter);
-        });
-    }
 
-    private void clickOnItemList(PlaceM placeM) {
-        mainViewModel.getPlaceDetail(placeM.getId());
-        NavHostFragment.findNavController(this).navigate(R.id.action_listFragment_to_placeDetailsFragment);
     }
 }

@@ -30,7 +30,11 @@
         android:id="@+id/placeDetailsFragment"
         android:name="com.applications.asm.places.view.fragments.PlaceDetailsFragment"
         android:label="fragment_place_details"
-        tools:layout="@layout/fragment_place_details" />
+        tools:layout="@layout/fragment_place_details" >
+        <action
+            android:id="@+id/action_placeDetailsFragment_to_reviewsFragment"
+            app:destination="@id/reviewsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/placesMapFragment"
         android:name="com.applications.asm.places.view.fragments.PlacesMapFragment"
@@ -40,4 +44,9 @@
             android:id="@+id/action_placesMapFragment_to_placeDetailsFragment"
             app:destination="@id/placeDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/reviewsFragment"
+        android:name="com.applications.asm.places.view.fragments.ReviewsFragment"
+        android:label="fragment_reviews"
+        tools:layout="@layout/fragment_reviews" />
 </navigation>

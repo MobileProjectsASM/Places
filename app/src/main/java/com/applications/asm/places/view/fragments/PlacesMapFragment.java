@@ -77,7 +77,7 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setObservables() {
-        mainViewModel.placesMV().observe(getViewLifecycleOwner(), this::renderMap);
+        mainViewModel.places().observe(getViewLifecycleOwner(), this::renderMap);
     }
 
     private void createMapFragment() {
