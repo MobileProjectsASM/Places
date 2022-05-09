@@ -19,6 +19,13 @@ import com.applications.asm.places.model.PriceM;
 import com.applications.asm.places.model.ScheduleM;
 import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view_model.MainViewModel;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -26,10 +33,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-public class PlaceDetailsFragment extends Fragment {
+public class PlaceDetailsFragment extends Fragment implements OnMapReadyCallback {
     private FragmentPlaceDetailsBinding binding;
     private MainViewParent mainViewParent;
     private MainViewModel mainViewModel;
+    private GoogleMap map;
 
     @Named("main_view_model")
     @Inject
@@ -54,6 +62,7 @@ public class PlaceDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentPlaceDetailsBinding.inflate(inflater, container, false);
+        createMapFragment();
         mainViewParent.getMainComponent().inject(this);
         mainViewModel = new ViewModelProvider(requireActivity(), factoryMainViewModel).get(MainViewModel.class);
         setObservables();
@@ -74,6 +83,16 @@ public class PlaceDetailsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+    }
+
+    private void createMapFragment() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.fragmentMap);
+        mapFragment.getMapAsync(this);
     }
 
     private void setListeners() {
@@ -99,6 +118,7 @@ public class PlaceDetailsFragment extends Fragment {
             binding.isOpenText.setText(placeDetailsM.getOpen() ? getString(R.string.text_helper_place_open) : getString(R.string.text_helper_place_close));
             String schedule = getSchedule(placeDetailsM.getSchedule());
             binding.scheduleText.setText(schedule);
+            createMarker(placeDetailsM.getLatitude(), placeDetailsM.getLongitude(), placeDetailsM.getName());
         }
     }
 
@@ -120,5 +140,14 @@ public class PlaceDetailsFragment extends Fragment {
         }
 
         return aux;
+    }
+
+    private void createMarker(Double latitude, Double longitude, String title) {
+        if(map != null) {
+            LatLng coordinates = new LatLng(latitude, longitude);
+            MarkerOptions markerOptions = new MarkerOptions().position(coordinates).title(title);
+            map.addMarker(markerOptions);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 18f), 4000, null);
+        }
     }
 }
