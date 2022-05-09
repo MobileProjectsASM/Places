@@ -68,4 +68,5 @@
     <!--KEYS-->
     <string name="places_service_base_url" translatable="false">https://api.yelp.com/</string>
     <string name="places_service_api_key" translatable="false">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
+    <string name="MAP_API_KEY" translatable="false">AIzaSyCfaCxqbQogUqs1p3eEYdt9SZG5JbeLyWs</string>
 </resources>

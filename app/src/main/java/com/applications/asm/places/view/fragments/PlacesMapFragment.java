@@ -94,6 +94,7 @@ public class PlacesMapFragment extends Fragment implements OnMapReadyCallback {
                 markers.put(marker.getId(), placeM.getId());
             }
             map.setOnInfoWindowClickListener(this::clickOnMarkerTitle);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.430989004702237, -99.13407308356926), 5f), 4000, null);
         }
     }
 
