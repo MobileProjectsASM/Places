@@ -4,6 +4,11 @@ import static com.applications.asm.domain.entities.Constants.DEFAULT_LATITUDE;
 import static com.applications.asm.domain.entities.Constants.DEFAULT_LONGITUDE;
 
 import com.applications.asm.domain.entities.SuggestedPlace;
+import com.applications.asm.domain.entities.Validators;
+import com.applications.asm.domain.exception.GetSuggestedPlacesError;
+import com.applications.asm.domain.exception.GetSuggestedPlacesException;
+import com.applications.asm.domain.exception.PlacesRepositoryError;
+import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -11,13 +16,15 @@ import com.applications.asm.domain.use_cases.base.UseCase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import io.reactivex.rxjava3.core.Observable;
 import jdk.internal.org.jline.utils.Log;
 
 public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSuggestedPlacesUc.Params> {
     private final PlacesRepository placesRepository;
-    private final String TAG = "GetSuggestedPlaces";
+    private final Validators validators;
+    private final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetSuggestedPlacesUc");
 
     public static class Params {
         private final String place;
@@ -35,9 +42,10 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
         }
     }
 
-    public GetSuggestedPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository) {
+    public GetSuggestedPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository, Validators validators) {
         super(threadExecutor, postExecutionThread);
         this.placesRepository = placesRepository;
+        this.validators = validators;
     }
 
     @Override
@@ -45,16 +53,28 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
         return Observable.fromCallable(() -> getSuggestedPlaces(params.place, params.longitude, params.latitude));
     }
 
-    private List<SuggestedPlace> getSuggestedPlaces(String place, Double longitude, Double latitude) {
+    private List<SuggestedPlace> getSuggestedPlaces(String place, Double longitude, Double latitude) throws GetSuggestedPlacesException {
         try {
-            if((latitude == null || latitude < -90 || latitude > 90) || (longitude == null || longitude < -180 || longitude > 180)) {
-                latitude = DEFAULT_LATITUDE;
-                longitude = DEFAULT_LONGITUDE;
-            }
+            if(place == null || longitude == null || latitude == null)
+                throw new GetSuggestedPlacesException(GetSuggestedPlacesError.ANY_VALUE_IS_NULL);
+            if(!validators.validateLatitudeRange(latitude) || !validators.validateLongitudeRange(longitude))
+                throw new GetSuggestedPlacesException(GetSuggestedPlacesError.LAT_LON_OUT_OF_RANGE);
             return placesRepository.getSuggestedPlaces(place, longitude, latitude);
-        } catch (ConnectionServerException connectionServerException) {
-            Log.error(TAG + " : " + connectionServerException.getMessage());
-            return new ArrayList<>();
+        } catch (PlacesRepositoryException e) {
+            PlacesRepositoryError placesRepositoryError = e.getError();
+            String TAG = "GetSuggestedPlacesUc";
+            switch (placesRepositoryError) {
+                case CONNECTION_WITH_SERVER_ERROR:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetSuggestedPlacesException(GetSuggestedPlacesError.CONNECTION_WITH_SERVER_ERROR);
+                case DECODING_RESPONSE_ERROR:
+                case CREATE_REQUEST_ERROR:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetSuggestedPlacesException(GetSuggestedPlacesError.REQUEST_RESPONSE_ERROR);
+                default:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetSuggestedPlacesException(GetSuggestedPlacesError.RESPONSE_NULL);
+            }
         }
     }
 

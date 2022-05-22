@@ -42,6 +42,7 @@ public class GetPlaceDetailsUc extends UseCase<PlaceDetails, String> {
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlaceDetailException(GetPlaceDetailError.CONNECTION_WITH_SERVER_ERROR);
                 case DECODING_RESPONSE_ERROR:
+                case CREATE_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlaceDetailException(GetPlaceDetailError.REQUEST_RESPONSE_ERROR);
                 default:
