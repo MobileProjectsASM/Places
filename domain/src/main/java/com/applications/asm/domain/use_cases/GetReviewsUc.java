@@ -1,7 +1,6 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Review;
-import com.applications.asm.domain.exception.ConnectionServer;
 import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -30,8 +29,8 @@ public class GetReviewsUc extends UseCase<List<Review>, String> {
     private List<Review> getReviews(String placeId) {
         try {
             return placesRepository.getReviews(placeId);
-        } catch (ConnectionServer connectionServer) {
-            Log.error(TAG + " : " + connectionServer.getMessage());
+        } catch (ConnectionServerException connectionServerException) {
+            Log.error(TAG + " : " + connectionServerException.getMessage());
             return new ArrayList<>();
         }
     }

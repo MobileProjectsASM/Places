@@ -8,10 +8,10 @@ public class Place {
     private Double latitude;
     private Double longitude;
     private String imageUrl;
-    private List<Category> categories;
+    private List<String> categories;
     private String address;
 
-    public Place(String id, String name, Double latitude, Double longitude, String imageUrl, List<Category> categories, String address) {
+    public Place(String id, String name, Double latitude, Double longitude, String imageUrl, List<String> categories, String address) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;
@@ -61,11 +61,11 @@ public class Place {
         this.imageUrl = imageUrl;
     }
 
-    public List<Category> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<Category> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 

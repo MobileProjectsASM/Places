@@ -4,7 +4,6 @@ import static com.applications.asm.domain.entities.Constants.DEFAULT_LATITUDE;
 import static com.applications.asm.domain.entities.Constants.DEFAULT_LONGITUDE;
 
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.exception.ConnectionServer;
 import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -53,8 +52,8 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
                 longitude = DEFAULT_LONGITUDE;
             }
             return placesRepository.getSuggestedPlaces(place, longitude, latitude);
-        } catch (ConnectionServer connectionServer) {
-            Log.error(TAG + " : " + connectionServer.getMessage());
+        } catch (ConnectionServerException connectionServerException) {
+            Log.error(TAG + " : " + connectionServerException.getMessage());
             return new ArrayList<>();
         }
     }

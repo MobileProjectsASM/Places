@@ -4,13 +4,13 @@ import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Review;
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.exception.ConnectionServer;
+import com.applications.asm.domain.exception.PlacesRepositoryException;
 
 import java.util.List;
 
 public interface PlacesRepository {
-    PlaceDetails getPlaceDetails(String placeId) throws ConnectionServer;
-    List<Place> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories) throws ConnectionServer;
-    List<Review> getReviews(String placeId) throws ConnectionServer;
-    List<SuggestedPlace> getSuggestedPlaces(String word, Double longitude, Double latitude) throws ConnectionServer;
+    PlaceDetails getPlaceDetails(String placeId) throws PlacesRepositoryException;
+    List<Place> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories, Integer page) throws PlacesRepositoryException;
+    List<Review> getReviews(String placeId) throws PlacesRepositoryException;
+    List<SuggestedPlace> getSuggestedPlaces(String word, Double longitude, Double latitude) throws PlacesRepositoryException;
 }
