@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesModel> {
-    private final String TAG = "PlacesModelDeserializer";
     private final Gson gson;
 
     public PlacesModelDeserializer(Gson gson) {
@@ -29,6 +28,7 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
 
     @Override
     public ResponsePlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+        String TAG = "PlacesModelDeserializer";
         Log.i(TAG, gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
 
@@ -50,7 +50,7 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
 
     private PlaceModel deserializePlace(JsonObject place) {
         CoordinatesModel coordinatesModel = deserializeCoordinates(place.getAsJsonObject("coordinates"));
-        List<CategoryModel> categoriesModel = deserializeCategories(place.getAsJsonArray("categories"));
+        List<String> categories = deserializeCategories(place.getAsJsonArray("categories"));
         LocationModel locationModel = deserializeLocation(place.getAsJsonObject("location"));
 
         PlaceModel placeModel = new PlaceModel();
@@ -58,7 +58,7 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         placeModel.setName(place.get("name").getAsString());
         placeModel.setImageUrl(place.get("image_url").isJsonNull() ? "" : place.get("image_url").getAsString());
         placeModel.setCoordinatesModel(coordinatesModel);
-        placeModel.setCategories(categoriesModel);
+        placeModel.setCategories(categories);
         placeModel.setLocationModel(locationModel);
 
         return placeModel;
@@ -71,18 +71,15 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         return coordinatesModel;
     }
 
-    private List<CategoryModel> deserializeCategories(JsonArray categories) {
-        List<CategoryModel> categoriesModel = new ArrayList<>();
+    private List<String> deserializeCategories(JsonArray categories) {
+        List<String> categoriesModel = new ArrayList<>();
         for (JsonElement category: categories)
             categoriesModel.add(deserializeCategory(category.getAsJsonObject()));
         return categoriesModel;
     }
 
-    private CategoryModel deserializeCategory(JsonObject category) {
-        CategoryModel categoryModel = new CategoryModel();
-        categoryModel.setId(category.get("alias").getAsString());
-        categoryModel.setName(category.get("title").getAsString());
-        return categoryModel;
+    private String deserializeCategory(JsonObject category) {
+        return category.get("title").getAsString();
     }
 
     private LocationModel deserializeLocation(JsonObject location) {

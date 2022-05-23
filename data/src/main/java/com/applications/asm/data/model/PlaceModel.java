@@ -7,12 +7,12 @@ public class PlaceModel {
     private String name;
     private String imageUrl;
     private CoordinatesModel coordinatesModel;
-    private List<CategoryModel> categories;
+    private List<String> categories;
     private LocationModel locationModel;
 
     public PlaceModel() {}
 
-    public PlaceModel(String id, String name, String imageUrl, CoordinatesModel coordinatesModel, List<CategoryModel> categories, LocationModel locationModel) {
+    public PlaceModel(String id, String name, String imageUrl, CoordinatesModel coordinatesModel, List<String> categories, LocationModel locationModel) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -53,11 +53,11 @@ public class PlaceModel {
         this.coordinatesModel = coordinatesModel;
     }
 
-    public List<CategoryModel> getCategories() {
+    public List<String> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<CategoryModel> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 
