@@ -17,7 +17,7 @@ import retrofit2.http.Query;
 public interface PlaceService {
 
     @GET("v3/businesses/search")
-    Call<ResponsePlacesModel> getPlacesModel(@Header("Authorization") String apiKey, @Query("term") String place, @Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") Integer radius, @Query("categories") String categories);
+    Call<ResponsePlacesModel> getPlacesModel(@Header("Authorization") String apiKey, @Query("term") String place, @Query("latitude") double latitude, @Query("longitude") double longitude, @Query("radius") Integer radius, @Query("categories") String categories, @Query("offset") Integer initIndex, @Query("limit") Integer limit);
 
     @GET("v3/businesses/{id}")
     Call<PlaceDetailsModel> getPlaceDetailModel(@Header("Authorization") String apiKey, @Path("id") String placeId);
