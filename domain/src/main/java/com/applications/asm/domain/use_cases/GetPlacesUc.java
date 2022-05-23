@@ -74,6 +74,7 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
                     throw new GetPlacesException(GetPlacesError.CONNECTION_WITH_SERVER_ERROR);
                 case DECODING_RESPONSE_ERROR:
                 case CREATE_REQUEST_ERROR:
+                case DO_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlacesException(GetPlacesError.REQUEST_RESPONSE_ERROR);
                 case NEGATIVE_PAGE:

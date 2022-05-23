@@ -64,6 +64,7 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
                     throw new GetSuggestedPlacesException(GetSuggestedPlacesError.CONNECTION_WITH_SERVER_ERROR);
                 case DECODING_RESPONSE_ERROR:
                 case CREATE_REQUEST_ERROR:
+                case DO_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetSuggestedPlacesException(GetSuggestedPlacesError.REQUEST_RESPONSE_ERROR);
                 case RESPONSE_NULL:

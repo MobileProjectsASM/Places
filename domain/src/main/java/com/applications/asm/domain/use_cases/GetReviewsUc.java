@@ -43,6 +43,7 @@ public class GetReviewsUc extends UseCase<List<Review>, String> {
                     throw new GetReviewsException(GetReviewsError.CONNECTION_WITH_SERVER_ERROR);
                 case DECODING_RESPONSE_ERROR:
                 case CREATE_REQUEST_ERROR:
+                case DO_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetReviewsException(GetReviewsError.REQUEST_RESPONSE_ERROR);
                 case RESPONSE_NULL:
