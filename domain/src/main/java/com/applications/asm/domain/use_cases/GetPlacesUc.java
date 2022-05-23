@@ -79,9 +79,12 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
                 case NEGATIVE_PAGE:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
-                default:
+                case RESPONSE_NULL:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlacesException(GetPlacesError.RESPONSE_NULL);
+                default:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetPlacesException(GetPlacesError.SERVER_ERROR);
             }
         }
     }

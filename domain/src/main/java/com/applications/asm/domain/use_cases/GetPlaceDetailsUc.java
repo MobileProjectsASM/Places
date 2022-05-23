@@ -13,7 +13,6 @@ import com.applications.asm.domain.use_cases.base.UseCase;
 import java.util.logging.Logger;
 
 import io.reactivex.rxjava3.core.Observable;
-import jdk.internal.org.jline.utils.Log;
 
 public class GetPlaceDetailsUc extends UseCase<PlaceDetails, String> {
     private final PlacesRepository placesRepository;
@@ -45,9 +44,12 @@ public class GetPlaceDetailsUc extends UseCase<PlaceDetails, String> {
                 case CREATE_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlaceDetailException(GetPlaceDetailError.REQUEST_RESPONSE_ERROR);
-                default:
+                case RESPONSE_NULL:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlaceDetailException(GetPlaceDetailError.RESPONSE_NULL);
+                default:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetPlaceDetailException(GetPlaceDetailError.SERVER_ERROR);
             }
         }
     }

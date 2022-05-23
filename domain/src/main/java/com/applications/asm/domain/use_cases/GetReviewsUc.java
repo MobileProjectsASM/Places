@@ -1,8 +1,6 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Review;
-import com.applications.asm.domain.exception.GetPlaceDetailError;
-import com.applications.asm.domain.exception.GetPlaceDetailException;
 import com.applications.asm.domain.exception.GetReviewsError;
 import com.applications.asm.domain.exception.GetReviewsException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
@@ -47,9 +45,12 @@ public class GetReviewsUc extends UseCase<List<Review>, String> {
                 case CREATE_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetReviewsException(GetReviewsError.REQUEST_RESPONSE_ERROR);
-                default:
+                case RESPONSE_NULL:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetReviewsException(GetReviewsError.RESPONSE_NULL);
+                default:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
             }
         }
     }

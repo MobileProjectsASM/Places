@@ -5,6 +5,7 @@ public enum GetSuggestedPlacesError {
     CONNECTION_WITH_SERVER_ERROR("Error to connect with the server"),
     REQUEST_RESPONSE_ERROR("Error to communicate with the server"),
     LAT_LON_OUT_OF_RANGE("Coordinates out of range"),
+    SERVER_ERROR("An error occurred on the server"),
     RESPONSE_NULL("Response is null");
 
     private final String message;

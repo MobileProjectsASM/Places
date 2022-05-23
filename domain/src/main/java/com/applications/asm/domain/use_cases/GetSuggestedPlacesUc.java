@@ -1,8 +1,5 @@
 package com.applications.asm.domain.use_cases;
 
-import static com.applications.asm.domain.entities.Constants.DEFAULT_LATITUDE;
-import static com.applications.asm.domain.entities.Constants.DEFAULT_LONGITUDE;
-
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.GetSuggestedPlacesError;
@@ -14,12 +11,10 @@ import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
 import com.applications.asm.domain.use_cases.base.UseCase;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 import io.reactivex.rxjava3.core.Observable;
-import jdk.internal.org.jline.utils.Log;
 
 public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSuggestedPlacesUc.Params> {
     private final PlacesRepository placesRepository;
@@ -71,9 +66,12 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
                 case CREATE_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetSuggestedPlacesException(GetSuggestedPlacesError.REQUEST_RESPONSE_ERROR);
-                default:
+                case RESPONSE_NULL:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetSuggestedPlacesException(GetSuggestedPlacesError.RESPONSE_NULL);
+                default:
+                    log.info(TAG + ": " + placesRepositoryError.getMessage());
+                    throw new GetSuggestedPlacesException(GetSuggestedPlacesError.SERVER_ERROR);
             }
         }
     }
