@@ -85,7 +85,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         if(placeToFind == null || longitude == null || latitude == null || radius == null || categories == null || page == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
         try {
             if(page == 0) {
-                ResponsePlacesModel responsePlacesModel = placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categories, 0, DEFAULT_AMOUNT);
+                ResponsePlacesModel responsePlacesModel = placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, getCategories(categories), 0, DEFAULT_AMOUNT);
                 List<Place> places = new ArrayList<>();
                 if(responsePlacesModel != null)  {
                     int total = responsePlacesModel.getTotal();
@@ -95,7 +95,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                     return places;
                 } else throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
             } else if(page > 0 && page < totalPages) {
-                ResponsePlacesModel responsePlacesModel = placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categories, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
+                ResponsePlacesModel responsePlacesModel = placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, getCategories(categories), (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
                 List<Place> places = new ArrayList<>();
                 if(responsePlacesModel != null)  {
                     for (PlaceModel placeModel : responsePlacesModel.getPlaces())
@@ -183,5 +183,18 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                     throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
             }
         }
+    }
+
+    private String getCategories(List<String> categories) {
+        if(!categories.isEmpty()) {
+            StringBuilder cat = new StringBuilder();
+            for(int i = 0; i < categories.size(); i++) {
+                if(i < categories.size() - 1)
+                    cat.append(categories.get(i)).append(",");
+                else cat.append(categories.get(i));
+            }
+            return cat.toString();
+        }
+        return "";
     }
 }
