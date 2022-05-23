@@ -8,7 +8,7 @@ public enum PlacesRepositoryError {
     SERVER_ERROR("Error in the server"),
     DECODING_RESPONSE_ERROR("Error to decoding response"),
     RESPONSE_NULL("Error response is null"),
-    NEGATIVE_PAGE("Error the page is negative");
+    PAGE_OUT_OF_RANGE("Page out of range");
 
     private final String message;
     PlacesRepositoryError(String message) {

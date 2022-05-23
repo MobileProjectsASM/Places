@@ -62,7 +62,7 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
         if(!validators.validateRadiusRange(radius))
             throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
         if(!validators.validatePage(page))
-            throw new GetPlacesException(GetPlacesError.NEGATIVE_PAGE);
+            throw new GetPlacesException(GetPlacesError.PAGE_OUT_OF_RANGE);
         try {
             return placesRepository.getPlaces(placeToFind, longitude, latitude, radius, categories, page);
         } catch (PlacesRepositoryException e) {
@@ -77,7 +77,7 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
                 case DO_REQUEST_ERROR:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlacesException(GetPlacesError.REQUEST_RESPONSE_ERROR);
-                case NEGATIVE_PAGE:
+                case PAGE_OUT_OF_RANGE:
                     log.info(TAG + ": " + placesRepositoryError.getMessage());
                     throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
                 case RESPONSE_NULL:
