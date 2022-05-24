@@ -6,6 +6,7 @@ import com.applications.asm.data.exception.PlacesDataSourceWSError;
 import com.applications.asm.data.exception.PlacesDataSourceWSException;
 import com.applications.asm.data.model.ErrorResponse;
 import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.ResponseCategoriesModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
 import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
@@ -13,7 +14,6 @@ import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -98,6 +98,27 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
     public ResponseSuggestedPlacesModel getSuggestedPlaces(String word, Double latitude, Double longitude) throws IOException, RuntimeException, PlacesDataSourceWSException {
         Call<ResponseSuggestedPlacesModel> suggestedPlacesModel = placeService.getSuggestedPlacesModel(apiKey, word, latitude, longitude);
         Response<ResponseSuggestedPlacesModel> response = suggestedPlacesModel.execute();
+        if(response.isSuccessful()) return response.body();
+        else {
+            String error = "There is no description of the error";
+            ResponseBody responseBody = response.errorBody();
+            if(responseBody != null) {
+                ErrorResponse e = gsonError.fromJson(responseBody.string(), ErrorResponse.class);
+                error = e.getError().getCode() + ": " + e.getError().getDescription();
+                error += e.getError().getField() != null ? "The field " + e.getError().getField() + " has value " + e.getError().getInstance() : "";
+            }
+            Log.e(TAG, error);
+            int code = response.code();
+            if(code >= 300 && code < 400) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.REDIRECTIONS);
+            else if(code >= 400 && code < 500) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.CLIENT_ERROR);
+            else throw new PlacesDataSourceWSException(PlacesDataSourceWSError.SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseCategoriesModel getCategoriesModel(String word, Double latitude, Double longitude, String locale) throws IOException, RuntimeException, PlacesDataSourceWSException {
+        Call<ResponseCategoriesModel> categoriesModel = placeService.getCategoriesModel(apiKey, word, latitude, longitude, locale);
+        Response<ResponseCategoriesModel> response = categoriesModel.execute();
         if(response.isSuccessful()) return response.body();
         else {
             String error = "There is no description of the error";

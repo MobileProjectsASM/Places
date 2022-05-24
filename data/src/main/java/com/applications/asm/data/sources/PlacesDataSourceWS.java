@@ -2,6 +2,7 @@ package com.applications.asm.data.sources;
 
 import com.applications.asm.data.exception.PlacesDataSourceWSException;
 import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.ResponseCategoriesModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
 import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
@@ -14,4 +15,5 @@ public interface PlacesDataSourceWS {
     PlaceDetailsModel getPlaceDetailsModel(String placeId) throws IOException, RuntimeException, PlacesDataSourceWSException;
     ResponseReviewsModel getReviewsModel(String placeId) throws IOException, RuntimeException, PlacesDataSourceWSException;
     ResponseSuggestedPlacesModel getSuggestedPlaces(String word, Double latitude, Double longitude) throws IOException, RuntimeException, PlacesDataSourceWSException;
+    ResponseCategoriesModel getCategoriesModel(String word, Double latitude, Double longitude, String locale) throws IOException, RuntimeException, PlacesDataSourceWSException;
 }

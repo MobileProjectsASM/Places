@@ -1,6 +1,7 @@
 package com.applications.asm.data.framework;
 
 import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.ResponseCategoriesModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
 import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
@@ -27,4 +28,7 @@ public interface PlaceService {
 
     @GET("v3/autocomplete")
     Call<ResponseSuggestedPlacesModel> getSuggestedPlacesModel(@Header("Authorization") String apiKey, @Query("text") String word, @Query("latitude") double latitude, @Query("longitude") double longitude);
+
+    @GET("v3/autocomplete")
+    Call<ResponseCategoriesModel> getCategoriesModel(@Header("Authorization") String apiKey, @Query("text") String word, @Query("latitude") double latitude, @Query("longitude") double longitude, @Query("locale") String locale);
 }

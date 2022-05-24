@@ -2,18 +2,22 @@ package com.applications.asm.data.repository;
 
 import com.applications.asm.data.exception.PlacesDataSourceWSError;
 import com.applications.asm.data.exception.PlacesDataSourceWSException;
+import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.PlaceModel;
+import com.applications.asm.data.model.ResponseCategoriesModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
 import com.applications.asm.data.model.ResponseReviewsModel;
 import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.model.ReviewModel;
 import com.applications.asm.data.model.SuggestedPlaceModel;
+import com.applications.asm.data.model.mapper.CategoryModelMapper;
 import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
 import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
+import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Review;
@@ -33,6 +37,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlaceDetailsModelMapper placeDetailsModelMapper;
     private final ReviewModelMapper reviewModelMapper;
     private final SuggestedPlaceModelMapper suggestedPlaceModelMapper;
+    private final CategoryModelMapper categoryModelMapper;
     private final static Integer DEFAULT_AMOUNT = 10;
     private Integer totalPages;
     private final String TAG = "PlacesRepositoryImpl";
@@ -43,13 +48,15 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         PlaceModelMapper placeModelMapper,
         PlaceDetailsModelMapper placeDetailsModelMapper,
         ReviewModelMapper reviewModelMapper,
-        SuggestedPlaceModelMapper suggestedPlaceModelMapper
+        SuggestedPlaceModelMapper suggestedPlaceModelMapper,
+        CategoryModelMapper categoryModelMapper
     ) {
         this.placeDataSourceWs = placesDataSourceWs;
         this.placeModelMapper = placeModelMapper;
         this.placeDetailsModelMapper = placeDetailsModelMapper;
         this.reviewModelMapper = reviewModelMapper;
         this.suggestedPlaceModelMapper = suggestedPlaceModelMapper;
+        this.categoryModelMapper = categoryModelMapper;
     }
 
     @Override
@@ -164,6 +171,37 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                 for(SuggestedPlaceModel suggestedPlaceModel: responseSuggestedPlacesModel.getSuggestPlacesModel())
                     suggestedPlaces.add(suggestedPlaceModelMapper.getSuggestedPlaceFromSuggestedPlaceModel(suggestedPlaceModel));
                 return suggestedPlaces;
+            } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+        } catch (IOException ioException) {
+            log.info(TAG + ": " + ioException.getMessage());
+            throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+        } catch (RuntimeException runtimeException) {
+            log.info(TAG + ": " + runtimeException.getMessage());
+            throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
+        } catch (PlacesDataSourceWSException placesDataSourceWSException) {
+            PlacesDataSourceWSError error = placesDataSourceWSException.getError();
+            log.info(TAG + ": " + error.getMessage());
+            switch (error) {
+                case REDIRECTIONS:
+                    throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+                case CLIENT_ERROR:
+                    throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
+                default:
+                    throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+            }
+        }
+    }
+
+    @Override
+    public List<Category> getCategories(String word, Double longitude, Double latitude, String locale) throws PlacesRepositoryException {
+        if(locale == null) throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+        try {
+            List<Category> categories = new ArrayList<>();
+            ResponseCategoriesModel responseCategoriesModel = placeDataSourceWs.getCategoriesModel(word, longitude, latitude, locale);
+            if(responseCategoriesModel != null) {
+                for(CategoryModel categoryModel: responseCategoriesModel.getCategoryModelList())
+                    categories.add(categoryModelMapper.getCategoryFromCategoryModel(categoryModel));
+                return categories;
             } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         } catch (IOException ioException) {
             log.info(TAG + ": " + ioException.getMessage());
