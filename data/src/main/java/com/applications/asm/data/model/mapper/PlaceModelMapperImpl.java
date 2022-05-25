@@ -2,6 +2,7 @@ package com.applications.asm.data.model.mapper;
 
 import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceModel;
+import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.entities.Place;
 
 import java.util.List;
@@ -14,9 +15,10 @@ public class PlaceModelMapperImpl implements PlaceModelMapper {
         String imageUrl = placeModel.getImageUrl();
         Double latitude = placeModel.getCoordinatesModel().getLatitude();
         Double longitude = placeModel.getCoordinatesModel().getLongitude();
+        Location location = new Location(latitude, longitude);
         List<String> categories = placeModel.getCategories();
         String address = getAddressFromLocation(placeModel.getLocationModel());
-        return new Place(id, name, latitude, longitude, imageUrl, categories, address);
+        return new Place(id, name, location, imageUrl, categories, address);
     }
 
     private String getAddressFromLocation(LocationModel locationModel) {
