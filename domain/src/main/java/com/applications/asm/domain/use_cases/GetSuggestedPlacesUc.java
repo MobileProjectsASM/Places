@@ -1,7 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.entities.Validators;
+import com.applications.asm.domain.entities.ValidatorsImpl;
 import com.applications.asm.domain.exception.GetSuggestedPlacesError;
 import com.applications.asm.domain.exception.GetSuggestedPlacesException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSuggestedPlacesUc.Params> {
     private final PlacesRepository placesRepository;
-    private final Validators validators;
+    private final ValidatorsImpl validatorsImpl;
     private final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetSuggestedPlacesUc");
 
     public static class Params {
@@ -37,10 +37,10 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
         }
     }
 
-    public GetSuggestedPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository, Validators validators) {
+    public GetSuggestedPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository, ValidatorsImpl validatorsImpl) {
         super(threadExecutor, postExecutionThread);
         this.placesRepository = placesRepository;
-        this.validators = validators;
+        this.validatorsImpl = validatorsImpl;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GetSuggestedPlacesUc extends UseCase<List<SuggestedPlace>, GetSugge
         try {
             if(place == null || longitude == null || latitude == null)
                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.ANY_VALUE_IS_NULL);
-            if(!validators.validateLatitudeRange(latitude) || !validators.validateLongitudeRange(longitude))
+            if(!validatorsImpl.validateLatitudeRange(latitude) || !validatorsImpl.validateLongitudeRange(longitude))
                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.LAT_LON_OUT_OF_RANGE);
             return placesRepository.getSuggestedPlaces(place, longitude, latitude);
         } catch (PlacesRepositoryException e) {

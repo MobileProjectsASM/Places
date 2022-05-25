@@ -1,7 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Place;
-import com.applications.asm.domain.entities.Validators;
+import com.applications.asm.domain.entities.ValidatorsImpl;
 import com.applications.asm.domain.exception.GetPlacesError;
 import com.applications.asm.domain.exception.GetPlacesException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.core.Observable;
 
 public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
     private final PlacesRepository placesRepository;
-    private final Validators validators;
+    private final ValidatorsImpl validatorsImpl;
     private final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetPlacesUc");
 
     public static class Params {
@@ -43,10 +43,10 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
         }
     }
 
-    public GetPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository, Validators validators) {
+    public GetPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository, ValidatorsImpl validatorsImpl) {
         super(threadExecutor, postExecutionThread);
         this.placesRepository = placesRepository;
-        this.validators = validators;
+        this.validatorsImpl = validatorsImpl;
     }
 
     @Override
@@ -57,11 +57,11 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
     private List<Place> getPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories, Integer page) throws GetPlacesException {
         if(placeToFind == null || latitude == null || longitude == null || radius == null || categories == null || page == null)
             throw new GetPlacesException(GetPlacesError.ANY_VALUE_IS_NULL);
-        if(!validators.validateLatitudeRange(latitude) || !validators.validateLongitudeRange(longitude))
+        if(!validatorsImpl.validateLatitudeRange(latitude) || !validatorsImpl.validateLongitudeRange(longitude))
             throw new GetPlacesException(GetPlacesError.LAT_LON_OUT_OF_RANGE);
-        if(!validators.validateRadiusRange(radius))
+        if(!validatorsImpl.validateRadiusRange(radius))
             throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
-        if(!validators.validatePage(page))
+        if(!validatorsImpl.validatePage(page))
             throw new GetPlacesException(GetPlacesError.PAGE_OUT_OF_RANGE);
         try {
             return placesRepository.getPlaces(placeToFind, longitude, latitude, radius, categories, page);
