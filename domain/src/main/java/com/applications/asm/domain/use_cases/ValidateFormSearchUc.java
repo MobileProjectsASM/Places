@@ -2,6 +2,7 @@ package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.RadiusState;
 import com.applications.asm.domain.entities.State;
+import com.applications.asm.domain.entities.StatesKey;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.ValidateFormSearchError;
 import com.applications.asm.domain.exception.ValidateFormSearchException;
@@ -9,13 +10,13 @@ import com.applications.asm.domain.executor.PostExecutionThread;
 import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.use_cases.base.UseCase;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import io.reactivex.rxjava3.core.Observable;
 
-public class ValidateFormSearchUc extends UseCase<List<State>, String> {
+public class ValidateFormSearchUc extends UseCase<Map<String, State>, String> {
     private final Validators validators;
     private final Pattern regexIntegerNumber = Pattern.compile("[0-9]*");
 
@@ -25,13 +26,14 @@ public class ValidateFormSearchUc extends UseCase<List<State>, String> {
     }
 
     @Override
-    public Observable<List<State>> buildUseCaseObservable(String radius) {
+    public Observable<Map<String, State>> buildUseCaseObservable(String radius) {
         return Observable.fromCallable(() -> validateFormSearch(radius));
     }
 
-    private List<State> validateFormSearch(String radius) throws ValidateFormSearchException {
-        List<State> states = new ArrayList<>();
+    private Map<String, State> validateFormSearch(String radius) throws ValidateFormSearchException {
+        Map<String, State> states = new HashMap<>();
         if(radius == null) throw new ValidateFormSearchException(ValidateFormSearchError.ANY_VALUES_IS_NULL);
+        states.put(StatesKey.RADIUS_STATE_KEY, validateRadius(radius));
         return states;
     }
 
