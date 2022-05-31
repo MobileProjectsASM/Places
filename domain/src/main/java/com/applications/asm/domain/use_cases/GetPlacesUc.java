@@ -6,20 +6,20 @@ import com.applications.asm.domain.exception.GetPlacesError;
 import com.applications.asm.domain.exception.GetPlacesException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
-import com.applications.asm.domain.use_cases.base.UseCase;
+import com.applications.asm.domain.use_cases.base.SingleUseCase;
+import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
-public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
+public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> {
     private final PlacesRepository placesRepository;
     private final ValidatorsImpl validatorsImpl;
-    private final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetPlacesUc");
+
+    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.GetPlacesUc");
 
     public static class Params {
         private final String placeToFind;
@@ -38,55 +38,59 @@ public class GetPlacesUc extends UseCase<List<Place>, GetPlacesUc.Params> {
             this.page = page;
         }
 
-        public static Params forFilterPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories, Integer init) {
-            return new Params(placeToFind, latitude, longitude, radius, categories, init);
+        public static Params forFilterPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories, Integer page) {
+            return new Params(placeToFind, latitude, longitude, radius, categories,page);
         }
     }
 
-    public GetPlacesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository, ValidatorsImpl validatorsImpl) {
-        super(threadExecutor, postExecutionThread);
+    public GetPlacesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository, ValidatorsImpl validatorsImpl) {
+        super(useCaseScheduler);
         this.placesRepository = placesRepository;
         this.validatorsImpl = validatorsImpl;
     }
 
-    @Override
-    public Observable<List<Place>> buildUseCaseObservable(Params params) {
-        return Observable.fromCallable(() -> getPlaces(params.placeToFind, params.latitude, params.longitude, params.radius, params.categories, params.page));
+    private Single<Params> validateParams(Params params) {
+        return Single.fromCallable(() -> {
+            if(params.placeToFind == null || params.latitude == null || params.longitude == null || params.radius == null || params.categories == null || params.page == null)
+                throw new GetPlacesException(GetPlacesError.ANY_VALUE_IS_NULL);
+            if(!validatorsImpl.validateLatitudeRange(params.latitude) || !validatorsImpl.validateLongitudeRange(params.longitude))
+                throw new GetPlacesException(GetPlacesError.LAT_LON_OUT_OF_RANGE);
+            if(!validatorsImpl.validateRadiusRange(params.radius))
+                throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
+            if(!validatorsImpl.validatePage(params.page))
+                throw new GetPlacesException(GetPlacesError.PAGE_OUT_OF_RANGE);
+            return params;
+        });
     }
 
-    private List<Place> getPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories, Integer page) throws GetPlacesException {
-        if(placeToFind == null || latitude == null || longitude == null || radius == null || categories == null || page == null)
-            throw new GetPlacesException(GetPlacesError.ANY_VALUE_IS_NULL);
-        if(!validatorsImpl.validateLatitudeRange(latitude) || !validatorsImpl.validateLongitudeRange(longitude))
-            throw new GetPlacesException(GetPlacesError.LAT_LON_OUT_OF_RANGE);
-        if(!validatorsImpl.validateRadiusRange(radius))
-            throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
-        if(!validatorsImpl.validatePage(page))
-            throw new GetPlacesException(GetPlacesError.PAGE_OUT_OF_RANGE);
-        try {
-            return placesRepository.getPlaces(placeToFind, longitude, latitude, radius, categories, page);
-        } catch (PlacesRepositoryException e) {
-            PlacesRepositoryError placesRepositoryError = e.getError();
-            String TAG = "GetPlacesUc";
-            switch (placesRepositoryError) {
-                case CONNECTION_WITH_SERVER_ERROR:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetPlacesException(GetPlacesError.CONNECTION_WITH_SERVER_ERROR);
-                case DECODING_RESPONSE_ERROR:
-                case CREATE_REQUEST_ERROR:
-                case DO_REQUEST_ERROR:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetPlacesException(GetPlacesError.REQUEST_RESPONSE_ERROR);
-                case PAGE_OUT_OF_RANGE:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
-                case RESPONSE_NULL:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetPlacesException(GetPlacesError.RESPONSE_NULL);
-                default:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetPlacesException(GetPlacesError.SERVER_ERROR);
-            }
-        }
+    @Override
+    protected Single<List<Place>> build(Params params) {
+        return validateParams(params)
+                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.longitude, param.latitude, param.radius, param.categories, param.page))
+                .doOnError(throwable -> {
+                    Exception exception = (Exception) throwable;
+                    if(exception instanceof PlacesRepositoryException) {
+                        PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
+                        switch (placesRepositoryError) {
+                            case CONNECTION_WITH_SERVER_ERROR:
+                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetPlacesException(GetPlacesError.CONNECTION_WITH_SERVER_ERROR);
+                            case DECODING_RESPONSE_ERROR:
+                            case CREATE_REQUEST_ERROR:
+                            case DO_REQUEST_ERROR:
+                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetPlacesException(GetPlacesError.REQUEST_RESPONSE_ERROR);
+                            case PAGE_OUT_OF_RANGE:
+                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
+                            case RESPONSE_NULL:
+                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetPlacesException(GetPlacesError.RESPONSE_NULL);
+                            default:
+                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetPlacesException(GetPlacesError.SERVER_ERROR);
+                        }
+                    } else throw exception;
+                });
     }
 }

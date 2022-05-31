@@ -6,44 +6,56 @@ import com.applications.asm.domain.entities.StatesKey;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.ValidateFormSearchError;
 import com.applications.asm.domain.exception.ValidateFormSearchException;
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
-import com.applications.asm.domain.use_cases.base.UseCase;
+import com.applications.asm.domain.use_cases.base.SingleUseCase;
+import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
-public class ValidateFormSearchUc extends UseCase<Map<String, State>, String> {
+public class ValidateFormSearchUc extends SingleUseCase<Map<String, State>, String> {
     private final Validators validators;
     private final Pattern regexIntegerNumber = Pattern.compile("[0-9]*");
+    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.ValidateFormSearchUc");
 
-    public ValidateFormSearchUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, Validators validators) {
-        super(threadExecutor, postExecutionThread);
+    public ValidateFormSearchUc(UseCaseScheduler useCaseScheduler, Validators validators) {
+        super(useCaseScheduler);
         this.validators = validators;
     }
 
     @Override
-    public Observable<Map<String, State>> buildUseCaseObservable(String radius) {
-        return Observable.fromCallable(() -> validateFormSearch(radius));
+    protected Single<Map<String, State>> build(String radius) {
+        return validateParams(radius)
+                .flatMap(this::validateFormSearch);
     }
 
-    private Map<String, State> validateFormSearch(String radius) throws ValidateFormSearchException {
-        Map<String, State> states = new HashMap<>();
-        if(radius == null) throw new ValidateFormSearchException(ValidateFormSearchError.ANY_VALUES_IS_NULL);
-        states.put(StatesKey.RADIUS_STATE_KEY, validateRadius(radius));
-        return states;
+    private Single<String> validateParams(String radius) {
+        return Single.fromCallable(() -> {
+            if(radius == null) throw new ValidateFormSearchException(ValidateFormSearchError.ANY_VALUES_IS_NULL);
+            return radius;
+        });
     }
 
-    private State validateRadius(String radius) {
-        if(radius.isEmpty())
-            return RadiusState.EMPTY;
-        else if(!regexIntegerNumber.matcher(radius).matches())
-            return RadiusState.INVALID;
-        else if(validators.validateRadiusRange(Integer.getInteger(radius)))
-            return RadiusState.OUT_OF_RANGE;
-        else return RadiusState.OK;
+    private Single<Map<String, State>> validateFormSearch(String radius) {
+        return validateRadius(radius).map(radiusState -> {
+            Map<String, State> states = new HashMap<>();
+            states.put(StatesKey.RADIUS_STATE_KEY, radiusState);
+            return states;
+        });
+    }
+
+    private Single<RadiusState> validateRadius(String radius) {
+        return Single.fromCallable(() -> {
+            if(radius.isEmpty())
+                return RadiusState.EMPTY;
+            else if(!regexIntegerNumber.matcher(radius).matches())
+                return RadiusState.INVALID;
+            else if(validators.validateRadiusRange(Integer.getInteger(radius)))
+                return RadiusState.OUT_OF_RANGE;
+            else return RadiusState.OK;
+        });
     }
 }

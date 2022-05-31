@@ -2,14 +2,14 @@ package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.exception.SaveLocationError;
 import com.applications.asm.domain.exception.SaveLocationException;
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.LocationRepository;
-import com.applications.asm.domain.use_cases.base.UseCase;
+import com.applications.asm.domain.use_cases.base.CompletableUseCase;
+import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
-public class SaveLocationUc extends UseCase<Boolean, SaveLocationUc.Params> {
+public class SaveLocationUc extends CompletableUseCase<SaveLocationUc.Params> {
     private final LocationRepository locationRepository;
 
     public static class Params {
@@ -26,18 +26,20 @@ public class SaveLocationUc extends UseCase<Boolean, SaveLocationUc.Params> {
         }
     }
 
-    public SaveLocationUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, LocationRepository locationRepository) {
-        super(threadExecutor, postExecutionThread);
+    public SaveLocationUc(UseCaseScheduler useCaseScheduler, LocationRepository locationRepository) {
+        super(useCaseScheduler);
         this.locationRepository = locationRepository;
     }
 
-    @Override
-    public Observable<Boolean> buildUseCaseObservable(Params params) {
-        return Observable.fromCallable(() -> saveLocation(params.latitude, params.longitude));
+    private Single<Params> validateParams(Params params) {
+        return Single.fromCallable(() -> {
+            if(params.latitude == null || params.longitude == null) throw new SaveLocationException(SaveLocationError.ANY_VALUE_IS_NULL);
+            return params;
+        });
     }
 
-    private Boolean saveLocation(Double latitude, Double longitude) throws SaveLocationException {
-        if(latitude == null && longitude == null) throw new SaveLocationException(SaveLocationError.ANY_VALUE_IS_NULL);
-        return locationRepository.saveLocation(latitude, longitude);
+    @Override
+    protected Completable build(Params params) {
+        return validateParams(params).flatMapCompletable(param -> locationRepository.saveLocation(param.latitude, params.longitude));
     }
 }

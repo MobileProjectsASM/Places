@@ -7,19 +7,20 @@ import com.applications.asm.domain.entities.StatesKey;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.ValidateFormLocationError;
 import com.applications.asm.domain.exception.ValidateFormLocationException;
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
-import com.applications.asm.domain.use_cases.base.UseCase;
+import com.applications.asm.domain.use_cases.base.SingleUseCase;
+import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
-public class ValidateFormLocationUc extends UseCase<Map<String, State>, ValidateFormLocationUc.Params> {
+public class ValidateFormLocationUc extends SingleUseCase<Map<String, State>, ValidateFormLocationUc.Params> {
     private final Validators validators;
     private final Pattern regexDecimalNumber = Pattern.compile("-?[0-9.]*");
+    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.ValidateFormLocationUc");
 
     public static class Params {
         private final String latitude;
@@ -30,46 +31,59 @@ public class ValidateFormLocationUc extends UseCase<Map<String, State>, Validate
             this.longitude = longitude;
         }
 
-        public Params forFormLocation(String latitude, String longitude) {
+        public static Params forFormLocation(String latitude, String longitude) {
             return new Params(latitude, longitude);
         }
     }
 
-    public ValidateFormLocationUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, Validators validators) {
-        super(threadExecutor, postExecutionThread);
+    public ValidateFormLocationUc(UseCaseScheduler useCaseScheduler, Validators validators) {
+        super(useCaseScheduler);
         this.validators = validators;
     }
 
+    private Single<Params> validateParams(Params params) {
+        return Single.fromCallable(() -> {
+            if(params.latitude == null || params.longitude == null) throw new ValidateFormLocationException(ValidateFormLocationError.ANY_VALUES_IS_NULL);
+            return params;
+        });
+    }
+
     @Override
-    public Observable<Map<String, State>> buildUseCaseObservable(Params params) {
-        return Observable.fromCallable(() -> validateForm(params.latitude, params.longitude));
+    protected Single<Map<String, State>> build(Params params) {
+        return validateParams(params)
+                .flatMap(this::validateForm);
     }
 
-    public Map<String, State> validateForm(String latitude, String longitude) throws ValidateFormLocationException {
-        Map<String, State> states = new HashMap<>();
-        if(latitude == null || longitude == null) throw new ValidateFormLocationException(ValidateFormLocationError.ANY_VALUES_IS_NULL);
-        states.put(StatesKey.LATITUDE_STATE_KEY, validateLatitude(latitude));
-        states.put(StatesKey.LONGITUDE_STATE_KEY, validateLongitude(longitude));
-        return states;
+    private Single<Map<String, State>> validateForm(Params params) {
+        return Single.zip(validateLatitude(params.latitude), validateLongitude(params.longitude), (stateLat, stateLon) -> {
+            Map<String, State> states = new HashMap<>();
+            states.put(StatesKey.LATITUDE_STATE_KEY, stateLat);
+            states.put(StatesKey.LONGITUDE_STATE_KEY, stateLon);
+            return states;
+        });
     }
 
-    public State validateLatitude(String latitude) {
-        if(latitude.isEmpty())
-            return LatitudeState.EMPTY;
-        else if(!regexDecimalNumber.matcher(latitude).matches())
-            return LatitudeState.INVALID;
-        else if(validators.validateLatitudeRange(Double.parseDouble(latitude)))
-            return LatitudeState.OUT_OF_RANGE;
-        else return LatitudeState.OK;
+    private Single<LatitudeState> validateLatitude(String latitude) {
+        return Single.fromCallable(() -> {
+            if(latitude.isEmpty())
+                return LatitudeState.EMPTY;
+            else if(!regexDecimalNumber.matcher(latitude).matches())
+                return LatitudeState.INVALID;
+            else if(validators.validateLatitudeRange(Double.parseDouble(latitude)))
+                return LatitudeState.OUT_OF_RANGE;
+            else return LatitudeState.OK;
+        });
     }
 
-    public State validateLongitude(String longitude) {
-        if(longitude.isEmpty())
-            return LongitudeState.EMPTY;
-        else if(!regexDecimalNumber.matcher(longitude).matches())
-            return LongitudeState.INVALID;
-        else if(validators.validateLongitudeRange(Double.parseDouble(longitude)))
-            return LongitudeState.OUT_OF_RANGE;
-        else return LongitudeState.OK;
+    private Single<LongitudeState> validateLongitude(String longitude) {
+        return Single.fromCallable(() -> {
+            if(longitude.isEmpty())
+                return LongitudeState.EMPTY;
+            else if(!regexDecimalNumber.matcher(longitude).matches())
+                return LongitudeState.INVALID;
+            else if(validators.validateLongitudeRange(Double.parseDouble(longitude)))
+                return LongitudeState.OUT_OF_RANGE;
+            else return LongitudeState.OK;
+        });
     }
 }

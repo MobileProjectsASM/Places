@@ -5,19 +5,18 @@ import com.applications.asm.domain.exception.GetCategoryError;
 import com.applications.asm.domain.exception.GetCategoryException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
 import com.applications.asm.domain.repository.PlacesRepository;
-import com.applications.asm.domain.use_cases.base.UseCase;
+import com.applications.asm.domain.use_cases.base.SingleUseCase;
+import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 import java.util.logging.Logger;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
-public class GetCategoriesUc extends UseCase<List<Category>, GetCategoriesUc.Params> {
+public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategoriesUc.Params> {
     private final PlacesRepository placesRepository;
-    private final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetCategoriesUc");
+    private static final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetCategoriesUc");
 
     public static class Params {
         private final String category;
@@ -37,39 +36,44 @@ public class GetCategoriesUc extends UseCase<List<Category>, GetCategoriesUc.Par
         }
     }
 
-    public GetCategoriesUc(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, PlacesRepository placesRepository) {
-        super(threadExecutor, postExecutionThread);
+    public GetCategoriesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
+        super(useCaseScheduler);
         this.placesRepository = placesRepository;
     }
 
-    @Override
-    public Observable<List<Category>> buildUseCaseObservable(Params params) {
-        return Observable.fromCallable(() -> getCategories(params.category, params.latitude, params.longitude, params.locale));
+    private Single<Params> validateParams(Params params) {
+        return Single.fromCallable(() -> {
+            if(params.category == null || params.latitude == null || params.longitude == null || params.locale == null)
+                throw new GetCategoryException(GetCategoryError.ANY_VALUE_IS_NULL);
+            return params;
+        });
     }
 
-    private List<Category> getCategories(String category, Double latitude, Double longitude, String locale) throws GetCategoryException {
-        if(category == null || latitude == null || longitude == null || locale == null) throw new GetCategoryException(GetCategoryError.ANY_VALUE_IS_NULL);
-        try {
-            return placesRepository.getCategories(category, latitude, longitude, locale);
-        } catch(PlacesRepositoryException placesRepositoryException) {
-            String TAG = "GetCategoriesUc";
-            PlacesRepositoryError placesRepositoryError = placesRepositoryException.getError();
-            switch (placesRepositoryError) {
-                case CONNECTION_WITH_SERVER_ERROR:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetCategoryException(GetCategoryError.CONNECTION_WITH_SERVER_ERROR);
-                case DECODING_RESPONSE_ERROR:
-                case CREATE_REQUEST_ERROR:
-                case DO_REQUEST_ERROR:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetCategoryException(GetCategoryError.REQUEST_RESPONSE_ERROR);
-                case RESPONSE_NULL:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetCategoryException(GetCategoryError.RESPONSE_NULL);
-                default:
-                    log.info(TAG + ": " + placesRepositoryError.getMessage());
-                    throw new GetCategoryException(GetCategoryError.SERVER_ERROR);
-            }
-        }
+    @Override
+    protected Single<List<Category>> build(Params params) {
+        return validateParams(params)
+                .flatMap(param -> placesRepository.getCategories(param.category, param.longitude, param.latitude, param.locale))
+                .doOnError(throwable -> {
+                    Exception exception = (Exception) throwable;
+                    if(exception instanceof PlacesRepositoryException) {
+                        PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
+                        switch (placesRepositoryError) {
+                            case CONNECTION_WITH_SERVER_ERROR:
+                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetCategoryException(GetCategoryError.CONNECTION_WITH_SERVER_ERROR);
+                            case DECODING_RESPONSE_ERROR:
+                            case CREATE_REQUEST_ERROR:
+                            case DO_REQUEST_ERROR:
+                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetCategoryException(GetCategoryError.REQUEST_RESPONSE_ERROR);
+                            case RESPONSE_NULL:
+                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetCategoryException(GetCategoryError.RESPONSE_NULL);
+                            default:
+                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetCategoryException(GetCategoryError.SERVER_ERROR);
+                        }
+                    } throw exception;
+                });
     }
 }

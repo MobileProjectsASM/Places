@@ -1,35 +1,23 @@
 package com.applications.asm.domain.use_cases.base;
 
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+public abstract class UseCase<Stream, Params> {
+    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.base.UseCase");
 
-public abstract class UseCase<T, Params> {
-    private final ThreadExecutor threadExecutor;
-    private final PostExecutionThread postExecutionThread;
-    private final CompositeDisposable disposables;
+    protected abstract Stream build(Params params);
 
-    public UseCase(ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
-        this.threadExecutor = threadExecutor;
-        this.postExecutionThread = postExecutionThread;
-        this.disposables = new CompositeDisposable();
+    final Stream execute(Params params) {
+        return execute(params, false);
     }
 
-    public abstract Observable<T> buildUseCaseObservable(Params params);
-
-    public void execute(DisposableObserver<T> observer, Params params) {
-        final Observable<T> observable = buildUseCaseObservable(params)
-                .subscribeOn(Schedulers.from(threadExecutor))
-                .observeOn(postExecutionThread.getScheduler());
-        disposables.add(observable.subscribeWith(observer));
+    final Stream executeFromAnotherUseCase(Params params) {
+        return execute(params, true);
     }
 
-    public void dispose() {
-        if(!disposables.isDisposed())
-            disposables.dispose();
+    protected Stream execute(Params params, Boolean fromUseCase) {
+        logger.log(Level.INFO, getClass().getName() + ": " + params);
+        return build(params);
     }
 }
