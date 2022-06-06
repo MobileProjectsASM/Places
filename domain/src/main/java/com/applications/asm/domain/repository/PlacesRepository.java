@@ -12,9 +12,9 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Single;
 
 public interface PlacesRepository {
-    Single<PlaceDetails> getPlaceDetails(String placeId) throws PlacesRepositoryException;
+    Single<PlaceDetails> getPlaceDetails(String placeId);
     Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories, Integer page);
-    Single<List<Review>> getReviews(String placeId) throws PlacesRepositoryException;
-    Single<List<SuggestedPlace>> getSuggestedPlaces(String word, Double longitude, Double latitude) throws PlacesRepositoryException;
-    Single<List<Category>> getCategories(String word, Double longitude, Double latitude, String locale) throws PlacesRepositoryException;
+    Single<List<Review>> getReviews(String placeId);
+    Single<List<SuggestedPlace>> getSuggestedPlaces(String word, Double longitude, Double latitude);
+    Single<List<Category>> getCategories(String word, Double longitude, Double latitude, String locale);
 }
