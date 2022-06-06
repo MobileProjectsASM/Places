@@ -3,12 +3,7 @@ package com.applications.asm.data.repository;
 import com.applications.asm.data.exception.PlacesDataSourceWSError;
 import com.applications.asm.data.exception.PlacesDataSourceWSException;
 import com.applications.asm.data.model.CategoryModel;
-import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.PlaceModel;
-import com.applications.asm.data.model.ResponseCategoriesModel;
-import com.applications.asm.data.model.ResponsePlacesModel;
-import com.applications.asm.data.model.ResponseReviewsModel;
-import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.model.ReviewModel;
 import com.applications.asm.data.model.SuggestedPlaceModel;
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
@@ -31,6 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import io.reactivex.rxjava3.core.Single;
+
 public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlacesDataSourceWS placeDataSourceWs;
     private final PlaceModelMapper placeModelMapper;
@@ -40,7 +37,6 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     private final CategoryModelMapper categoryModelMapper;
     private final static Integer DEFAULT_AMOUNT = 10;
     private Integer totalPages;
-    private final String TAG = "PlacesRepositoryImpl";
     private final Logger log = Logger.getLogger("com.applications.asm.data.repository.PlacesRepositoryImpl");
 
     public PlacesRepositoryImpl(
@@ -60,167 +56,202 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
-    public PlaceDetails getPlaceDetails(String placeId) throws PlacesRepositoryException {
-        if(placeId == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
-        try {
-            PlaceDetailsModel placeDetails = placeDataSourceWs.getPlaceDetailsModel(placeId);
-            if(placeDetails != null)
-                return placeDetailsModelMapper.getPlaceDetailsFromPlaceDetailsModel(placeDetails);
+    public Single<PlaceDetails> getPlaceDetails(String placeId) {
+        return Single.fromCallable(() -> {
+            if(placeId == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
+            return placeId;
+        }).flatMap(
+            placeDataSourceWs::getPlaceDetailsModel
+        ).map(placeDetailsModel -> {
+            if(placeDetailsModel != null)
+                return placeDetailsModelMapper.getPlaceDetailsFromPlaceDetailsModel(placeDetailsModel);
             throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-        } catch (IOException ioException) {
-            log.info(TAG + ": " + ioException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-        } catch (RuntimeException runtimeException) {
-            log.info(TAG + ": " + runtimeException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
-        } catch (PlacesDataSourceWSException placesDataSourceWSException) {
-            PlacesDataSourceWSError error = placesDataSourceWSException.getError();
-            log.info(TAG + ": " + error.getMessage());
-            switch (error) {
-                case REDIRECTIONS:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-                case CLIENT_ERROR:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                default:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
-            }
-        }
+        })
+        .doOnError(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof IOException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+            } else if(exception instanceof RuntimeException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
+            } else if(exception instanceof PlacesDataSourceWSException) {
+                PlacesDataSourceWSError error = ((PlacesDataSourceWSException) exception).getError();
+                log.info(getClass().getName() + ": " + error.getMessage());
+                switch (error) {
+                    case REDIRECTIONS:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+                    case CLIENT_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
+                    default:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                }
+            } else throw exception;
+        });
     }
 
     @Override
-    public List<Place> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories, Integer page) throws PlacesRepositoryException {
-        if(placeToFind == null || longitude == null || latitude == null || radius == null || categories == null || page == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
-        try {
+    public Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories, Integer page) {
+        return Single.fromCallable(() -> {
+            if(placeToFind == null || longitude == null || latitude == null || radius == null || categories == null || page == null)
+                throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
+            return true;
+        }).flatMap(params -> {
             if(page == 0) {
-                ResponsePlacesModel responsePlacesModel = placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, getCategories(categories), 0, DEFAULT_AMOUNT);
+                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, getCategories(categories), 0, DEFAULT_AMOUNT)
+                    .flatMap(responsePlacesModel -> Single.fromCallable(() -> {
+                        if(responsePlacesModel != null) {
+                            int total = responsePlacesModel.getTotal();
+                            totalPages = total % DEFAULT_AMOUNT == 0 ? total / 10 : total / 10 + 1;
+                            return responsePlacesModel;
+                        }
+                        throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+                    }));
+            } else if(page > 0 && page < totalPages)
+                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, getCategories(categories), (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
+            throw new PlacesRepositoryException(PlacesRepositoryError.PAGE_OUT_OF_RANGE);
+        }).map(responsePlacesModel -> {
+            if(responsePlacesModel != null) {
                 List<Place> places = new ArrayList<>();
-                if(responsePlacesModel != null)  {
-                    int total = responsePlacesModel.getTotal();
-                    totalPages = total % DEFAULT_AMOUNT == 0 ? total / 10 : total / 10 + 1;
-                    for (PlaceModel placeModel : responsePlacesModel.getPlaces())
-                        places.add(placeModelMapper.getPlaceFromPlaceModel(placeModel));
-                    return places;
-                } else throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-            } else if(page > 0 && page < totalPages) {
-                ResponsePlacesModel responsePlacesModel = placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, getCategories(categories), (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
-                List<Place> places = new ArrayList<>();
-                if(responsePlacesModel != null)  {
-                    for (PlaceModel placeModel : responsePlacesModel.getPlaces())
-                        places.add(placeModelMapper.getPlaceFromPlaceModel(placeModel));
-                    return places;
-                } else throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-            } throw new PlacesRepositoryException(PlacesRepositoryError.PAGE_OUT_OF_RANGE);
-        } catch (IOException ioException) {
-            log.info(TAG + ": " + ioException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-        } catch (RuntimeException runtimeException) {
-            log.info(TAG + ": " + runtimeException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
-        } catch (PlacesDataSourceWSException placesDataSourceWSException) {
-            PlacesDataSourceWSError error = placesDataSourceWSException.getError();
-            log.info(TAG + ": " + error.getMessage());
-            switch (error) {
-                case REDIRECTIONS:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-                case CLIENT_ERROR:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                default:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
-            }
-        }
+                for (PlaceModel placeModel : responsePlacesModel.getPlaces())
+                    places.add(placeModelMapper.getPlaceFromPlaceModel(placeModel));
+                return places;
+            } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+        }).doOnError(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof IOException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+            } else if(exception instanceof RuntimeException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
+            } else if(exception instanceof PlacesDataSourceWSException) {
+                PlacesDataSourceWSError error = ((PlacesDataSourceWSException) exception).getError();
+                log.info(getClass().getName() + ": " + error.getMessage());
+                switch (error) {
+                    case REDIRECTIONS:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+                    case CLIENT_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
+                    default:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                }
+            } else throw exception;
+        });
     }
 
     @Override
-    public List<Review> getReviews(String placeId) throws PlacesRepositoryException {
-        if(placeId == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
-        try {
-            List<Review> reviews = new ArrayList<>();
-            ResponseReviewsModel responseReviewsModel = placeDataSourceWs.getReviewsModel(placeId);
+    public Single<List<Review>> getReviews(String placeId) {
+        return Single.fromCallable(() -> {
+            if(placeId == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
+            return placeId;
+        }).flatMap(
+            placeDataSourceWs::getReviewsModel
+        ).map(responseReviewsModel -> {
             if(responseReviewsModel != null) {
+                List<Review> reviews = new ArrayList<>();
                 for (ReviewModel reviewModel : responseReviewsModel.getReviewModels())
                     reviews.add(reviewModelMapper.getReviewFromReviewModel(reviewModel));
                 return reviews;
             } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-        } catch (IOException ioException) {
-            log.info(TAG + ": " + ioException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-        } catch (RuntimeException runtimeException) {
-            log.info(TAG + ": " + runtimeException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
-        } catch (PlacesDataSourceWSException placesDataSourceWSException) {
-            PlacesDataSourceWSError error = placesDataSourceWSException.getError();
-            log.info(TAG + ": " + error.getMessage());
-            switch (error) {
-                case REDIRECTIONS:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-                case CLIENT_ERROR:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                default:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
-            }
-        }
+        }).doOnError(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof IOException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+            } else if(exception instanceof RuntimeException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
+            } else if(exception instanceof PlacesDataSourceWSException) {
+                PlacesDataSourceWSError error = ((PlacesDataSourceWSException) exception).getError();
+                log.info(getClass().getName() + ": " + error.getMessage());
+                switch (error) {
+                    case REDIRECTIONS:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+                    case CLIENT_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
+                    default:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                }
+            } else throw exception;
+        });
+
     }
 
     @Override
-    public List<SuggestedPlace> getSuggestedPlaces(String word, Double longitude, Double latitude) throws PlacesRepositoryException {
-        if(word == null || latitude == null || longitude == null) throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
-        try {
-            List<SuggestedPlace> suggestedPlaces = new ArrayList<>();
-            ResponseSuggestedPlacesModel responseSuggestedPlacesModel = placeDataSourceWs.getSuggestedPlaces(word, latitude, longitude);
+    public Single<List<SuggestedPlace>> getSuggestedPlaces(String word, Double longitude, Double latitude) {
+        return Single.fromCallable(() -> {
+            if(word == null || latitude == null || longitude == null)
+                throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
+            return true;
+        }).flatMap(
+            value -> placeDataSourceWs.getSuggestedPlaces(word, longitude, latitude)
+        ).map(responseSuggestedPlacesModel -> {
             if(responseSuggestedPlacesModel != null) {
+                List<SuggestedPlace> suggestedPlaces = new ArrayList<>();
                 for(SuggestedPlaceModel suggestedPlaceModel: responseSuggestedPlacesModel.getSuggestPlacesModel())
                     suggestedPlaces.add(suggestedPlaceModelMapper.getSuggestedPlaceFromSuggestedPlaceModel(suggestedPlaceModel));
                 return suggestedPlaces;
-            } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-        } catch (IOException ioException) {
-            log.info(TAG + ": " + ioException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-        } catch (RuntimeException runtimeException) {
-            log.info(TAG + ": " + runtimeException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
-        } catch (PlacesDataSourceWSException placesDataSourceWSException) {
-            PlacesDataSourceWSError error = placesDataSourceWSException.getError();
-            log.info(TAG + ": " + error.getMessage());
-            switch (error) {
-                case REDIRECTIONS:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-                case CLIENT_ERROR:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                default:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
             }
-        }
+            throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+        }).doOnError(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof IOException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+            } else if(exception instanceof RuntimeException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
+            } else if(exception instanceof PlacesDataSourceWSException) {
+                PlacesDataSourceWSError error = ((PlacesDataSourceWSException) exception).getError();
+                log.info(getClass().getName() + ": " + error.getMessage());
+                switch (error) {
+                    case REDIRECTIONS:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+                    case CLIENT_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
+                    default:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                }
+            } else throw exception;
+        });
     }
 
     @Override
-    public List<Category> getCategories(String word, Double longitude, Double latitude, String locale) throws PlacesRepositoryException {
-        if(locale == null) throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-        try {
-            List<Category> categories = new ArrayList<>();
-            ResponseCategoriesModel responseCategoriesModel = placeDataSourceWs.getCategoriesModel(word, longitude, latitude, locale);
+    public Single<List<Category>> getCategories(String word, Double longitude, Double latitude, String locale) {
+        return Single.fromCallable(() -> {
+            if(locale == null) throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+            return true;
+        }).flatMap(
+            value -> placeDataSourceWs.getCategoriesModel(word, longitude, latitude, locale)
+        ).map(responseCategoriesModel -> {
             if(responseCategoriesModel != null) {
+                List<Category> categories = new ArrayList<>();
                 for(CategoryModel categoryModel: responseCategoriesModel.getCategoryModelList())
                     categories.add(categoryModelMapper.getCategoryFromCategoryModel(categoryModel));
                 return categories;
             } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
-        } catch (IOException ioException) {
-            log.info(TAG + ": " + ioException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-        } catch (RuntimeException runtimeException) {
-            log.info(TAG + ": " + runtimeException.getMessage());
-            throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
-        } catch (PlacesDataSourceWSException placesDataSourceWSException) {
-            PlacesDataSourceWSError error = placesDataSourceWSException.getError();
-            log.info(TAG + ": " + error.getMessage());
-            switch (error) {
-                case REDIRECTIONS:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-                case CLIENT_ERROR:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                default:
-                    throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
-            }
-        }
+        }).doOnError(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof IOException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+            } else if(exception instanceof RuntimeException) {
+                log.info(getClass().getName() + ": " + exception.getMessage());
+                throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
+            } else if(exception instanceof PlacesDataSourceWSException) {
+                PlacesDataSourceWSError error = ((PlacesDataSourceWSException) exception).getError();
+                log.info(getClass().getName() + ": " + error.getMessage());
+                switch (error) {
+                    case REDIRECTIONS:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
+                    case CLIENT_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
+                    default:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                }
+            } else throw exception;
+        });
     }
 
     private String getCategories(List<String> categories) {

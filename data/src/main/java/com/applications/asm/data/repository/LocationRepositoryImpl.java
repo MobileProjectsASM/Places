@@ -4,6 +4,9 @@ import com.applications.asm.data.sources.LocationDataSourceSP;
 import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.repository.LocationRepository;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+
 public class LocationRepositoryImpl implements LocationRepository {
     private final LocationDataSourceSP locationDataSourceSP;
 
@@ -12,16 +15,12 @@ public class LocationRepositoryImpl implements LocationRepository {
     }
 
     @Override
-    public Boolean saveLocation(Double latitude, Double longitude) {
-        locationDataSourceSP.saveLatitude(latitude);
-        locationDataSourceSP.saveLongitude(longitude);
-        return true;
+    public Completable saveLocation(Double latitude, Double longitude) {
+        return locationDataSourceSP.saveLocation(latitude, longitude);
     }
 
     @Override
-    public Location getLocation() {
-        Double latitude = locationDataSourceSP.getLatitude();
-        Double longitude = locationDataSourceSP.getLongitude();
-        return new Location(latitude, longitude);
+    public Single<Location> getLocation() {
+        return Single.zip(locationDataSourceSP.getLatitude(), locationDataSourceSP.getLongitude(), Location::new);
     }
 }

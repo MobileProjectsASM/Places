@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 
 import com.applications.asm.data.sources.LocationDataSourceSP;
 
+import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
+
 public class LocationSharedPreferences implements LocationDataSourceSP {
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
@@ -14,20 +17,23 @@ public class LocationSharedPreferences implements LocationDataSourceSP {
     }
 
     @Override
-    public void saveLocation(Double latitude, Double longitude) {
-        SharedPreferences.Editor editor = appPreferences.edit();
-        editor.putFloat(LATITUDE_KEY, latitude.floatValue());
-        editor.putFloat(LONGITUDE_KEY, longitude.floatValue());
-        editor.commit();
+    public Completable saveLocation(Double latitude, Double longitude) {
+        return Completable.create(emitter -> {
+            SharedPreferences.Editor editor = appPreferences.edit();
+            editor.putFloat(LATITUDE_KEY, latitude.floatValue());
+            editor.putFloat(LONGITUDE_KEY, longitude.floatValue());
+            editor.commit();
+            emitter.onComplete();
+        });
     }
 
     @Override
-    public double getLatitude() {
-        return appPreferences.getFloat(LATITUDE_KEY, 0);
+    public Single<Double> getLatitude() {
+        return Single.fromCallable(() -> Double.valueOf(appPreferences.getFloat(LATITUDE_KEY, 0)));
     }
 
     @Override
-    public double getLongitude() {
-        return appPreferences.getFloat(LONGITUDE_KEY, 0);
+    public Single<Double> getLongitude() {
+        return Single.fromCallable(() -> Double.valueOf(appPreferences.getFloat(LONGITUDE_KEY, 0)));
     }
 }
