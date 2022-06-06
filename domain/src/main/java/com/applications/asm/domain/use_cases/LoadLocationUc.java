@@ -11,7 +11,6 @@ import io.reactivex.rxjava3.core.Single;
 
 public class LoadLocationUc extends SingleUseCase<Location, Object> {
     private final LocationRepository locationRepository;
-    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.LoadLocationUc");
 
     public LoadLocationUc(UseCaseScheduler useCaseScheduler, LocationRepository locationRepository) {
         super(useCaseScheduler);

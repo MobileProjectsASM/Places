@@ -19,7 +19,6 @@ import io.reactivex.rxjava3.core.Single;
 public class ValidateFormSearchUc extends SingleUseCase<Map<String, State>, String> {
     private final Validators validators;
     private final Pattern regexIntegerNumber = Pattern.compile("[0-9]*");
-    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.ValidateFormSearchUc");
 
     public ValidateFormSearchUc(UseCaseScheduler useCaseScheduler, Validators validators) {
         super(useCaseScheduler);

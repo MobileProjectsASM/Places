@@ -20,7 +20,6 @@ import io.reactivex.rxjava3.core.Single;
 public class ValidateFormLocationUc extends SingleUseCase<Map<String, State>, ValidateFormLocationUc.Params> {
     private final Validators validators;
     private final Pattern regexDecimalNumber = Pattern.compile("-?[0-9.]*");
-    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.ValidateFormLocationUc");
 
     public static class Params {
         private final String latitude;

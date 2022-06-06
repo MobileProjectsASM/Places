@@ -2,6 +2,8 @@ package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.entities.ValidatorsImpl;
+import com.applications.asm.domain.exception.GetReviewsError;
+import com.applications.asm.domain.exception.GetReviewsException;
 import com.applications.asm.domain.exception.GetSuggestedPlacesError;
 import com.applications.asm.domain.exception.GetSuggestedPlacesException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
@@ -72,9 +74,12 @@ public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, Ge
                             case RESPONSE_NULL:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.RESPONSE_NULL);
-                            default:
+                            case SERVER_ERROR:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetSuggestedPlacesException(GetSuggestedPlacesError.SERVER_ERROR);
+                                throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
+                            case NETWORK_ERROR:
+                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } else throw exception;
                 });

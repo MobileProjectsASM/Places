@@ -3,6 +3,8 @@ package com.applications.asm.domain.use_cases;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.exception.GetPlaceDetailError;
 import com.applications.asm.domain.exception.GetPlaceDetailException;
+import com.applications.asm.domain.exception.GetReviewsError;
+import com.applications.asm.domain.exception.GetReviewsException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -50,9 +52,12 @@ public class GetPlaceDetailsUc extends SingleUseCase<PlaceDetails, String> {
                             case RESPONSE_NULL:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetPlaceDetailException(GetPlaceDetailError.RESPONSE_NULL);
-                            default:
+                            case SERVER_ERROR:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetPlaceDetailException(GetPlaceDetailError.SERVER_ERROR);
+                                throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
+                            case NETWORK_ERROR:
+                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } throw exception;
                 });

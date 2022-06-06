@@ -5,7 +5,8 @@ public enum GetCategoryError {
     REQUEST_RESPONSE_ERROR("Error to communicate with the server"),
     ANY_VALUE_IS_NULL("Some value is null"),
     SERVER_ERROR("An error occurred on the server"),
-    RESPONSE_NULL("Response is null");
+    RESPONSE_NULL("Response is null"),
+    NETWORK_ERROR("There some error in the network");
 
     private final String message;
     GetCategoryError(String message) {

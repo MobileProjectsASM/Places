@@ -51,9 +51,12 @@ public class GetReviewsUc extends SingleUseCase<List<Review>, String> {
                             case RESPONSE_NULL:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.RESPONSE_NULL);
-                            default:
+                            case SERVER_ERROR:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
+                            case NETWORK_ERROR:
+                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     }
                 });

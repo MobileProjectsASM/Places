@@ -5,7 +5,8 @@ public enum GetPlaceDetailError {
     REQUEST_RESPONSE_ERROR("Error to communicate with the server"),
     NULL_ID("Id is null"),
     SERVER_ERROR("An error occurred on the server"),
-    RESPONSE_NULL("Response is null");
+    RESPONSE_NULL("Response is null"),
+    NETWORK_ERROR("There some error in the network");
 
     private final String message;
     GetPlaceDetailError(String message) {

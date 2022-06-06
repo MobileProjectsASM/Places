@@ -3,6 +3,8 @@ package com.applications.asm.domain.use_cases;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.exception.GetCategoryError;
 import com.applications.asm.domain.exception.GetCategoryException;
+import com.applications.asm.domain.exception.GetReviewsError;
+import com.applications.asm.domain.exception.GetReviewsException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -69,9 +71,12 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
                             case RESPONSE_NULL:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetCategoryException(GetCategoryError.RESPONSE_NULL);
-                            default:
+                            case SERVER_ERROR:
                                 log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetCategoryException(GetCategoryError.SERVER_ERROR);
+                                throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
+                            case NETWORK_ERROR:
+                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } throw exception;
                 });

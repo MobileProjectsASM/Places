@@ -4,6 +4,8 @@ import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.ValidatorsImpl;
 import com.applications.asm.domain.exception.GetPlacesError;
 import com.applications.asm.domain.exception.GetPlacesException;
+import com.applications.asm.domain.exception.GetReviewsError;
+import com.applications.asm.domain.exception.GetReviewsException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -86,9 +88,12 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
                             case RESPONSE_NULL:
                                 logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetPlacesException(GetPlacesError.RESPONSE_NULL);
-                            default:
-                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetPlacesException(GetPlacesError.SERVER_ERROR);
+                            case SERVER_ERROR:
+                                logger.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
+                            case NETWORK_ERROR:
+                                logger.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } else throw exception;
                 });
