@@ -21,7 +21,6 @@ import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.repository.PlacesRepository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -69,10 +68,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         })
         .doOnError(throwable -> {
             Exception exception = (Exception) throwable;
-            if(exception instanceof IOException) {
-                log.info(getClass().getName() + ": " + exception.getMessage());
-                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-            } else if(exception instanceof RuntimeException) {
+            if(exception instanceof RuntimeException) {
                 log.info(getClass().getName() + ": " + exception.getMessage());
                 throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
             } else if(exception instanceof PlacesDataSourceWSException) {
@@ -83,8 +79,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
                     case CLIENT_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                    default:
+                    case SERVER_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                    case NETWORK_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.NETWORK_ERROR);
                 }
             } else throw exception;
         });
@@ -119,10 +117,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
-            if(exception instanceof IOException) {
-                log.info(getClass().getName() + ": " + exception.getMessage());
-                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-            } else if(exception instanceof RuntimeException) {
+            if(exception instanceof RuntimeException) {
                 log.info(getClass().getName() + ": " + exception.getMessage());
                 throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
             } else if(exception instanceof PlacesDataSourceWSException) {
@@ -133,8 +128,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
                     case CLIENT_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                    default:
+                    case SERVER_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                    case NETWORK_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.NETWORK_ERROR);
                 }
             } else throw exception;
         });
@@ -156,10 +153,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
-            if(exception instanceof IOException) {
-                log.info(getClass().getName() + ": " + exception.getMessage());
-                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-            } else if(exception instanceof RuntimeException) {
+            if(exception instanceof RuntimeException) {
                 log.info(getClass().getName() + ": " + exception.getMessage());
                 throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
             } else if(exception instanceof PlacesDataSourceWSException) {
@@ -170,8 +164,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
                     case CLIENT_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                    default:
+                    case SERVER_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                    case NETWORK_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.NETWORK_ERROR);
                 }
             } else throw exception;
         });
@@ -196,10 +192,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
-            if(exception instanceof IOException) {
-                log.info(getClass().getName() + ": " + exception.getMessage());
-                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-            } else if(exception instanceof RuntimeException) {
+            if(exception instanceof RuntimeException) {
                 log.info(getClass().getName() + ": " + exception.getMessage());
                 throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
             } else if(exception instanceof PlacesDataSourceWSException) {
@@ -210,8 +203,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
                     case CLIENT_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                    default:
+                    case SERVER_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                    case NETWORK_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.NETWORK_ERROR);
                 }
             } else throw exception;
         });
@@ -233,10 +228,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
-            if(exception instanceof IOException) {
-                log.info(getClass().getName() + ": " + exception.getMessage());
-                throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
-            } else if(exception instanceof RuntimeException) {
+            if(exception instanceof RuntimeException) {
                 log.info(getClass().getName() + ": " + exception.getMessage());
                 throw new PlacesRepositoryException(PlacesRepositoryError.DECODING_RESPONSE_ERROR);
             } else if(exception instanceof PlacesDataSourceWSException) {
@@ -247,8 +239,10 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.CONNECTION_WITH_SERVER_ERROR);
                     case CLIENT_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.DO_REQUEST_ERROR);
-                    default:
+                    case SERVER_ERROR:
                         throw new PlacesRepositoryException(PlacesRepositoryError.SERVER_ERROR);
+                    case NETWORK_ERROR:
+                        throw new PlacesRepositoryException(PlacesRepositoryError.NETWORK_ERROR);
                 }
             } else throw exception;
         });

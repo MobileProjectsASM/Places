@@ -13,6 +13,8 @@ import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.google.gson.Gson;
 
+import java.io.IOException;
+
 import io.reactivex.rxjava3.core.Single;
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
@@ -51,7 +53,8 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
                         else if(code >= 400 && code < 500) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.CLIENT_ERROR);
                         else throw new PlacesDataSourceWSException(PlacesDataSourceWSError.SERVER_ERROR);
                     }
-                }
+                } else if(exception instanceof IOException)
+                    throw new PlacesDataSourceWSException(PlacesDataSourceWSError.NETWORK_ERROR);
             });
     }
 
@@ -77,7 +80,8 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
                         else if(code >= 400 && code < 500) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.CLIENT_ERROR);
                         else throw new PlacesDataSourceWSException(PlacesDataSourceWSError.SERVER_ERROR);
                     }
-                }
+                } else if(exception instanceof IOException)
+                    throw new PlacesDataSourceWSException(PlacesDataSourceWSError.NETWORK_ERROR);
             });
     }
 
@@ -103,7 +107,8 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
                         else if(code >= 400 && code < 500) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.CLIENT_ERROR);
                         else throw new PlacesDataSourceWSException(PlacesDataSourceWSError.SERVER_ERROR);
                     }
-                }
+                } else if(exception instanceof IOException)
+                    throw new PlacesDataSourceWSException(PlacesDataSourceWSError.NETWORK_ERROR);
             });
     }
 
@@ -129,7 +134,8 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
                         else if(code >= 400 && code < 500) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.CLIENT_ERROR);
                         else throw new PlacesDataSourceWSException(PlacesDataSourceWSError.SERVER_ERROR);
                     }
-                }
+                } else if(exception instanceof IOException)
+                    throw new PlacesDataSourceWSException(PlacesDataSourceWSError.NETWORK_ERROR);
             });
     }
 
@@ -155,7 +161,8 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
                         else if(code >= 400 && code < 500) throw new PlacesDataSourceWSException(PlacesDataSourceWSError.CLIENT_ERROR);
                         else throw new PlacesDataSourceWSException(PlacesDataSourceWSError.SERVER_ERROR);
                     }
-                }
+                } else if(exception instanceof IOException)
+                    throw new PlacesDataSourceWSException(PlacesDataSourceWSError.NETWORK_ERROR);
             });
     }
 }
