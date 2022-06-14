@@ -21,7 +21,7 @@ public class SaveLocationUc extends CompletableUseCase<SaveLocationUc.Params> {
             this.longitude = longitude;
         }
 
-        public Params forSaveLocation(Double latitude, Double longitude) {
+        public static Params forSaveLocation(Double latitude, Double longitude) {
             return new Params(longitude, latitude);
         }
     }

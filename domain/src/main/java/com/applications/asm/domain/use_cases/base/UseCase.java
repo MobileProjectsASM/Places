@@ -8,11 +8,11 @@ public abstract class UseCase<Stream, Params> {
 
     protected abstract Stream build(Params params);
 
-    final Stream execute(Params params) {
+    public final Stream execute(Params params) {
         return execute(params, false);
     }
 
-    final Stream executeFromAnotherUseCase(Params params) {
+    public final Stream executeFromAnotherUseCase(Params params) {
         return execute(params, true);
     }
 
