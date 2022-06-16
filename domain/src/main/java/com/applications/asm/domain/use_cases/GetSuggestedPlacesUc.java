@@ -1,7 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.entities.ValidatorsImpl;
+import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.GetReviewsError;
 import com.applications.asm.domain.exception.GetReviewsException;
 import com.applications.asm.domain.exception.GetSuggestedPlacesError;
@@ -19,7 +19,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, GetSuggestedPlacesUc.Params> {
     private final PlacesRepository placesRepository;
-    private final ValidatorsImpl validatorsImpl;
+    private final Validators validators;
     private static final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetSuggestedPlacesUc");
 
     public static class Params {
@@ -38,17 +38,17 @@ public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, Ge
         }
     }
 
-    public GetSuggestedPlacesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository, ValidatorsImpl validatorsImpl) {
+    public GetSuggestedPlacesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository, Validators validators) {
         super(useCaseScheduler);
         this.placesRepository = placesRepository;
-        this.validatorsImpl = validatorsImpl;
+        this.validators = validators;
     }
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.place == null || params.longitude == null || params.latitude == null)
                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.ANY_VALUE_IS_NULL);
-            if(!validatorsImpl.validateLatitudeRange(params.latitude) || !validatorsImpl.validateLongitudeRange(params.longitude))
+            if(!validators.validateLatitudeRange(params.latitude) || !validators.validateLongitudeRange(params.longitude))
                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.LAT_LON_OUT_OF_RANGE);
             return params;
         });

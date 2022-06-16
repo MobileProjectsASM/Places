@@ -1,7 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Place;
-import com.applications.asm.domain.entities.ValidatorsImpl;
+import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.GetPlacesError;
 import com.applications.asm.domain.exception.GetPlacesException;
 import com.applications.asm.domain.exception.GetReviewsError;
@@ -19,7 +19,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> {
     private final PlacesRepository placesRepository;
-    private final ValidatorsImpl validatorsImpl;
+    private final Validators validators;
 
     private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.GetPlacesUc");
 
@@ -45,21 +45,21 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
         }
     }
 
-    public GetPlacesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository, ValidatorsImpl validatorsImpl) {
+    public GetPlacesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository, Validators validators) {
         super(useCaseScheduler);
         this.placesRepository = placesRepository;
-        this.validatorsImpl = validatorsImpl;
+        this.validators = validators;
     }
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.placeToFind == null || params.latitude == null || params.longitude == null || params.radius == null || params.categories == null || params.page == null)
                 throw new GetPlacesException(GetPlacesError.ANY_VALUE_IS_NULL);
-            if(!validatorsImpl.validateLatitudeRange(params.latitude) || !validatorsImpl.validateLongitudeRange(params.longitude))
+            if(!validators.validateLatitudeRange(params.latitude) || !validators.validateLongitudeRange(params.longitude))
                 throw new GetPlacesException(GetPlacesError.LAT_LON_OUT_OF_RANGE);
-            if(!validatorsImpl.validateRadiusRange(params.radius))
+            if(!validators.validateRadiusRange(params.radius))
                 throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
-            if(!validatorsImpl.validatePage(params.page))
+            if(!validators.validatePage(params.page))
                 throw new GetPlacesException(GetPlacesError.PAGE_OUT_OF_RANGE);
             return params;
         });
