@@ -40,7 +40,14 @@ public class LocationViewModel extends ViewModel {
     private MutableLiveData<Resource<Boolean>> saveLocationLD;
     private MutableLiveData<Resource<LocationVM>> loadLocationLD;
 
-    public LocationViewModel(SaveLocationUc saveLocationUc, ValidateFormLocationUc validateFormLocationUc, LoadLocationUc loadLocationUc, StatesMapper statesMapper, LocationMapper locationMapper, CompositeDisposable composite) {
+    public LocationViewModel(
+        SaveLocationUc saveLocationUc,
+        ValidateFormLocationUc validateFormLocationUc,
+        LoadLocationUc loadLocationUc,
+        StatesMapper statesMapper,
+        LocationMapper locationMapper,
+        CompositeDisposable composite
+    ) {
         this.saveLocationUc = saveLocationUc;
         this.validateFormLocationUc = validateFormLocationUc;
         this.loadLocationUc = loadLocationUc;

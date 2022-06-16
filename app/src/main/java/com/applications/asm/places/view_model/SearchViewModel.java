@@ -6,21 +6,27 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.RadiusState;
 import com.applications.asm.domain.entities.StatesKey;
 import com.applications.asm.domain.entities.SuggestedPlace;
+import com.applications.asm.domain.exception.GetCategoryError;
+import com.applications.asm.domain.exception.GetCategoryException;
 import com.applications.asm.domain.exception.GetSuggestedPlacesError;
 import com.applications.asm.domain.exception.GetSuggestedPlacesException;
+import com.applications.asm.domain.use_cases.GetCategoriesUc;
 import com.applications.asm.domain.use_cases.GetSuggestedPlacesUc;
 import com.applications.asm.domain.use_cases.LoadLocationUc;
 import com.applications.asm.domain.use_cases.ValidateFormSearchUc;
 import com.applications.asm.places.R;
+import com.applications.asm.places.model.CategoryMV;
 import com.applications.asm.places.model.LocationVM;
 import com.applications.asm.places.model.RadiusStateMV;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.StateMV;
 import com.applications.asm.places.model.StatesKeyMV;
 import com.applications.asm.places.model.SuggestedPlaceVM;
+import com.applications.asm.places.model.mappers.CategoryMapper;
 import com.applications.asm.places.model.mappers.LocationMapper;
 import com.applications.asm.places.model.mappers.PlaceMapper;
 import com.applications.asm.places.model.mappers.StatesMapper;
@@ -37,30 +43,37 @@ public class SearchViewModel extends ViewModel {
     private final LoadLocationUc loadLocationUc;
     private final ValidateFormSearchUc validateFormSearchUc;
     private final GetSuggestedPlacesUc getSuggestedPlacesUc;
+    private final GetCategoriesUc getCategoriesUc;
     private final LocationMapper locationMapper;
     private final StatesMapper statesMapper;
     private final PlaceMapper placeMapper;
+    private final CategoryMapper categoryMapper;
     private final CompositeDisposable composite;
 
     private MutableLiveData<Resource<LocationVM>> currentLocationLD;
     private MutableLiveData<Resource<Map<String, StateMV>>> formStateLD;
     private MutableLiveData<Resource<List<SuggestedPlaceVM>>> suggestedPlacesLD;
+    private MutableLiveData<Resource<List<CategoryMV>>> categoriesLD;
 
     public SearchViewModel(
         LoadLocationUc loadLocationUc,
         ValidateFormSearchUc validateFormSearchUc,
         GetSuggestedPlacesUc getSuggestedPlacesUc,
+        GetCategoriesUc getCategoriesUc,
         StatesMapper statesMapper,
         LocationMapper locationMapper,
         PlaceMapper placeMapper,
+        CategoryMapper categoryMapper,
         CompositeDisposable composite
     ) {
         this.loadLocationUc = loadLocationUc;
         this.validateFormSearchUc = validateFormSearchUc;
         this.getSuggestedPlacesUc = getSuggestedPlacesUc;
+        this.getCategoriesUc = getCategoriesUc;
         this.locationMapper = locationMapper;
         this.statesMapper = statesMapper;
         this.placeMapper = placeMapper;
+        this.categoryMapper = categoryMapper;
         this.composite = composite;
     }
 
@@ -76,7 +89,12 @@ public class SearchViewModel extends ViewModel {
         return suggestedPlacesLD;
     }
 
+    public LiveData<Resource<List<CategoryMV>>> getCategories() {
+        return categoriesLD;
+    }
+
     public void loadLocation() {
+        currentLocationLD.setValue(Resource.loading());
         Disposable loadLocationDisposable = loadLocationUc
             .execute(null)
             .map(locationMapper::getLocationVM)
@@ -143,6 +161,43 @@ public class SearchViewModel extends ViewModel {
                 suggestedPlacesLD.setValue(Resource.error(message));
             });
         composite.add(getSuggestedPlacesDisposable);
+    }
+
+    public void getCategories(String text, Double latitude, Double longitude, String locale) {
+        Disposable getCategoriesDisposable = getCategoriesUc
+            .execute(GetCategoriesUc.Params.forGetCategories(text, latitude, longitude, locale))
+            .map(categories -> {
+                List<CategoryMV> categoriesMV = new ArrayList<>();
+                for(Category category: categories)
+                    categoriesMV.add(categoryMapper.getCategoryMV(category));
+                return categoriesMV;
+            })
+            .subscribe(categoriesMV -> categoriesLD.setValue(Resource.success(categoriesMV)), error -> {
+                Exception exception = (Exception) error;
+                int message;
+                if(exception instanceof GetCategoryException) {
+                    GetCategoryException getCategoryException = (GetCategoryException) exception;
+                    GetCategoryError getCategoryError = getCategoryException.getError();
+                    Log.e(getClass().getName(), getCategoryError.getMessage());
+                    switch (getCategoryError) {
+                        case CONNECTION_WITH_SERVER_ERROR:
+                            message = R.string.error_connection_with_server;
+                            break;
+                        case REQUEST_RESPONSE_ERROR:
+                            message = R.string.error_server;
+                            break;
+                        case NETWORK_ERROR:
+                            message = R.string.error_network_connection;
+                            break;
+                        default: message = R.string.error_unknown;
+                    }
+                } else {
+                    Log.e(getClass().getName(), exception.getMessage());
+                    message = R.string.error_unknown;
+                }
+                categoriesLD.setValue(Resource.error(message));
+            });
+        composite.add(getCategoriesDisposable);
     }
 
     @Override

@@ -4,42 +4,31 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.applications.asm.domain.use_cases.GetPlaceDetailsUc;
 import com.applications.asm.domain.use_cases.GetPlacesUc;
-import com.applications.asm.domain.use_cases.GetReviewsUc;
-import com.applications.asm.places.model.mappers.PlaceDetailsMapper;
 import com.applications.asm.places.model.mappers.PlaceMapper;
-import com.applications.asm.places.model.mappers.ReviewMapper;
 import com.applications.asm.places.view_model.MainViewModel;
+
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class MainViewModelFactory implements ViewModelProvider.Factory {
     private final GetPlacesUc getPlacesUc;
-    private final GetPlaceDetailsUc getPlaceDetailsUc;
-    private final GetReviewsUc getReviewsUc;
     private final PlaceMapper placeMapper;
-    private final PlaceDetailsMapper placeDetailsMapper;
-    private final ReviewMapper reviewMapper;
+    private final CompositeDisposable composite;
 
     public MainViewModelFactory(
         GetPlacesUc getPlacesUc,
-        GetPlaceDetailsUc getPlaceDetailsUc,
-        GetReviewsUc getReviewsUc,
         PlaceMapper placeMapper,
-        PlaceDetailsMapper placeDetailsMapper,
-        ReviewMapper reviewMapper
+        CompositeDisposable composite
     ) {
         this.getPlacesUc = getPlacesUc;
-        this.getPlaceDetailsUc = getPlaceDetailsUc;
-        this.getReviewsUc = getReviewsUc;
         this.placeMapper = placeMapper;
-        this.placeDetailsMapper = placeDetailsMapper;
-        this.reviewMapper = reviewMapper;
+        this.composite = composite;
     }
 
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if(modelClass.isAssignableFrom(MainViewModel.class)) return (T) new MainViewModel(getPlacesUc, getPlaceDetailsUc, getReviewsUc, placeMapper, placeDetailsMapper, reviewMapper);
+        if(modelClass.isAssignableFrom(MainViewModel.class)) return (T) new MainViewModel(getPlacesUc, placeMapper, composite);
         throw new IllegalArgumentException("ViewModel class not found");
     }
 }
