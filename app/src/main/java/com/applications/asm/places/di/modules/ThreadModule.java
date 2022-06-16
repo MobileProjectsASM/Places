@@ -1,50 +1,40 @@
 package com.applications.asm.places.di.modules;
 
-import com.applications.asm.domain.executor.JobExecutor;
-import com.applications.asm.domain.executor.JobThreadFactory;
-import com.applications.asm.domain.executor.PostExecutionThread;
-import com.applications.asm.domain.executor.ThreadExecutor;
-import com.applications.asm.places.UiThread;
+import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executor;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @Module
 public class ThreadModule {
 
     @Singleton
     @Provides
-    PostExecutionThread providePostExecutionThread() {
-        return new UiThread();
+    UseCaseScheduler provideUseCaseScheduler(
+        @Named("scheduler_run") Scheduler run,
+        @Named("scheduler_post") Scheduler post
+    ) {
+        return new UseCaseScheduler(
+            run,
+            post
+        );
     }
 
-    @Singleton
+    @Named("scheduler_run")
     @Provides
-    ThreadExecutor provideThreadExecutor(Executor executor) {
-        return new JobExecutor(executor);
+    Scheduler provideSchedulerRun() {
+        return Schedulers.io();
     }
 
+    @Named("scheduler_post")
     @Provides
-    Executor provideThreadPoolExecutor(BlockingQueue<Runnable> queue, ThreadFactory threadFactory) {
-        return new ThreadPoolExecutor(8, 12, 2, TimeUnit.SECONDS, queue, threadFactory);
-    }
-
-    @Provides
-    BlockingQueue<Runnable> provideBlockingQueue() {
-        return new LinkedBlockingQueue<>();
-    }
-
-    @Provides
-    ThreadFactory provideThreadFactory() {
-        return new JobThreadFactory();
+    Scheduler provideSchedulerPost() {
+        return AndroidSchedulers.mainThread();
     }
 }
