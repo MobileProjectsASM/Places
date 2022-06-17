@@ -3,6 +3,8 @@ package com.applications.asm.domain.use_cases;
 import com.applications.asm.domain.entities.Review;
 import com.applications.asm.domain.exception.GetReviewsError;
 import com.applications.asm.domain.exception.GetReviewsException;
+import com.applications.asm.domain.exception.GetSuggestedPlacesError;
+import com.applications.asm.domain.exception.GetSuggestedPlacesException;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.repository.PlacesRepository;
@@ -16,7 +18,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public class GetReviewsUc extends SingleUseCase<List<Review>, String> {
     private final PlacesRepository placesRepository;
-    private static final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetReviewsUc");
+    private static final Logger log = Logger.getLogger(GetReviewsUc.class.getName());
 
     public GetReviewsUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
         super(useCaseScheduler);
@@ -41,21 +43,21 @@ public class GetReviewsUc extends SingleUseCase<List<Review>, String> {
                         PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
                         switch(placesRepositoryError) {
                             case CONNECTION_WITH_SERVER_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetReviewsException(GetReviewsError.CONNECTION_WITH_SERVER_ERROR);
+                                log.warning("Connection with server error: " + placesRepositoryError.getMessage());
+                                throw new GetSuggestedPlacesException(GetSuggestedPlacesError.CONNECTION_WITH_SERVER_ERROR);
                             case DECODING_RESPONSE_ERROR:
                             case CREATE_REQUEST_ERROR:
                             case DO_REQUEST_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetReviewsException(GetReviewsError.REQUEST_RESPONSE_ERROR);
+                                log.warning( "Request error: " + placesRepositoryError.getMessage());
+                                throw new GetSuggestedPlacesException(GetSuggestedPlacesError.REQUEST_RESPONSE_ERROR);
                             case RESPONSE_NULL:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
-                                throw new GetReviewsException(GetReviewsError.RESPONSE_NULL);
+                                log.warning( "Response null: " + placesRepositoryError.getMessage());
+                                throw new GetSuggestedPlacesException(GetSuggestedPlacesError.RESPONSE_NULL);
                             case SERVER_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Server error: " + placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
                             case NETWORK_ERROR:
-                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                log.warning("Network error: " +placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     }

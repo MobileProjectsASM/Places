@@ -11,7 +11,6 @@ import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import io.reactivex.rxjava3.core.Single;

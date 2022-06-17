@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategoriesUc.Params> {
     private final PlacesRepository placesRepository;
-    private static final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetCategoriesUc");
+    private static final Logger log = Logger.getLogger(GetCategoriesUc.class.getName());
 
     public static class Params {
         private final String category;
@@ -61,21 +61,21 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
                         PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
                         switch (placesRepositoryError) {
                             case CONNECTION_WITH_SERVER_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Connection with server error: : " + placesRepositoryError.getMessage());
                                 throw new GetCategoryException(GetCategoryError.CONNECTION_WITH_SERVER_ERROR);
                             case DECODING_RESPONSE_ERROR:
                             case CREATE_REQUEST_ERROR:
                             case DO_REQUEST_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Request error: " + placesRepositoryError.getMessage());
                                 throw new GetCategoryException(GetCategoryError.REQUEST_RESPONSE_ERROR);
                             case RESPONSE_NULL:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Response null: " + placesRepositoryError.getMessage());
                                 throw new GetCategoryException(GetCategoryError.RESPONSE_NULL);
                             case SERVER_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Server error: " + placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
                             case NETWORK_ERROR:
-                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                log.warning("Network error: " +placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } throw exception;

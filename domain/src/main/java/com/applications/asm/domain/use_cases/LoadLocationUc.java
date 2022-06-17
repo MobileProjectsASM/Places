@@ -5,8 +5,6 @@ import com.applications.asm.domain.repository.LocationRepository;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
-import java.util.logging.Logger;
-
 import io.reactivex.rxjava3.core.Single;
 
 public class LoadLocationUc extends SingleUseCase<Location, Object> {

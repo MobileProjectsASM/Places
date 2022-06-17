@@ -21,7 +21,7 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
     private final PlacesRepository placesRepository;
     private final Validators validators;
 
-    private static final Logger logger = Logger.getLogger("com.applications.asm.domain.use_cases.GetPlacesUc");
+    private static final Logger log = Logger.getLogger(GetPlacesUc.class.getName());
 
     public static class Params {
         private final String placeToFind;
@@ -75,24 +75,24 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
                         PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
                         switch (placesRepositoryError) {
                             case CONNECTION_WITH_SERVER_ERROR:
-                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Connection with server error: " + placesRepositoryError.getMessage());
                                 throw new GetPlacesException(GetPlacesError.CONNECTION_WITH_SERVER_ERROR);
                             case DECODING_RESPONSE_ERROR:
                             case CREATE_REQUEST_ERROR:
                             case DO_REQUEST_ERROR:
-                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Request error: " + placesRepositoryError.getMessage());
                                 throw new GetPlacesException(GetPlacesError.REQUEST_RESPONSE_ERROR);
                             case PAGE_OUT_OF_RANGE:
-                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning(getClass().getName() + ": " + placesRepositoryError.getMessage());
                                 throw new GetPlacesException(GetPlacesError.NEGATIVE_RADIUS);
                             case RESPONSE_NULL:
-                                logger.severe(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Response null: " + placesRepositoryError.getMessage());
                                 throw new GetPlacesException(GetPlacesError.RESPONSE_NULL);
                             case SERVER_ERROR:
-                                logger.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Server error: " + placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
                             case NETWORK_ERROR:
-                                logger.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                log.warning("Network error: " +placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } else throw exception;

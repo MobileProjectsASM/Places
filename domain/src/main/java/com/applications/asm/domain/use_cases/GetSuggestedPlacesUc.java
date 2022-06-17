@@ -20,7 +20,7 @@ import io.reactivex.rxjava3.core.Single;
 public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, GetSuggestedPlacesUc.Params> {
     private final PlacesRepository placesRepository;
     private final Validators validators;
-    private static final Logger log = Logger.getLogger("com.applications.asm.domain.use_cases.GetSuggestedPlacesUc");
+    private static final Logger log = Logger.getLogger(GetSuggestedPlacesUc.class.getName());
 
     public static class Params {
         private final String place;
@@ -64,21 +64,21 @@ public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, Ge
                         PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
                         switch (placesRepositoryError) {
                             case CONNECTION_WITH_SERVER_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Connection with server error: " + placesRepositoryError.getMessage());
                                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.CONNECTION_WITH_SERVER_ERROR);
                             case DECODING_RESPONSE_ERROR:
                             case CREATE_REQUEST_ERROR:
                             case DO_REQUEST_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning( "Request error: " + placesRepositoryError.getMessage());
                                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.REQUEST_RESPONSE_ERROR);
                             case RESPONSE_NULL:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning( "Response null: " + placesRepositoryError.getMessage());
                                 throw new GetSuggestedPlacesException(GetSuggestedPlacesError.RESPONSE_NULL);
                             case SERVER_ERROR:
-                                log.info(getClass().getName() + ": " + placesRepositoryError.getMessage());
+                                log.warning("Server error: " + placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
                             case NETWORK_ERROR:
-                                log.info(getClass().getName() + ": " +placesRepositoryError.getMessage());
+                                log.warning("Network error: " +placesRepositoryError.getMessage());
                                 throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
                         }
                     } else throw exception;
