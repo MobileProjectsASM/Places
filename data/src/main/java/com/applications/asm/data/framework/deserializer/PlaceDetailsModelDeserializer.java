@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDetailsModel> {
-    private final String TAG = "PlaceDetailsModelDeserializer";
     private final Gson gson;
 
     public PlaceDetailsModelDeserializer(Gson gson) {
@@ -27,27 +26,45 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
 
     @Override
     public PlaceDetailsModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Log.i(TAG, gson.toJson(json));
+        Log.i(getClass().getName(), gson.toJson(json));
+
         JsonObject body = json.getAsJsonObject();
 
-        JsonArray hours = body.getAsJsonArray("hours");
-        JsonObject schedule = hours != null ? hours.get(0).getAsJsonObject() : null;
-        Boolean isOpen = (schedule == null || schedule.get("is_open_now").getAsBoolean());
+        JsonElement idJson = body.get("id");
+        JsonElement nameJson = body.get("name");
+        JsonElement imageUrlJson = body.get("image_url");
+        JsonElement hoursJson = body.get("hours");
+        JsonElement ratingJson = body.get("rating");
+        JsonElement priceJson = body.get("price");
+        JsonElement phoneJson = body.get("phone");
+        JsonElement reviewCountJson = body.get("review_count");
+        JsonElement coordinatesJson = body.get("coordinates");
+        JsonArray hoursJsonArray = hoursJson != null && !hoursJson.isJsonNull() ? hoursJson.getAsJsonArray() : new JsonArray();
+        JsonObject itemJson = hoursJsonArray.size() > 0 ? hoursJsonArray.get(0).getAsJsonObject() : new JsonObject();
+        JsonElement isOpenNowJson = itemJson.get("is_open_now");
+        JsonElement openJson = itemJson.get("open");
 
-        List<WorkingHoursModel> workingHoursModelDays = new ArrayList<>();
-        if(schedule != null) workingHoursModelDays = deserializeWorkingHoursModelDays(schedule.getAsJsonArray("open"));
+        String id = idJson != null && !idJson.isJsonNull() ? idJson.getAsString() : "";
+        String name = nameJson != null && !nameJson.isJsonNull() ? nameJson.getAsString() : "";
+        String imageUrl = imageUrlJson != null && !imageUrlJson.isJsonNull() ? imageUrlJson.getAsString() : "";
+        Double rating = ratingJson != null && !ratingJson.isJsonNull() ? ratingJson.getAsDouble() : 0;
+        String price = priceJson != null && !priceJson.isJsonNull() ? priceJson.getAsString() : "";
+        String phone = phoneJson != null && !phoneJson.isJsonNull() ? phoneJson.getAsString() : "";
+        Integer reviewCount = reviewCountJson != null && !reviewCountJson.isJsonNull() ? reviewCountJson.getAsInt() : 0;
+        Boolean isOpen = isOpenNowJson != null && !isOpenNowJson.isJsonNull() && isOpenNowJson.getAsBoolean();
+        List<WorkingHoursModel> workingHoursModelDays = openJson != null && !openJson.isJsonNull() ? deserializeWorkingHoursModelDays(openJson.getAsJsonArray()) : new ArrayList<>();
 
-        CoordinatesModel coordinatesModel = deserializeCoordinatesModel(body.getAsJsonObject("coordinates"));
+        CoordinatesModel coordinatesModel = coordinatesJson != null && !coordinatesJson.isJsonNull() ? deserializeCoordinatesModel(coordinatesJson.getAsJsonObject()) : new CoordinatesModel(0d, 0d);
 
         PlaceDetailsModel placeDetailsModel = new PlaceDetailsModel();
-        placeDetailsModel.setId(body.get("id").getAsString());
-        placeDetailsModel.setName(body.get("name").getAsString());
-        placeDetailsModel.setImageUrl(body.get("image_url").getAsString());
+        placeDetailsModel.setId(id);
+        placeDetailsModel.setName(name);
+        placeDetailsModel.setImageUrl(imageUrl);
         placeDetailsModel.setCoordinatesModel(coordinatesModel);
-        placeDetailsModel.setRating(body.get("rating").getAsDouble());
-        placeDetailsModel.setPrice(body.get("price") != null ? body.get("price").getAsString() : "");
-        placeDetailsModel.setPhoneNumber(body.get("phone").getAsString());
-        placeDetailsModel.setReviewCount(body.get("review_count").getAsInt());
+        placeDetailsModel.setRating(rating);
+        placeDetailsModel.setPrice(price);
+        placeDetailsModel.setPhoneNumber(phone);
+        placeDetailsModel.setReviewCount(reviewCount);
         placeDetailsModel.setOpen(isOpen);
         placeDetailsModel.setWorkingHoursModelDays(workingHoursModelDays);
 
@@ -55,27 +72,38 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
     }
 
     private CoordinatesModel deserializeCoordinatesModel(JsonObject coordinates) {
+        JsonElement latitudeJson = coordinates.get("latitude");
+        JsonElement longitudeJson = coordinates.get("longitude");
+
+        Double latitude = latitudeJson != null && !latitudeJson.isJsonNull() ? latitudeJson.getAsDouble() : 0;
+        Double longitude = longitudeJson != null && !longitudeJson.isJsonNull() ? longitudeJson.getAsDouble() : 0;
+
         CoordinatesModel coordinatesModel = new CoordinatesModel();
-        coordinatesModel.setLongitude(coordinates.get("longitude").getAsDouble());
-        coordinatesModel.setLatitude(coordinates.get("latitude").getAsDouble());
+        coordinatesModel.setLatitude(latitude);
+        coordinatesModel.setLongitude(longitude);
         return coordinatesModel;
     }
 
     private List<WorkingHoursModel> deserializeWorkingHoursModelDays(JsonArray open) {
         List<WorkingHoursModel> workingHoursModelDays = new ArrayList<>();
-
         for(JsonElement workingHours: open)
             workingHoursModelDays.add(deserializeWorkingHoursModel(workingHours.getAsJsonObject()));
-
         return workingHoursModelDays;
     }
 
     private WorkingHoursModel deserializeWorkingHoursModel(JsonObject jsonObject) {
-        WorkingHoursModel workingHoursModel = new WorkingHoursModel();
+        JsonElement dayJson = jsonObject.get("day");
+        JsonElement startJson = jsonObject.get("start");
+        JsonElement endJson = jsonObject.get("end");
 
-        workingHoursModel.setDay(jsonObject.get("day").getAsInt());
-        workingHoursModel.setHourOpen(jsonObject.get("start").getAsString());
-        workingHoursModel.setHourClose(jsonObject.get("end").getAsString());
+        Integer day = dayJson != null && !dayJson.isJsonNull() ? dayJson.getAsInt() : -1;
+        String start = startJson != null && !startJson.isJsonNull() ? startJson.getAsString() : "";
+        String end = endJson != null && !endJson.isJsonNull() ? endJson.getAsString() : "";
+
+        WorkingHoursModel workingHoursModel = new WorkingHoursModel();
+        workingHoursModel.setDay(day);
+        workingHoursModel.setHourOpen(start);
+        workingHoursModel.setHourClose(end);
 
         return workingHoursModel;
     }

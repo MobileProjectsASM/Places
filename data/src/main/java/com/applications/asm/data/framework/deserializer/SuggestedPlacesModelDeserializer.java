@@ -10,14 +10,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SuggestedPlacesModelDeserializer implements JsonDeserializer<ResponseSuggestedPlacesModel> {
-    private final String TAG = "SuggestedPlacesModelDeserializer";
     private final Gson gson;
 
     public SuggestedPlacesModelDeserializer(Gson gson) {
@@ -25,11 +23,12 @@ public class SuggestedPlacesModelDeserializer implements JsonDeserializer<Respon
     }
 
     @Override
-    public ResponseSuggestedPlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Log.i(TAG, gson.toJson(json));
+    public ResponseSuggestedPlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        Log.i(getClass().getName(), gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
+        JsonElement businessesJson = body.get("businesses");
 
-        List<SuggestedPlaceModel> suggestedPlacesModel = deserializeSuggestedPlaces(body.getAsJsonArray("businesses"));
+        List<SuggestedPlaceModel> suggestedPlacesModel = businessesJson != null && !businessesJson.isJsonNull() ? deserializeSuggestedPlaces(businessesJson.getAsJsonArray()) : new ArrayList<>();
 
         ResponseSuggestedPlacesModel responseSuggestedPlacesModel = new ResponseSuggestedPlacesModel();
         responseSuggestedPlacesModel.setSuggestPlacesModel(suggestedPlacesModel);
@@ -39,19 +38,25 @@ public class SuggestedPlacesModelDeserializer implements JsonDeserializer<Respon
     }
 
     private List<SuggestedPlaceModel> deserializeSuggestedPlaces(JsonArray businesses) {
-        List<SuggestedPlaceModel> suggestedPlacesModel = new ArrayList<>();
-
-        for(JsonElement suggestedPlaceModel: businesses)
-            suggestedPlacesModel.add(deserializeSuggestedPlaceModel(suggestedPlaceModel.getAsJsonObject()));
-
-        return suggestedPlacesModel;
+        if(businesses.size() > 0) {
+            List<SuggestedPlaceModel> suggestedPlacesModel = new ArrayList<>();
+            for(JsonElement suggestedPlaceModel: businesses)
+                suggestedPlacesModel.add(deserializeSuggestedPlaceModel(suggestedPlaceModel.getAsJsonObject()));
+            return suggestedPlacesModel;
+        }
+        return new ArrayList<>();
     }
 
     private SuggestedPlaceModel deserializeSuggestedPlaceModel(JsonObject suggestedPlace) {
-        SuggestedPlaceModel suggestedPlaceModel = new SuggestedPlaceModel();
+        JsonElement idJson = suggestedPlace.get("id");
+        JsonElement nameJson = suggestedPlace.get("name");
 
-        suggestedPlaceModel.setId(suggestedPlace.get("id").getAsString());
-        suggestedPlaceModel.setName(suggestedPlace.get("name").getAsString());
+        String id = idJson != null && !idJson.isJsonNull() ? idJson.getAsString() : "";
+        String name = nameJson != null && !nameJson.isJsonNull() ? nameJson.getAsString() : "";
+
+        SuggestedPlaceModel suggestedPlaceModel = new SuggestedPlaceModel();
+        suggestedPlaceModel.setId(id);
+        suggestedPlaceModel.setName(name);
 
         return suggestedPlaceModel;
     }

@@ -2,7 +2,6 @@ package com.applications.asm.data.framework.deserializer;
 
 import android.util.Log;
 
-import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceModel;
@@ -13,7 +12,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -27,17 +25,19 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
     }
 
     @Override
-    public ResponsePlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        String TAG = "PlacesModelDeserializer";
-        Log.i(TAG, gson.toJson(json));
+    public ResponsePlacesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        Log.i(getClass().getName(), gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
+        JsonElement totalJson = body.get("total");
+        JsonElement businessesJson = body.get("businesses");
 
-        JsonArray businesses = body.getAsJsonArray("businesses");
-        List<PlaceModel> places = deserializePlaces(businesses);
+        int total = totalJson != null && !totalJson.isJsonNull() ? totalJson.getAsInt() : 0;
+        List<PlaceModel> places = total > 0 && businessesJson != null && !businessesJson.isJsonNull() ? deserializePlaces(businessesJson.getAsJsonArray()) : new ArrayList<>();
 
         ResponsePlacesModel responsePlacesModel = new ResponsePlacesModel();
         responsePlacesModel.setPlaces(places);
-        responsePlacesModel.setTotal(body.get("total").getAsInt());
+        responsePlacesModel.setTotal(total);
+
         return responsePlacesModel;
     }
 
@@ -49,14 +49,24 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
     }
 
     private PlaceModel deserializePlace(JsonObject place) {
-        CoordinatesModel coordinatesModel = deserializeCoordinates(place.getAsJsonObject("coordinates"));
-        List<String> categories = deserializeCategories(place.getAsJsonArray("categories"));
-        LocationModel locationModel = deserializeLocation(place.getAsJsonObject("location"));
+        JsonElement idJson = place.get("id");
+        JsonElement nameJson = place.get("name");
+        JsonElement imageUrlJson = place.get("image_url");
+        JsonElement coordinatesJson = place.get("coordinates");
+        JsonElement categoriesJson = place.get("categories");
+        JsonElement locationJson = place.get("location");
+
+        String id = idJson != null && !idJson.isJsonNull() ? idJson.getAsString() : "";
+        String name = nameJson != null && !nameJson.isJsonNull() ? nameJson.getAsString() : "";
+        String imageUrl = imageUrlJson != null && !imageUrlJson.isJsonNull() ? imageUrlJson.getAsString() : "";
+        CoordinatesModel coordinatesModel = coordinatesJson != null && !coordinatesJson.isJsonNull() ? deserializeCoordinates(coordinatesJson.getAsJsonObject()) : new CoordinatesModel(0d, 0d);
+        List<String> categories = categoriesJson != null && !categoriesJson.isJsonNull() ? deserializeCategories(categoriesJson.getAsJsonArray()) : new ArrayList<>();
+        LocationModel locationModel = locationJson != null && !locationJson.isJsonNull() ? deserializeLocation(locationJson.getAsJsonObject()) : new LocationModel("", "", "", "", "", "");
 
         PlaceModel placeModel = new PlaceModel();
-        placeModel.setId(place.get("id").getAsString());
-        placeModel.setName(place.get("name").getAsString());
-        placeModel.setImageUrl(place.get("image_url").isJsonNull() ? "" : place.get("image_url").getAsString());
+        placeModel.setId(id);
+        placeModel.setName(name);
+        placeModel.setImageUrl(imageUrl);
         placeModel.setCoordinatesModel(coordinatesModel);
         placeModel.setCategories(categories);
         placeModel.setLocationModel(locationModel);
@@ -64,10 +74,16 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         return placeModel;
     }
 
-    private CoordinatesModel deserializeCoordinates(JsonObject coordinates) {
+    private CoordinatesModel deserializeCoordinates(JsonObject coordinatesJson) {
+        JsonElement latitudeJson = coordinatesJson.get("latitude");
+        JsonElement longitudeJson = coordinatesJson.get("longitude");
+
+        double latitude = latitudeJson != null && !latitudeJson.isJsonNull() ? latitudeJson.getAsDouble() : 0;
+        double longitude = longitudeJson != null && !longitudeJson.isJsonNull() ? longitudeJson.getAsDouble() : 0;
+
         CoordinatesModel coordinatesModel = new CoordinatesModel();
-        coordinatesModel.setLatitude(coordinates.get("latitude").getAsDouble());
-        coordinatesModel.setLongitude(coordinates.get("longitude").getAsDouble());
+        coordinatesModel.setLatitude(latitude);
+        coordinatesModel.setLongitude(longitude);
         return coordinatesModel;
     }
 
@@ -79,17 +95,32 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
     }
 
     private String deserializeCategory(JsonObject category) {
-        return category.get("title").getAsString();
+        JsonElement titleJson = category.get("title");
+        return titleJson != null && !titleJson.isJsonNull() ? titleJson.getAsString() : "";
     }
 
-    private LocationModel deserializeLocation(JsonObject location) {
+    private LocationModel deserializeLocation(JsonObject locationJson) {
+        JsonElement countryJson = locationJson.get("country");
+        JsonElement stateJson = locationJson.get("state");
+        JsonElement cityJson = locationJson.get("city");
+        JsonElement zipCodeJson = locationJson.get("zip_code");
+        JsonElement suburbJson = locationJson.get("address2");
+        JsonElement addressJson = locationJson.get("address1");
+
+        String country = countryJson != null && !countryJson.isJsonNull() ? countryJson.getAsString() : "";
+        String state = stateJson != null && !stateJson.isJsonNull() ? stateJson.getAsString() : "";
+        String city = cityJson != null && !cityJson.isJsonNull() ? cityJson.getAsString() : "";
+        String zipCode = zipCodeJson != null && !zipCodeJson.isJsonNull() ? zipCodeJson.getAsString() : "";
+        String suburb = suburbJson != null && !suburbJson.isJsonNull() ? suburbJson.getAsString() : "";
+        String address = addressJson != null && !addressJson.isJsonNull() ? addressJson.getAsString() : "";
+
         LocationModel locationModel = new LocationModel();
-        locationModel.setCountry(location.get("country").isJsonNull() ? "" : location.get("country").getAsString());
-        locationModel.setState(location.get("state").isJsonNull() ? "" : location.get("state").getAsString());
-        locationModel.setCity(location.get("city").isJsonNull() ? "" : location.get("city").getAsString());
-        locationModel.setZipCode(location.get("zip_code").isJsonNull() ? "" : location.get("zip_code").getAsString());
-        locationModel.setSuburb(location.get("address2").isJsonNull() ? "" : location.get("address2").getAsString());
-        locationModel.setAddress(location.get("address1").isJsonNull() ? "" : location.get("address1").getAsString());
+        locationModel.setCountry(country);
+        locationModel.setState(state);
+        locationModel.setCity(city);
+        locationModel.setZipCode(zipCode);
+        locationModel.setSuburb(suburb);
+        locationModel.setAddress(address);
         return locationModel;
     }
 }

@@ -10,14 +10,12 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReviewsModelDeserializer implements JsonDeserializer<ResponseReviewsModel> {
-    private final String TAG = "ReviewsModuleDeserializer";
     private final Gson gson;
 
     public ReviewsModelDeserializer(Gson gson) {
@@ -25,12 +23,14 @@ public class ReviewsModelDeserializer implements JsonDeserializer<ResponseReview
     }
 
     @Override
-    public ResponseReviewsModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        Log.i(TAG, gson.toJson(json));
+    public ResponseReviewsModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        Log.i(getClass().getName(), gson.toJson(json));
+
         JsonObject body = json.getAsJsonObject();
 
-        JsonArray reviews = body.getAsJsonArray("reviews");
-        List<ReviewModel> reviewsModel = deserializeReviews(reviews);
+        JsonElement reviewsJson = body.get("reviews");
+
+        List<ReviewModel> reviewsModel = reviewsJson != null && !reviewsJson.isJsonNull() ? deserializeReviews(reviewsJson.getAsJsonArray()) : new ArrayList<>();
 
         ResponseReviewsModel responseReviewsModel = new ResponseReviewsModel();
         responseReviewsModel.setReviewModels(reviewsModel);
@@ -47,20 +47,36 @@ public class ReviewsModelDeserializer implements JsonDeserializer<ResponseReview
     }
 
     private ReviewModel deserializeReviewModel(JsonObject review) {
-        JsonObject user = review.getAsJsonObject("user");
+        JsonElement userJson = review.get("user");
+        JsonElement timeCreatedJson = review.get("time_created");
+        JsonElement ratingJson = review.get("rating");
+        JsonElement textJson = review.get("text");
+        JsonObject user = userJson != null && !userJson.isJsonNull() ? userJson.getAsJsonObject() : new JsonObject();
+        JsonElement nameJson = user.get("name");
+        JsonElement imageUrlJson = user.get("image_url");
+
+
+        String name = nameJson != null && !nameJson.isJsonNull() ? nameJson.getAsString() : "";
+        String imageUrl = imageUrlJson != null && !imageUrlJson.isJsonNull() ? imageUrlJson.getAsString() : "";
+        String dateCreated = timeCreatedJson != null && !timeCreatedJson.isJsonNull() ? getDateCreated(timeCreatedJson.getAsString()) : "";
+        Integer rating = ratingJson != null && !ratingJson.isJsonNull() ? ratingJson.getAsInt() : 0;
+        String description = textJson != null && !textJson.isJsonNull() ? textJson.getAsString() : "";
 
         ReviewModel reviewModel = new ReviewModel();
-        reviewModel.setUserName(user.get("name").getAsString());
-        reviewModel.setImageUrl(user.get("image_url").getAsString());
-        reviewModel.setDateCreated(getDateCreated(review.get("time_created").getAsString()));
-        reviewModel.setRate(review.get("rating").getAsInt());
-        reviewModel.setDescription(review.get("text").getAsString());
+        reviewModel.setUserName(name);
+        reviewModel.setImageUrl(imageUrl);
+        reviewModel.setDateCreated(dateCreated);
+        reviewModel.setRate(rating);
+        reviewModel.setDescription(description);
 
         return reviewModel;
     }
 
     private String getDateCreated(String time) {
-        String[] date = time.split(" ");
-        return date[0];
+        if(time.compareTo("") != 0) {
+            String[] date = time.split(" ");
+            return date[0];
+        }
+        return "";
     }
 }

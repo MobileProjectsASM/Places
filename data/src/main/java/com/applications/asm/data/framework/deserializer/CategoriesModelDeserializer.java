@@ -10,7 +10,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -24,12 +23,12 @@ public class CategoriesModelDeserializer implements JsonDeserializer<ResponseCat
     }
 
     @Override
-    public ResponseCategoriesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        String TAG = "CategoriesModelDeserializer";
-        Log.i(TAG, gson.toJson(json));
+    public ResponseCategoriesModel deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+        Log.i(getClass().getName(), gson.toJson(json));
         JsonObject body = json.getAsJsonObject();
+        JsonElement categoriesJson = body.get("categories");
 
-        List<CategoryModel> categoriesModel = deserializeCategoriesModel(body.getAsJsonArray("categories"));
+        List<CategoryModel> categoriesModel = categoriesJson != null && !categoriesJson.isJsonNull() ? deserializeCategoriesModel(categoriesJson.getAsJsonArray()) : new ArrayList<>();
 
         ResponseCategoriesModel responseCategoriesModel = new ResponseCategoriesModel();
         responseCategoriesModel.setCategoryModelList(categoriesModel);
@@ -39,19 +38,25 @@ public class CategoriesModelDeserializer implements JsonDeserializer<ResponseCat
     }
 
     private List<CategoryModel> deserializeCategoriesModel(JsonArray categories) {
-        List<CategoryModel> categoriesModel = new ArrayList<>();
-
-        for(JsonElement suggestedPlaceModel: categories)
-            categoriesModel.add(deserializeCategoryModel(suggestedPlaceModel.getAsJsonObject()));
-
-        return categoriesModel;
+        if(categories.size() > 0) {
+            List<CategoryModel> categoriesModel = new ArrayList<>();
+            for(JsonElement suggestedPlaceModel: categories)
+                categoriesModel.add(deserializeCategoryModel(suggestedPlaceModel.getAsJsonObject()));
+            return categoriesModel;
+        }
+        return new ArrayList<>();
     }
 
     private CategoryModel deserializeCategoryModel(JsonObject categoryJson) {
-        CategoryModel categoryModel = new CategoryModel();
+        JsonElement aliasJson = categoryJson.get("alias");
+        JsonElement titleJson = categoryJson.get("title");
 
-        categoryModel.setId(categoryJson.get("alias").getAsString());
-        categoryModel.setName(categoryJson.get("title").getAsString());
+        String alias = aliasJson != null && !aliasJson.isJsonNull() ? aliasJson.getAsString() : "";
+        String name = titleJson != null && !titleJson.isJsonNull() ?  titleJson.getAsString() : "";
+
+        CategoryModel categoryModel = new CategoryModel();
+        categoryModel.setId(alias);
+        categoryModel.setName(name);
 
         return categoryModel;
     }
