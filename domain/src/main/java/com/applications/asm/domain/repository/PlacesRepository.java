@@ -5,7 +5,6 @@ import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Review;
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.exception.PlacesRepositoryException;
 
 import java.util.List;
 

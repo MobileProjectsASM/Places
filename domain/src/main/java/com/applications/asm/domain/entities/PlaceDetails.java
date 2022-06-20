@@ -2,12 +2,7 @@ package com.applications.asm.domain.entities;
 
 import java.util.List;
 
-public class PlaceDetails {
-    private String id;
-    private String name;
-    private String imageUrl;
-    private Double longitude;
-    private Double latitude;
+public class PlaceDetails extends Place {
     private Double rating;
     private Price price;
     private String phoneNumber;
@@ -18,9 +13,10 @@ public class PlaceDetails {
     public PlaceDetails(
         String id,
         String name,
+        Location location,
         String imageUrl,
-        Double longitude,
-        Double latitude,
+        List<String> categories,
+        String address,
         Double rating,
         Price price,
         String phoneNumber,
@@ -28,57 +24,13 @@ public class PlaceDetails {
         List<WorkingHours> workingHoursDays,
         Boolean isOpen
     ) {
-        this.id = id;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        super(id, name, location, imageUrl, categories, address);
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
         this.reviewsCounter = reviewsCounter;
         this.workingHoursDays = workingHoursDays;
         this.isOpen = isOpen;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
     }
 
     public Double getRating() {
