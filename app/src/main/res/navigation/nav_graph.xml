@@ -3,28 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/searchFragment">
+    app:startDestination="@id/filterFragment">
 
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.applications.asm.places.view.fragments.SearchFragment"
+        android:id="@+id/filterFragment"
+        android:name="com.applications.asm.places.view.fragments.FilterFragment"
         android:label="@string/fragment_search_label"
-        tools:layout="@layout/fragment_search" >
+        tools:layout="@layout/fragment_filter" >
         <action
-            android:id="@+id/action_searchFragment_to_listFragment"
-            app:destination="@id/listFragment" />
+            android:id="@+id/action_filterFragment_to_placesFragment"
+            app:destination="@id/placesFragment" />
         <action
-            android:id="@+id/action_searchFragment_to_placesMapFragment"
-            app:destination="@id/placesMapFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/listFragment"
-        android:name="com.applications.asm.places.view.fragments.ListFragment"
-        android:label="@string/fragment_list_label"
-        tools:layout="@layout/fragment_list" >
-        <action
-            android:id="@+id/action_listFragment_to_placeDetailsFragment"
-            app:destination="@id/placeDetailsFragment" />
+            android:id="@+id/action_filterFragment_to_categoriesFragment"
+            app:destination="@id/categoriesFragment" />
     </fragment>
     <fragment
         android:id="@+id/placeDetailsFragment"
@@ -36,17 +27,39 @@
             app:destination="@id/reviewsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/placesMapFragment"
-        android:name="com.applications.asm.places.view.fragments.PlacesMapFragment"
-        android:label="fragment_places_map"
-        tools:layout="@layout/fragment_places_map" >
-        <action
-            android:id="@+id/action_placesMapFragment_to_placeDetailsFragment"
-            app:destination="@id/placeDetailsFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/reviewsFragment"
         android:name="com.applications.asm.places.view.fragments.ReviewsFragment"
         android:label="fragment_reviews"
         tools:layout="@layout/fragment_reviews" />
+    <fragment
+        android:id="@+id/locationFragment"
+        android:name="com.applications.asm.places.view.fragments.LocationFragment"
+        android:label="fragment_location"
+        tools:layout="@layout/fragment_location" />
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.applications.asm.places.view.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search" >
+        <action
+            android:id="@+id/action_searchFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_placeDetailsFragment"
+            app:destination="@id/placeDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/placesFragment"
+        android:name="com.applications.asm.places.view.fragments.PlacesFragment"
+        android:label="fragment_places"
+        tools:layout="@layout/fragment_places" >
+        <action
+            android:id="@+id/action_placesFragment_to_placeDetailsFragment"
+            app:destination="@id/placeDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoriesFragment"
+        android:name="com.applications.asm.places.view.fragments.CategoriesFragment"
+        android:label="fragment_categories"
+        tools:layout="@layout/fragment_categories" />
 </navigation>

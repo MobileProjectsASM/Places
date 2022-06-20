@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/default_size_expanded_style"
+    tools:context=".view.fragments.CategoriesFragment">
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/default_size_fit_style"
+            android:layout_gravity="center_vertical"
+            android:text="@string/categories_text_view" />
+
+        <HorizontalScrollView
+            style="@style/default_size_height_style"
+            android:layout_marginStart="10dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/categories_chip_group"
+                style="@style/default_size_height_style">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_1"
+                    style="@style/default_input_chip_style"
+                    tools:text="Barato" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_2"
+                    style="@style/default_input_chip_style"
+                    tools:text="Regular" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_3"
+                    style="@style/default_input_chip_style"
+                    tools:text="Caro" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_4"
+                    style="@style/default_input_chip_style"
+                    tools:text="Muy Caro" />
+            </com.google.android.material.chip.ChipGroup>
+
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <com.google.android.material.divider.MaterialDivider
+        style="@style/default_middle_divider"
+        android:id="@+id/divider3"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="20dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_category_text_input_layout"
+        style="@style/text_input_layout_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="20dp"
+        android:hint="@string/category_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider3">
+
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/default_size_height_style"
+            android:textAppearance="@style/regular_text_style"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/categories_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_category_text_input_layout"
+        app:layout_constraintBottom_toTopOf="@id/apply_categories_button"
+        tools:listitem="@layout/category_item_layout" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/contained_button_container_style"
+        android:id="@+id/apply_categories_button"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/apply_categories_text_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

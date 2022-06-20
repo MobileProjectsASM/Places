@@ -72,6 +72,11 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="text_check_box_style" parent="regular_text_style">
+        <item name="android:textSize">@dimen/text_chip_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
     <style name="text_info_place_style" parent="regular_text_style">
         <item name="android:textSize">@dimen/small_text_size</item>
     </style>
@@ -81,8 +86,7 @@
     </style>
 
     <!-- TEXT-INPUT STYLES -->
-    <style name="text_input_layout_style" parent="default_size_height_style">
-        <item name="android:textColorHint">@color/primary_color</item>
+    <style name="text_input_layout_style">
         <item name="startIconTint">@color/primary_color</item>
         <item name="endIconTint">@color/primary_color</item>
     </style>
@@ -93,7 +97,6 @@
     </style>
 
     <style name="exposed_drop_down_menu" parent="exposed_drop_down_menu_default_size_height">
-        <item name="android:textColorHint">@color/primary_color</item>
         <item name="startIconTint">@color/primary_color</item>
     </style>
 
@@ -125,6 +128,12 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="checkedIconVisible">true</item>
+        <item name="android:textAppearance">@style/text_chip_style</item>
+    </style>
+
+    <style name="default_input_chip_style" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/text_chip_style</item>
     </style>
 </resources>

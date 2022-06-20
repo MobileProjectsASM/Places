@@ -4,7 +4,7 @@
     <string name="text_helper_place_to_find">Lugar a buscar</string>
     <string name="text_helper_origin_coordinates">Coordenadas de origen</string>
     <string name="text_helper_radio_to_find">Radio de busqueda</string>
-    <string name="text_helper_category_selected">Selecciona las categorias</string>
+    <string name="price_text_view">Precio</string>
     <string name="text_helper_address">Direccion:</string>
     <string name="text_helper_categories">Categories:</string>
     <string name="text_helper_rates">Evaluacion(es)</string>
@@ -32,27 +32,23 @@
     <string name="text_info_not_found_places">No se encontraron lugares intente con otra ubicacion o cambie los filtros de busqueda</string>
     <string name="text_info_not_found_reviews">No se encontraron reseñas</string>
 
-    <!--TEXT TEXTS-INPUT-->
-    <string name="text_text_input_place">Lugar</string>
-    <string name="text_text_input_latitude">Latitud</string>
-    <string name="text_text_input_longitude">Longitud</string>
-    <string name="text_text_input_radius">Radio</string>
-    <string name="text_text_input_category">Categoria</string>
-    <string name="text_text_input_show_mode">Modo vista</string>
-    <string name="category_active_life">Vida activa</string>
-    <string name="category_food">Comida</string>
-    <string name="category_arts_entertainment">Artes</string>
-    <string name="category_health">Salud</string>
-    <string name="category_automotive">Automotriz</string>
-    <string name="category_beauty_spas">Belleza</string>
-    <string name="category_nightlife">Vida nocturna</string>
-    <string name="category_education">Educacion</string>
-    <string name="category_public_services">Servicios publicos</string>
-    <string name="category_pets">Mascotas</string>
+    <!--LABELS TEXTS-INPUT-->
+    <string name="place_label">Lugar</string>
+    <string name="latitude_label">Latitud</string>
+    <string name="longitude_label">Longitud</string>
+    <string name="radius_label">Radio</string>
+    <string name="categories_label">Categorias</string>
+    <string name="category_label">Categoria</string>
+    <string name="sort_label">Ordenar por</string>
+    <string name="cheap_text_chip">Barato</string>
+    <string name="regular_text_chip">Regular</string>
+    <string name="expensive_text_chip">Caro</string>
+    <string name="very_expensive_text_chip">Muy Caro</string>
+
 
     <!--TEXT BUTTONS-->
     <string name="text_contained_button_get_coordinates">My ubicacion</string>
-    <string name="text_contained_button_search_places">Buscar</string>
+    <string name="apply_filter_text_label">Aplicar filtro</string>
     <string name="text_contained_button_set_coordinates">Establecer coordenadas</string>
     <string name="text_contained_button_see_reviews">Ver reseñas</string>
 
@@ -69,4 +65,23 @@
     <string name="places_service_base_url" translatable="false">https://api.yelp.com/</string>
     <string name="places_service_api_key" translatable="false">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
     <string name="MAP_API_KEY" translatable="false">AIzaSyCfaCxqbQogUqs1p3eEYdt9SZG5JbeLyWs</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="error_validate_form_search">Error al validar el formulario</string>
+    <string name="error_validate_form_location">Error al validar formulario</string>
+    <string name="error_save_location">Error al guardar localizacion</string>
+    <string name="error_load_location">Error al cargar localizacion</string>
+    <string name="error_connection_with_server">Error al conectar con el servidor</string>
+    <string name="error_server">Error en el servidor</string>
+    <string name="error_network_connection">No hay conexion de internet</string>
+    <string name="error_unknown">Error desconocido</string>
+    <string name="error_location_invalid">Localizacion invalida</string>
+    <string name="places_only_open_text_check_box">¿Abierto ahora?</string>
+    <string name="set_location_text_label">Establecer Localizacion</string>
+    <string name="automatic_location">Localizacion automatica</string>
+    <string name="kind_visibility">Tipo de vista</string>
+    <string name="view_list">Lista</string>
+    <string name="view_map">Mapa</string>
+    <string name="categories_text_view">Categorias:</string>
+    <string name="apply_categories_text_label">Aplicar</string>
 </resources>
