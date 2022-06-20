@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public interface PlacesRepository {
     Single<PlaceDetails> getPlaceDetails(String placeId);
-    Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<String> categories, Integer page);
+    Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer page);
     Single<List<Review>> getReviews(String placeId);
     Single<List<SuggestedPlace>> getSuggestedPlaces(String word, Double longitude, Double latitude);
     Single<List<Category>> getCategories(String word, Double longitude, Double latitude, String locale);

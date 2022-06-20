@@ -1,6 +1,9 @@
 package com.applications.asm.domain.use_cases;
 
+import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Place;
+import com.applications.asm.domain.entities.Price;
+import com.applications.asm.domain.entities.SortCriteria;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.GetPlacesError;
 import com.applications.asm.domain.exception.GetPlacesException;
@@ -28,20 +31,26 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
         private final Double latitude;
         private final Double longitude;
         private final Integer radius;
-        private final List<String> categories;
+        private final List<Category> categories;
+        private final SortCriteria sortCriteria;
+        private final List<Price> prices;
+        private final Boolean isOpenNow;
         private final Integer page;
 
-        private Params(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories, Integer page) {
+        private Params(String placeToFind, Double latitude, Double longitude, Integer radius, List<Category> categories, SortCriteria sortCriteria, List<Price> prices, Boolean isOpenNow, Integer page) {
             this.placeToFind = placeToFind;
             this.latitude = latitude;
             this.longitude = longitude;
             this.radius = radius;
             this.categories = categories;
+            this.sortCriteria = sortCriteria;
+            this.prices = prices;
+            this.isOpenNow = isOpenNow;
             this.page = page;
         }
 
-        public static Params forFilterPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<String> categories, Integer page) {
-            return new Params(placeToFind, latitude, longitude, radius, categories,page);
+        public static Params forFilterPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<Category> categories, SortCriteria sortCriteria, List<Price> prices, Boolean isOpenNow, Integer page) {
+            return new Params(placeToFind, latitude, longitude, radius, categories, sortCriteria, prices, isOpenNow, page);
         }
     }
 
@@ -53,7 +62,7 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.placeToFind == null || params.latitude == null || params.longitude == null || params.radius == null || params.categories == null || params.page == null)
+            if(params.placeToFind == null || params.latitude == null || params.longitude == null || params.radius == null || params.categories == null || params.sortCriteria == null || params.prices == null || params.isOpenNow == null || params.page == null)
                 throw new GetPlacesException(GetPlacesError.ANY_VALUE_IS_NULL);
             if(!validators.validateLatitudeRange(params.latitude) || !validators.validateLongitudeRange(params.longitude))
                 throw new GetPlacesException(GetPlacesError.LAT_LON_OUT_OF_RANGE);
@@ -68,7 +77,7 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
     @Override
     protected Single<List<Place>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.longitude, param.latitude, param.radius, param.categories, param.page))
+                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.longitude, param.latitude, param.radius, getCategories(param.categories), param.sortCriteria.getKey(), getPrices(param.prices), param.isOpenNow, param.page))
                 .doOnError(throwable -> {
                     Exception exception = (Exception) throwable;
                     if(exception instanceof PlacesRepositoryException) {
@@ -97,5 +106,29 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
                         }
                     } else throw exception;
                 });
+    }
+
+    private String getCategories(List<Category> categories) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < categories.size(); i++) {
+            if(i == categories.size() - 1)
+                stringBuilder.append(categories.get(i).getId());
+            else if(i == 0)
+                stringBuilder.append(categories.get(i).getId());
+            else stringBuilder.append(",").append(categories.get(i).getId());
+        }
+        return stringBuilder.toString();
+    }
+
+    private String getPrices(List<Price> prices) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i = 0; i < prices.size(); i++) {
+            if(i == prices.size() - 1)
+                stringBuilder.append(prices.get(i));
+            else if(i == 0)
+                stringBuilder.append(prices.get(i));
+            else stringBuilder.append(",").append(prices.get(i));
+        }
+        return stringBuilder.toString();
     }
 }
