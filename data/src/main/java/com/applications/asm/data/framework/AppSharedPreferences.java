@@ -2,17 +2,17 @@ package com.applications.asm.data.framework;
 
 import android.content.SharedPreferences;
 
-import com.applications.asm.data.sources.LocationDataSourceSP;
+import com.applications.asm.data.sources.CacheDataSourceSP;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
-public class LocationSharedPreferences implements LocationDataSourceSP {
+public class AppSharedPreferences implements CacheDataSourceSP {
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
     private final SharedPreferences appPreferences;
 
-    public LocationSharedPreferences(SharedPreferences appPreferences) {
+    public AppSharedPreferences(SharedPreferences appPreferences) {
         this.appPreferences = appPreferences;
     }
 

@@ -2,11 +2,7 @@ package com.applications.asm.data.model;
 
 import java.util.List;
 
-public class PlaceDetailsModel {
-    private String id;
-    private String name;
-    private CoordinatesModel coordinatesModel;
-    private String imageUrl;
+public class PlaceDetailsModel extends PlaceModel {
     private Double rating;
     private String price;
     private String phoneNumber;
@@ -14,51 +10,18 @@ public class PlaceDetailsModel {
     private List<WorkingHoursModel> workingHoursModelDays;
     private Boolean isOpen;
 
-    public PlaceDetailsModel() {}
+    public PlaceDetailsModel() {
+        super();
+    }
 
-    public PlaceDetailsModel(String id, String name, CoordinatesModel coordinatesModel, String imageUrl, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursModel> workingHoursModelDays, Boolean isOpen) {
-        this.id = id;
-        this.name = name;
-        this.coordinatesModel = coordinatesModel;
-        this.imageUrl = imageUrl;
+    public PlaceDetailsModel(String id, String name, String imageUrl, CoordinatesModel coordinatesModel, List<String> categories, LocationModel locationModel, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursModel> workingHoursModelDays, Boolean isOpen) {
+        super(id, name, imageUrl, coordinatesModel, categories, locationModel);
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
         this.reviewCount = reviewCount;
         this.workingHoursModelDays = workingHoursModelDays;
         this.isOpen = isOpen;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public CoordinatesModel getCoordinatesModel() {
-        return coordinatesModel;
-    }
-
-    public void setCoordinatesModel(CoordinatesModel coordinatesModel) {
-        this.coordinatesModel = coordinatesModel;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public Double getRating() {

@@ -7,7 +7,6 @@ import com.applications.asm.data.model.PlaceModel;
 import com.applications.asm.data.model.ReviewModel;
 import com.applications.asm.data.model.SuggestedPlaceModel;
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
-import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
 import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
@@ -30,7 +29,6 @@ import io.reactivex.rxjava3.core.Single;
 public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlacesDataSourceWS placeDataSourceWs;
     private final PlaceModelMapper placeModelMapper;
-    private final PlaceDetailsModelMapper placeDetailsModelMapper;
     private final ReviewModelMapper reviewModelMapper;
     private final SuggestedPlaceModelMapper suggestedPlaceModelMapper;
     private final CategoryModelMapper categoryModelMapper;
@@ -41,14 +39,12 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     public PlacesRepositoryImpl(
         PlacesDataSourceWS placesDataSourceWs,
         PlaceModelMapper placeModelMapper,
-        PlaceDetailsModelMapper placeDetailsModelMapper,
         ReviewModelMapper reviewModelMapper,
         SuggestedPlaceModelMapper suggestedPlaceModelMapper,
         CategoryModelMapper categoryModelMapper
     ) {
         this.placeDataSourceWs = placesDataSourceWs;
         this.placeModelMapper = placeModelMapper;
-        this.placeDetailsModelMapper = placeDetailsModelMapper;
         this.reviewModelMapper = reviewModelMapper;
         this.suggestedPlaceModelMapper = suggestedPlaceModelMapper;
         this.categoryModelMapper = categoryModelMapper;
@@ -63,7 +59,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             placeDataSourceWs::getPlaceDetailsModel
         ).map(placeDetailsModel -> {
             if(placeDetailsModel != null)
-                return placeDetailsModelMapper.getPlaceDetailsFromPlaceDetailsModel(placeDetailsModel);
+                return placeModelMapper.getPlaceDetailsFromPlaceDetailsModel(placeDetailsModel);
             throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         })
         .doOnError(throwable -> {

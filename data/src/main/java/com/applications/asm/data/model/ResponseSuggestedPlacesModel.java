@@ -1,7 +1,5 @@
 package com.applications.asm.data.model;
 
-import com.applications.asm.domain.entities.SuggestedPlace;
-
 import java.util.List;
 
 public class ResponseSuggestedPlacesModel {
