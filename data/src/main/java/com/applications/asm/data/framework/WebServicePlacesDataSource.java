@@ -32,8 +32,8 @@ public class WebServicePlacesDataSource implements PlacesDataSourceWS {
     }
 
     @Override
-    public Single<ResponsePlacesModel> getPlacesModel(String placeToFind, Double longitude, Double latitude, Integer radius, String categories, Integer initIndex, Integer amount) {
-        return placeApi.getPlacesModel(apiKey, placeToFind, latitude, longitude, radius, categories, initIndex, amount)
+    public Single<ResponsePlacesModel> getPlacesModel(String placeToFind, Double longitude, Double latitude, Integer radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer initIndex, Integer amount) {
+        return placeApi.getPlacesModel(apiKey, placeToFind, latitude, longitude, radius, categories, sortBy, price, isOpenNow, initIndex, amount)
             .doOnError(throwable -> {
                 Exception exception = (Exception) throwable;
                 if(exception instanceof HttpException) {
