@@ -9,10 +9,10 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetPrices extends SingleUseCase<List<Price>, Object> {
+public class GetPricesUc extends SingleUseCase<List<Price>, Object> {
     private final PlacesRepository placesRepository;
 
-    public GetPrices(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
+    public GetPricesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
         super(useCaseScheduler);
         this.placesRepository = placesRepository;
     }
