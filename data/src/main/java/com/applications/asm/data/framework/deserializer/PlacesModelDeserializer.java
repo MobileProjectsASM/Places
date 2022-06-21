@@ -2,6 +2,7 @@ package com.applications.asm.data.framework.deserializer;
 
 import android.util.Log;
 
+import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceModel;
@@ -60,7 +61,7 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         String name = nameJson != null && !nameJson.isJsonNull() ? nameJson.getAsString() : "";
         String imageUrl = imageUrlJson != null && !imageUrlJson.isJsonNull() ? imageUrlJson.getAsString() : "";
         CoordinatesModel coordinatesModel = coordinatesJson != null && !coordinatesJson.isJsonNull() ? deserializeCoordinates(coordinatesJson.getAsJsonObject()) : new CoordinatesModel(0d, 0d);
-        List<String> categories = categoriesJson != null && !categoriesJson.isJsonNull() ? deserializeCategories(categoriesJson.getAsJsonArray()) : new ArrayList<>();
+        List<CategoryModel> categories = categoriesJson != null && !categoriesJson.isJsonNull() ? deserializeCategories(categoriesJson.getAsJsonArray()) : new ArrayList<>();
         LocationModel locationModel = locationJson != null && !locationJson.isJsonNull() ? deserializeLocation(locationJson.getAsJsonObject()) : new LocationModel("", "", "", "", "", "");
 
         PlaceModel placeModel = new PlaceModel();
@@ -87,16 +88,20 @@ public class PlacesModelDeserializer implements JsonDeserializer<ResponsePlacesM
         return coordinatesModel;
     }
 
-    private List<String> deserializeCategories(JsonArray categories) {
-        List<String> categoriesModel = new ArrayList<>();
+    private List<CategoryModel> deserializeCategories(JsonArray categories) {
+        List<CategoryModel> categoriesModel = new ArrayList<>();
         for (JsonElement category: categories)
             categoriesModel.add(deserializeCategory(category.getAsJsonObject()));
         return categoriesModel;
     }
 
-    private String deserializeCategory(JsonObject category) {
+    private CategoryModel deserializeCategory(JsonObject category) {
+        JsonElement aliasJson = category.get("alias");
         JsonElement titleJson = category.get("title");
-        return titleJson != null && !titleJson.isJsonNull() ? titleJson.getAsString() : "";
+
+        String alias = aliasJson != null && !aliasJson.isJsonNull() ? aliasJson.getAsString() : "";
+        String title = titleJson != null && !titleJson.isJsonNull() ? titleJson.getAsString() : "";
+        return new CategoryModel(alias, title);
     }
 
     private LocationModel deserializeLocation(JsonObject locationJson) {

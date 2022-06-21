@@ -4,17 +4,22 @@ import com.applications.asm.data.exception.PlacesDataSourceWSError;
 import com.applications.asm.data.exception.PlacesDataSourceWSException;
 import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.PlaceModel;
+import com.applications.asm.data.model.PriceModel;
 import com.applications.asm.data.model.ReviewModel;
+import com.applications.asm.data.model.SortCriteriaModel;
 import com.applications.asm.data.model.SuggestedPlaceModel;
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
+import com.applications.asm.data.model.mapper.PriceMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
-import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
+import com.applications.asm.data.model.mapper.SortCriteriaMapper;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
+import com.applications.asm.domain.entities.Price;
 import com.applications.asm.domain.entities.Review;
+import com.applications.asm.domain.entities.SortCriteria;
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
@@ -30,8 +35,9 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlacesDataSourceWS placeDataSourceWs;
     private final PlaceModelMapper placeModelMapper;
     private final ReviewModelMapper reviewModelMapper;
-    private final SuggestedPlaceModelMapper suggestedPlaceModelMapper;
     private final CategoryModelMapper categoryModelMapper;
+    private final SortCriteriaMapper sortCriteriaMapper;
+    private final PriceMapper priceMapper;
     private final static Integer DEFAULT_AMOUNT = 10;
     private Integer totalPages;
     private final Logger log = Logger.getLogger("com.applications.asm.data.repository.PlacesRepositoryImpl");
@@ -40,14 +46,16 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         PlacesDataSourceWS placesDataSourceWs,
         PlaceModelMapper placeModelMapper,
         ReviewModelMapper reviewModelMapper,
-        SuggestedPlaceModelMapper suggestedPlaceModelMapper,
-        CategoryModelMapper categoryModelMapper
+        CategoryModelMapper categoryModelMapper,
+        SortCriteriaMapper sortCriteriaMapper,
+        PriceMapper priceMapper
     ) {
         this.placeDataSourceWs = placesDataSourceWs;
         this.placeModelMapper = placeModelMapper;
         this.reviewModelMapper = reviewModelMapper;
-        this.suggestedPlaceModelMapper = suggestedPlaceModelMapper;
         this.categoryModelMapper = categoryModelMapper;
+        this.sortCriteriaMapper = sortCriteriaMapper;
+        this.priceMapper = priceMapper;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             placeDataSourceWs::getPlaceDetailsModel
         ).map(placeDetailsModel -> {
             if(placeDetailsModel != null)
-                return placeModelMapper.getPlaceDetailsFromPlaceDetailsModel(placeDetailsModel);
+                return placeModelMapper.getPlaceDetails(placeDetailsModel);
             throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         })
         .doOnError(throwable -> {
@@ -85,14 +93,14 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
-    public Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer page) {
+    public Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<Category> categories, SortCriteria sortBy, List<Price> prices, Boolean isOpenNow, Integer page) {
         return Single.fromCallable(() -> {
             if(placeToFind == null || longitude == null || latitude == null || radius == null || categories == null || page == null)
                 throw new PlacesRepositoryException(PlacesRepositoryError.ANY_VALUE_IS_NULL);
             return true;
         }).flatMap(params -> {
             if(page == 0) {
-                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categories, sortBy, price, isOpenNow,0, DEFAULT_AMOUNT)
+                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaMapper.getSortCriteriaModel(sortBy), priceMapper.getPricesModel(prices), isOpenNow,0, DEFAULT_AMOUNT)
                     .flatMap(responsePlacesModel -> Single.fromCallable(() -> {
                         if(responsePlacesModel != null) {
                             int total = responsePlacesModel.getTotal();
@@ -102,15 +110,12 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
                     }));
             } else if(page > 0 && page < totalPages)
-                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categories, sortBy, price, isOpenNow, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
+                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaMapper.getSortCriteriaModel(sortBy), priceMapper.getPricesModel(prices), isOpenNow, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
             throw new PlacesRepositoryException(PlacesRepositoryError.PAGE_OUT_OF_RANGE);
         }).map(responsePlacesModel -> {
-            if(responsePlacesModel != null) {
-                List<Place> places = new ArrayList<>();
-                for (PlaceModel placeModel : responsePlacesModel.getPlaces())
-                    places.add(placeModelMapper.getPlaceFromPlaceModel(placeModel));
-                return places;
-            } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+            if(responsePlacesModel != null)
+                return placeModelMapper.getPlaces(responsePlacesModel.getPlaces());
+            throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
             if(exception instanceof RuntimeException) {
@@ -141,12 +146,9 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         }).flatMap(
             placeDataSourceWs::getReviewsModel
         ).map(responseReviewsModel -> {
-            if(responseReviewsModel != null) {
-                List<Review> reviews = new ArrayList<>();
-                for (ReviewModel reviewModel : responseReviewsModel.getReviewModels())
-                    reviews.add(reviewModelMapper.getReviewFromReviewModel(reviewModel));
-                return reviews;
-            } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+            if(responseReviewsModel != null)
+                return reviewModelMapper.getReviews(responseReviewsModel.getReviewModels());
+            throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
             if(exception instanceof RuntimeException) {
@@ -179,12 +181,8 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         }).flatMap(
             value -> placeDataSourceWs.getSuggestedPlaces(word, longitude, latitude)
         ).map(responseSuggestedPlacesModel -> {
-            if(responseSuggestedPlacesModel != null) {
-                List<SuggestedPlace> suggestedPlaces = new ArrayList<>();
-                for(SuggestedPlaceModel suggestedPlaceModel: responseSuggestedPlacesModel.getSuggestPlacesModel())
-                    suggestedPlaces.add(suggestedPlaceModelMapper.getSuggestedPlaceFromSuggestedPlaceModel(suggestedPlaceModel));
-                return suggestedPlaces;
-            }
+            if(responseSuggestedPlacesModel != null)
+                return placeModelMapper.getSuggestedPlaces(responseSuggestedPlacesModel.getSuggestPlacesModel());
             throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
@@ -216,12 +214,9 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         }).flatMap(
             value -> placeDataSourceWs.getCategoriesModel(word, longitude, latitude, locale)
         ).map(responseCategoriesModel -> {
-            if(responseCategoriesModel != null) {
-                List<Category> categories = new ArrayList<>();
-                for(CategoryModel categoryModel: responseCategoriesModel.getCategoryModelList())
-                    categories.add(categoryModelMapper.getCategoryFromCategoryModel(categoryModel));
-                return categories;
-            } throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
+            if(responseCategoriesModel != null)
+                return categoryModelMapper.getCategories(responseCategoriesModel.getCategoryModelList());
+            throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
         }).doOnError(throwable -> {
             Exception exception = (Exception) throwable;
             if(exception instanceof RuntimeException) {
@@ -242,5 +237,17 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                 }
             } else throw exception;
         });
+    }
+
+    @Override
+    public Single<List<SortCriteria>> getSortCriteria() {
+        return placeDataSourceWs.getCriteriaModel()
+                .map(sortCriteriaMapper::getSortCriteriaList);
+    }
+
+    @Override
+    public Single<List<Price>> getPrices() {
+        return placeDataSourceWs.getPricesModel()
+                .map(priceMapper::getPrices);
     }
 }

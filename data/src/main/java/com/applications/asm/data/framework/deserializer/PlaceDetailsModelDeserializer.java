@@ -1,10 +1,14 @@
 package com.applications.asm.data.framework.deserializer;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.applications.asm.data.R;
+import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceDetailsModel;
+import com.applications.asm.data.model.PriceModel;
 import com.applications.asm.data.model.WorkingHoursModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -20,9 +24,11 @@ import java.util.List;
 
 public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDetailsModel> {
     private final Gson gson;
+    private final Context context;
 
-    public PlaceDetailsModelDeserializer(Gson gson) {
+    public PlaceDetailsModelDeserializer(Gson gson, Context context) {
         this.gson = gson;
+        this.context = context;
     }
 
     @Override
@@ -51,9 +57,9 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
         String name = nameJson != null && !nameJson.isJsonNull() ? nameJson.getAsString() : "";
         String imageUrl = imageUrlJson != null && !imageUrlJson.isJsonNull() ? imageUrlJson.getAsString() : "";
         Double rating = ratingJson != null && !ratingJson.isJsonNull() ? ratingJson.getAsDouble() : 0;
-        String price = priceJson != null && !priceJson.isJsonNull() ? priceJson.getAsString() : "";
+        PriceModel price = priceJson != null && !priceJson.isJsonNull() ? getPrice(priceJson.getAsString()) : new PriceModel("unknown", this.context.getString(R.string.price_unknown));
         String phone = phoneJson != null && !phoneJson.isJsonNull() ? phoneJson.getAsString() : "";
-        List<String> categories = categoriesJson != null && !categoriesJson.isJsonNull() ? deserializeCategories(categoriesJson.getAsJsonArray()) : new ArrayList<>();
+        List<CategoryModel> categories = categoriesJson != null && !categoriesJson.isJsonNull() ? deserializeCategories(categoriesJson.getAsJsonArray()) : new ArrayList<>();
         LocationModel locationModel = locationJson != null && !locationJson.isJsonNull() ? deserializeLocation(locationJson.getAsJsonObject()) : new LocationModel("", "", "", "", "", "");
         Integer reviewCount = reviewCountJson != null && !reviewCountJson.isJsonNull() ? reviewCountJson.getAsInt() : 0;
         Boolean isOpen = isOpenNowJson != null && !isOpenNowJson.isJsonNull() && isOpenNowJson.getAsBoolean();
@@ -78,6 +84,18 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
         return placeDetailsModel;
     }
 
+    private PriceModel getPrice(String price) {
+        if(price.compareTo("$") == 0)
+            return new PriceModel("$", this.context.getString(R.string.price_cheap));
+        else if(price.compareTo("$$") == 0)
+            return new PriceModel("$$", this.context.getString(R.string.price_regular));
+        else if(price.compareTo("$$$") == 0)
+            return new PriceModel("$$$", this.context.getString(R.string.price_expensive));
+        else if(price.compareTo("$$$$") == 0)
+            return new PriceModel("$$$$", this.context.getString(R.string.price_very_expensive));
+        else return new PriceModel("unknown", this.context.getString(R.string.price_unknown));
+    }
+
     private CoordinatesModel deserializeCoordinates(JsonObject coordinates) {
         JsonElement latitudeJson = coordinates.get("latitude");
         JsonElement longitudeJson = coordinates.get("longitude");
@@ -91,16 +109,21 @@ public class PlaceDetailsModelDeserializer implements JsonDeserializer<PlaceDeta
         return coordinatesModel;
     }
 
-    private List<String> deserializeCategories(JsonArray categories) {
-        List<String> categoriesModel = new ArrayList<>();
+    private List<CategoryModel> deserializeCategories(JsonArray categories) {
+        List<CategoryModel> categoriesModel = new ArrayList<>();
         for (JsonElement category: categories)
             categoriesModel.add(deserializeCategory(category.getAsJsonObject()));
         return categoriesModel;
     }
 
-    private String deserializeCategory(JsonObject category) {
+    private CategoryModel deserializeCategory(JsonObject category) {
+        JsonElement aliasJson = category.get("alias");
         JsonElement titleJson = category.get("title");
-        return titleJson != null && !titleJson.isJsonNull() ? titleJson.getAsString() : "";
+
+        String alias = aliasJson != null && !aliasJson.isJsonNull() ? aliasJson.getAsString() : "";
+        String title = titleJson != null && !titleJson.isJsonNull() ? titleJson.getAsString() : "";
+
+        return new CategoryModel(alias, title);
     }
 
     private LocationModel deserializeLocation(JsonObject locationJson) {

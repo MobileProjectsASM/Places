@@ -4,7 +4,7 @@ import java.util.List;
 
 public class PlaceDetailsModel extends PlaceModel {
     private Double rating;
-    private String price;
+    private PriceModel price;
     private String phoneNumber;
     private Integer reviewCount;
     private List<WorkingHoursModel> workingHoursModelDays;
@@ -14,7 +14,7 @@ public class PlaceDetailsModel extends PlaceModel {
         super();
     }
 
-    public PlaceDetailsModel(String id, String name, String imageUrl, CoordinatesModel coordinatesModel, List<String> categories, LocationModel locationModel, Double rating, String price, String phoneNumber, Integer reviewCount, List<WorkingHoursModel> workingHoursModelDays, Boolean isOpen) {
+    public PlaceDetailsModel(String id, String name, String imageUrl, CoordinatesModel coordinatesModel, List<CategoryModel> categories, LocationModel locationModel, Double rating, PriceModel price, String phoneNumber, Integer reviewCount, List<WorkingHoursModel> workingHoursModelDays, Boolean isOpen) {
         super(id, name, imageUrl, coordinatesModel, categories, locationModel);
         this.rating = rating;
         this.price = price;
@@ -32,11 +32,11 @@ public class PlaceDetailsModel extends PlaceModel {
         this.rating = rating;
     }
 
-    public String getPrice() {
+    public PriceModel getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(PriceModel price) {
         this.price = price;
     }
 

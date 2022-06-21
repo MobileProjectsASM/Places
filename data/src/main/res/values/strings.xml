@@ -7,4 +7,13 @@
     <string name="friday">Viernes</string>
     <string name="saturday">Sabado</string>
     <string name="sunday">Domingo</string>
+    <string name="sort_by_best_match">Coincidencia</string>
+    <string name="sort_by_rating">Puntucion</string>
+    <string name="sort_by_review_count">Cantidad de evaluaciones</string>
+    <string name="sort_by_distance">Distancia</string>
+    <string name="price_cheap">Barato</string>
+    <string name="price_regular">Regular</string>
+    <string name="price_expensive">Caro</string>
+    <string name="price_very_expensive">Muy Caro</string>
+    <string name="price_unknown">Desconocido</string>
 </resources>
