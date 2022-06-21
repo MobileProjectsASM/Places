@@ -6,7 +6,7 @@ import com.applications.asm.domain.entities.Price;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PriceMapperImpl implements PriceMapper {
+public class PriceModelMapperImpl implements PriceModelMapper {
     @Override
     public PriceModel getPriceModel(Price price) {
         return new PriceModel(price.getId(), price.getName());

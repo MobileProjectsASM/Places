@@ -5,7 +5,7 @@ import com.applications.asm.domain.entities.SortCriteria;
 
 import java.util.List;
 
-public interface SortCriteriaMapper {
+public interface SortCriteriaModelMapper {
     SortCriteriaModel getSortCriteriaModel(SortCriteria sortCriteria);
     SortCriteria getSortCriteria(SortCriteriaModel sortCriteriaModel);
     List<SortCriteria> getSortCriteriaList(List<SortCriteriaModel> sortCriteriaModelList);

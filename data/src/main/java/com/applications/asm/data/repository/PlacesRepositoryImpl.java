@@ -2,17 +2,11 @@ package com.applications.asm.data.repository;
 
 import com.applications.asm.data.exception.PlacesDataSourceWSError;
 import com.applications.asm.data.exception.PlacesDataSourceWSException;
-import com.applications.asm.data.model.CategoryModel;
-import com.applications.asm.data.model.PlaceModel;
-import com.applications.asm.data.model.PriceModel;
-import com.applications.asm.data.model.ReviewModel;
-import com.applications.asm.data.model.SortCriteriaModel;
-import com.applications.asm.data.model.SuggestedPlaceModel;
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
-import com.applications.asm.data.model.mapper.PriceMapper;
+import com.applications.asm.data.model.mapper.PriceModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
-import com.applications.asm.data.model.mapper.SortCriteriaMapper;
+import com.applications.asm.data.model.mapper.SortCriteriaModelMapper;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Place;
@@ -25,7 +19,6 @@ import com.applications.asm.domain.exception.PlacesRepositoryError;
 import com.applications.asm.domain.exception.PlacesRepositoryException;
 import com.applications.asm.domain.repository.PlacesRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,8 +29,8 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     private final PlaceModelMapper placeModelMapper;
     private final ReviewModelMapper reviewModelMapper;
     private final CategoryModelMapper categoryModelMapper;
-    private final SortCriteriaMapper sortCriteriaMapper;
-    private final PriceMapper priceMapper;
+    private final SortCriteriaModelMapper sortCriteriaModelMapper;
+    private final PriceModelMapper priceModelMapper;
     private final static Integer DEFAULT_AMOUNT = 10;
     private Integer totalPages;
     private final Logger log = Logger.getLogger("com.applications.asm.data.repository.PlacesRepositoryImpl");
@@ -47,15 +40,15 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         PlaceModelMapper placeModelMapper,
         ReviewModelMapper reviewModelMapper,
         CategoryModelMapper categoryModelMapper,
-        SortCriteriaMapper sortCriteriaMapper,
-        PriceMapper priceMapper
+        SortCriteriaModelMapper sortCriteriaModelMapper,
+        PriceModelMapper priceModelMapper
     ) {
         this.placeDataSourceWs = placesDataSourceWs;
         this.placeModelMapper = placeModelMapper;
         this.reviewModelMapper = reviewModelMapper;
         this.categoryModelMapper = categoryModelMapper;
-        this.sortCriteriaMapper = sortCriteriaMapper;
-        this.priceMapper = priceMapper;
+        this.sortCriteriaModelMapper = sortCriteriaModelMapper;
+        this.priceModelMapper = priceModelMapper;
     }
 
     @Override
@@ -100,7 +93,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
             return true;
         }).flatMap(params -> {
             if(page == 0) {
-                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaMapper.getSortCriteriaModel(sortBy), priceMapper.getPricesModel(prices), isOpenNow,0, DEFAULT_AMOUNT)
+                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaModelMapper.getSortCriteriaModel(sortBy), priceModelMapper.getPricesModel(prices), isOpenNow,0, DEFAULT_AMOUNT)
                     .flatMap(responsePlacesModel -> Single.fromCallable(() -> {
                         if(responsePlacesModel != null) {
                             int total = responsePlacesModel.getTotal();
@@ -110,7 +103,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesRepositoryException(PlacesRepositoryError.RESPONSE_NULL);
                     }));
             } else if(page > 0 && page < totalPages)
-                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaMapper.getSortCriteriaModel(sortBy), priceMapper.getPricesModel(prices), isOpenNow, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
+                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaModelMapper.getSortCriteriaModel(sortBy), priceModelMapper.getPricesModel(prices), isOpenNow, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
             throw new PlacesRepositoryException(PlacesRepositoryError.PAGE_OUT_OF_RANGE);
         }).map(responsePlacesModel -> {
             if(responsePlacesModel != null)
@@ -242,12 +235,12 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     @Override
     public Single<List<SortCriteria>> getSortCriteria() {
         return placeDataSourceWs.getCriteriaModel()
-                .map(sortCriteriaMapper::getSortCriteriaList);
+                .map(sortCriteriaModelMapper::getSortCriteriaList);
     }
 
     @Override
     public Single<List<Price>> getPrices() {
         return placeDataSourceWs.getPricesModel()
-                .map(priceMapper::getPrices);
+                .map(priceModelMapper::getPrices);
     }
 }

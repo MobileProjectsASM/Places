@@ -23,12 +23,12 @@ import java.util.List;
 public class PlaceModelMapperImpl implements PlaceModelMapper {
     private final Context context;
     private final CategoryModelMapper categoryModelMapper;
-    private final PriceMapper priceMapper;
+    private final PriceModelMapper priceModelMapper;
 
-    public PlaceModelMapperImpl(Context context, CategoryModelMapper categoryModelMapper, PriceMapper priceMapper) {
+    public PlaceModelMapperImpl(Context context, CategoryModelMapper categoryModelMapper, PriceModelMapper priceModelMapper) {
         this.context = context;
         this.categoryModelMapper = categoryModelMapper;
-        this.priceMapper = priceMapper;
+        this.priceModelMapper = priceModelMapper;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PlaceModelMapperImpl implements PlaceModelMapper {
         List<Category> categories = categoryModelMapper.getCategories(placeDetailsModel.getCategories());
         String address = getAddressFromLocation(placeDetailsModel.getLocationModel());
         Double rating = placeDetailsModel.getRating();
-        Price price = priceMapper.getPrice(placeDetailsModel.getPrice());
+        Price price = priceModelMapper.getPrice(placeDetailsModel.getPrice());
         String phoneNumber = placeDetailsModel.getPhoneNumber();
         Integer reviewsCounter = placeDetailsModel.getReviewCount();
         List<WorkingHours> workingHoursDays = getWorkingHours(placeDetailsModel.getWorkingHoursModelDays());

@@ -6,7 +6,7 @@ import com.applications.asm.domain.entities.SortCriteria;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SortCriteriaMapperImpl implements SortCriteriaMapper {
+public class SortCriteriaModelMapperImpl implements SortCriteriaModelMapper {
     @Override
     public SortCriteriaModel getSortCriteriaModel(SortCriteria sortCriteria) {
         return new SortCriteriaModel(sortCriteria.getId(), sortCriteria.getName());

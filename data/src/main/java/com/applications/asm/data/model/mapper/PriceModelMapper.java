@@ -5,7 +5,7 @@ import com.applications.asm.domain.entities.Price;
 
 import java.util.List;
 
-public interface PriceMapper {
+public interface PriceModelMapper {
     PriceModel getPriceModel(Price price);
     Price getPrice(PriceModel priceModel);
     List<Price> getPrices(List<PriceModel> pricesModel);
