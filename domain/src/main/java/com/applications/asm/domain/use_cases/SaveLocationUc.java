@@ -2,7 +2,7 @@ package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.exception.SaveLocationError;
 import com.applications.asm.domain.exception.SaveLocationException;
-import com.applications.asm.domain.repository.LocationRepository;
+import com.applications.asm.domain.repository.CacheRepository;
 import com.applications.asm.domain.use_cases.base.CompletableUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 public class SaveLocationUc extends CompletableUseCase<SaveLocationUc.Params> {
-    private final LocationRepository locationRepository;
+    private final CacheRepository cacheRepository;
 
     public static class Params {
         private final Double latitude;
@@ -26,9 +26,9 @@ public class SaveLocationUc extends CompletableUseCase<SaveLocationUc.Params> {
         }
     }
 
-    public SaveLocationUc(UseCaseScheduler useCaseScheduler, LocationRepository locationRepository) {
+    public SaveLocationUc(UseCaseScheduler useCaseScheduler, CacheRepository cacheRepository) {
         super(useCaseScheduler);
-        this.locationRepository = locationRepository;
+        this.cacheRepository = cacheRepository;
     }
 
     private Single<Params> validateParams(Params params) {
@@ -40,6 +40,6 @@ public class SaveLocationUc extends CompletableUseCase<SaveLocationUc.Params> {
 
     @Override
     protected Completable build(Params params) {
-        return validateParams(params).flatMapCompletable(param -> locationRepository.saveLocation(param.latitude, params.longitude));
+        return validateParams(params).flatMapCompletable(param -> cacheRepository.saveLocation(param.latitude, params.longitude));
     }
 }

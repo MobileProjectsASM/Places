@@ -15,7 +15,7 @@ public class PlaceDetails extends Place {
         String name,
         Location location,
         String imageUrl,
-        List<String> categories,
+        List<Category> categories,
         String address,
         Double rating,
         Price price,

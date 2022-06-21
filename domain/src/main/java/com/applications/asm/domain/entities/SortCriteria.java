@@ -1,18 +1,27 @@
 package com.applications.asm.domain.entities;
 
-public enum SortCriteria {
-    BEST_MATCH("best_match"),
-    RATING("rating"),
-    REVIEW_COUNT("review_count"),
-    DISTANCE("distance");
+public class SortCriteria {
+    private String id;
+    private String name;
 
-    private final String key;
-
-    SortCriteria(String key) {
-        this.key = key;
+    public SortCriteria(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

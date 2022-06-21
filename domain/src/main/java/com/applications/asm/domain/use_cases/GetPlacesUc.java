@@ -77,7 +77,7 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
     @Override
     protected Single<List<Place>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.longitude, param.latitude, param.radius, getCategories(param.categories), param.sortCriteria.getKey(), getPrices(param.prices), param.isOpenNow, param.page))
+                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.longitude, param.latitude, param.radius, param.categories, param.sortCriteria, param.prices, param.isOpenNow, param.page))
                 .doOnError(throwable -> {
                     Exception exception = (Exception) throwable;
                     if(exception instanceof PlacesRepositoryException) {
@@ -108,27 +108,4 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
                 });
     }
 
-    private String getCategories(List<Category> categories) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 0; i < categories.size(); i++) {
-            if(i == categories.size() - 1)
-                stringBuilder.append(categories.get(i).getId());
-            else if(i == 0)
-                stringBuilder.append(categories.get(i).getId());
-            else stringBuilder.append(",").append(categories.get(i).getId());
-        }
-        return stringBuilder.toString();
-    }
-
-    private String getPrices(List<Price> prices) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 0; i < prices.size(); i++) {
-            if(i == prices.size() - 1)
-                stringBuilder.append(prices.get(i));
-            else if(i == 0)
-                stringBuilder.append(prices.get(i));
-            else stringBuilder.append(",").append(prices.get(i));
-        }
-        return stringBuilder.toString();
-    }
 }

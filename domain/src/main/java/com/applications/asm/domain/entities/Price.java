@@ -1,21 +1,27 @@
 package com.applications.asm.domain.entities;
 
-import com.sun.org.apache.bcel.internal.classfile.Unknown;
+public class Price {
+    private String id;
+    private String name;
 
-public enum Price {
-    CHEAP("1"),
-    REGULAR("2"),
-    EXPENSIVE("3"),
-    VERY_EXPENSIVE("4"),
-    UNKNOWN("");
-
-    private final String key;
-
-    Price(String key) {
-        this.key = key;
+    public Price(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

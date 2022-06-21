@@ -7,10 +7,10 @@ public class Place {
     private String name;
     private Location location;
     private String imageUrl;
-    private List<String> categories;
+    private List<Category> categories;
     private String address;
 
-    public Place(String id, String name, Location location, String imageUrl, List<String> categories, String address) {
+    public Place(String id, String name, Location location, String imageUrl, List<Category> categories, String address) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -51,11 +51,11 @@ public class Place {
         this.imageUrl = imageUrl;
     }
 
-    public List<String> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 
