@@ -17,14 +17,14 @@ import com.applications.asm.data.model.ResponseReviewsModel;
 import com.applications.asm.data.model.ResponseSuggestedPlacesModel;
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
 import com.applications.asm.data.model.mapper.CategoryModelMapperImpl;
-import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
-import com.applications.asm.data.model.mapper.PlaceDetailsModelMapperImpl;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapperImpl;
+import com.applications.asm.data.model.mapper.PriceModelMapper;
+import com.applications.asm.data.model.mapper.PriceModelMapperImpl;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapperImpl;
-import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
-import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapperImpl;
+import com.applications.asm.data.model.mapper.SortCriteriaModelMapper;
+import com.applications.asm.data.model.mapper.SortCriteriaModelMapperImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -51,7 +51,10 @@ public class UtilsModule {
     }
 
     @Provides
-    SharedPreferences provideSharedPreferences(Context context, @Named("name_preferences") String namePreferences) {
+    SharedPreferences provideSharedPreferences(
+        Context context,
+        @Named("name_preferences") String namePreferences
+    ) {
         return context.getSharedPreferences(namePreferences, Context.MODE_PRIVATE);
     }
 
@@ -84,7 +87,10 @@ public class UtilsModule {
     }
 
     @Provides
-    Retrofit provideRetrofit(@Named("place_service_base_url") String baseUrl, GsonConverterFactory gsonConverterFactory) {
+    Retrofit provideRetrofit(
+        @Named("place_service_base_url") String baseUrl,
+        GsonConverterFactory gsonConverterFactory
+    ) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(gsonConverterFactory)
@@ -126,8 +132,8 @@ public class UtilsModule {
 
     @Named("place_deserializer")
     @Provides
-    JsonDeserializer<PlaceDetailsModel> providePlaceDetailsDeserializer(@Named("gson_printer") Gson gson) {
-        return new PlaceDetailsModelDeserializer(gson);
+    JsonDeserializer<PlaceDetailsModel> providePlaceDetailsDeserializer(@Named("gson_printer") Gson gson, Context context) {
+        return new PlaceDetailsModelDeserializer(gson, context);
     }
 
     @Named("reviews_deserializer")
@@ -150,13 +156,16 @@ public class UtilsModule {
 
     //Mappers
     @Provides
-    PlaceModelMapper providePlaceModelMapper() {
-        return new PlaceModelMapperImpl();
-    }
-
-    @Provides
-    PlaceDetailsModelMapper providePlaceDetailsModelMapper(Context context) {
-        return new PlaceDetailsModelMapperImpl(context);
+    PlaceModelMapper providePlaceModelMapper(
+        Context context,
+        CategoryModelMapper categoryModelMapper,
+        PriceModelMapper priceModelMapper
+    ) {
+        return new PlaceModelMapperImpl(
+            context,
+            categoryModelMapper,
+            priceModelMapper
+        );
     }
 
     @Provides
@@ -165,8 +174,13 @@ public class UtilsModule {
     }
 
     @Provides
-    SuggestedPlaceModelMapper provideSuggestedPlaceModelMapper() {
-        return new SuggestedPlaceModelMapperImpl();
+    SortCriteriaModelMapper provideSortCriteriaMapper() {
+        return new SortCriteriaModelMapperImpl();
+    }
+
+    @Provides
+    PriceModelMapper providePriceModelMapper() {
+        return new PriceModelMapperImpl();
     }
 
     @Provides

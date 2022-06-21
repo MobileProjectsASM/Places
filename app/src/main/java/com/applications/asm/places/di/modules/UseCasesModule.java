@@ -1,17 +1,17 @@
 package com.applications.asm.places.di.modules;
 
 import com.applications.asm.domain.entities.Validators;
-import com.applications.asm.domain.repository.LocationRepository;
+import com.applications.asm.domain.repository.CacheRepository;
 import com.applications.asm.domain.repository.PlacesRepository;
 import com.applications.asm.domain.use_cases.GetCategoriesUc;
 import com.applications.asm.domain.use_cases.GetPlaceDetailsUc;
 import com.applications.asm.domain.use_cases.GetPlacesUc;
+import com.applications.asm.domain.use_cases.GetPricesUc;
 import com.applications.asm.domain.use_cases.GetReviewsUc;
+import com.applications.asm.domain.use_cases.GetSortCriteriaUc;
 import com.applications.asm.domain.use_cases.GetSuggestedPlacesUc;
 import com.applications.asm.domain.use_cases.LoadLocationUc;
 import com.applications.asm.domain.use_cases.SaveLocationUc;
-import com.applications.asm.domain.use_cases.ValidateFormLocationUc;
-import com.applications.asm.domain.use_cases.ValidateFormSearchUc;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import dagger.Module;
@@ -19,47 +19,26 @@ import dagger.Provides;
 
 @Module
 public class UseCasesModule {
-    @Provides
-    ValidateFormLocationUc provideValidateFormLocationUc(
-        UseCaseScheduler useCaseScheduler,
-        Validators validators
-    ) {
-        return new ValidateFormLocationUc(
-            useCaseScheduler,
-            validators
-        );
-    }
 
     @Provides
     LoadLocationUc provideLoadLocationUc(
         UseCaseScheduler useCaseScheduler,
-        LocationRepository locationRepository
+        CacheRepository cacheRepository
     ) {
         return new LoadLocationUc(
             useCaseScheduler,
-            locationRepository
+            cacheRepository
         );
     }
 
     @Provides
     SaveLocationUc provideSaveLocationUc(
         UseCaseScheduler useCaseScheduler,
-        LocationRepository locationRepository
+        CacheRepository cacheRepository
     ) {
         return new SaveLocationUc(
             useCaseScheduler,
-            locationRepository
-        );
-    }
-
-    @Provides
-    ValidateFormSearchUc provideValidateFormSearchUc(
-        UseCaseScheduler useCaseScheduler,
-        Validators validators
-    ) {
-        return new ValidateFormSearchUc(
-            useCaseScheduler,
-            validators
+            cacheRepository
         );
     }
 
@@ -73,6 +52,28 @@ public class UseCasesModule {
             useCaseScheduler,
             placesRepository,
             validators
+        );
+    }
+
+    @Provides
+    GetSortCriteriaUc provideGetSortCriteriaUc(
+        UseCaseScheduler useCaseScheduler,
+        PlacesRepository placesRepository
+    ) {
+        return new GetSortCriteriaUc(
+            useCaseScheduler,
+            placesRepository
+        );
+    }
+
+    @Provides
+    GetPricesUc provideGetPricesUc(
+        UseCaseScheduler useCaseScheduler,
+        PlacesRepository placesRepository
+    ) {
+        return new GetPricesUc(
+            useCaseScheduler,
+            placesRepository
         );
     }
 

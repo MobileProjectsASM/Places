@@ -1,20 +1,17 @@
 package com.applications.asm.places.di.modules;
 
-import android.app.Application;
-import android.content.Context;
-
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
-import com.applications.asm.data.model.mapper.PlaceDetailsModelMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
+import com.applications.asm.data.model.mapper.PriceModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
-import com.applications.asm.data.model.mapper.SuggestedPlaceModelMapper;
-import com.applications.asm.data.repository.LocationRepositoryImpl;
+import com.applications.asm.data.model.mapper.SortCriteriaModelMapper;
+import com.applications.asm.data.repository.CacheRepositoryImpl;
 import com.applications.asm.data.repository.PlacesRepositoryImpl;
-import com.applications.asm.data.sources.LocationDataSourceSP;
+import com.applications.asm.data.sources.CacheDataSourceSP;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.entities.ValidatorsImpl;
-import com.applications.asm.domain.repository.LocationRepository;
+import com.applications.asm.domain.repository.CacheRepository;
 import com.applications.asm.domain.repository.PlacesRepository;
 
 import javax.inject.Singleton;
@@ -25,12 +22,6 @@ import dagger.Provides;
 @Module
 public class ServicesModule {
 
-    private final Application application;
-
-    public ServicesModule(Application application, String apiKey) {
-        this.application = application;
-    }
-
     @Singleton
     @Provides
     Validators provideValidators() {
@@ -39,8 +30,8 @@ public class ServicesModule {
 
     @Singleton
     @Provides
-    LocationRepository provideLocationRepository(LocationDataSourceSP locationDataSourceSP) {
-        return new LocationRepositoryImpl(locationDataSourceSP);
+    CacheRepository provideCacheRepository(CacheDataSourceSP cacheDataSourceSP) {
+        return new CacheRepositoryImpl(cacheDataSourceSP);
     }
 
     @Singleton
@@ -48,23 +39,18 @@ public class ServicesModule {
     PlacesRepository providePlacesRepository(
         PlacesDataSourceWS placesDataSourceWs,
         PlaceModelMapper placeModelMapper,
-        PlaceDetailsModelMapper placeDetailsModelMapper,
         ReviewModelMapper reviewModelMapper,
-        SuggestedPlaceModelMapper suggestedPlaceModelMapper,
-        CategoryModelMapper categoryModelMapper
+        CategoryModelMapper categoryModelMapper,
+        SortCriteriaModelMapper sortCriteriaModelMapper,
+        PriceModelMapper priceModelMapper
     ) {
         return new PlacesRepositoryImpl(
             placesDataSourceWs,
             placeModelMapper,
-            placeDetailsModelMapper,
             reviewModelMapper,
-            suggestedPlaceModelMapper,
-            categoryModelMapper
+            categoryModelMapper,
+            sortCriteriaModelMapper,
+            priceModelMapper
         );
-    }
-
-    @Provides
-    Context provideContext() {
-        return application;
     }
 }

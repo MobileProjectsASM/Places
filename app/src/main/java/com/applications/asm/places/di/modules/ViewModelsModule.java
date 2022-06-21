@@ -4,11 +4,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.applications.asm.domain.use_cases.GetCategoriesUc;
 import com.applications.asm.domain.use_cases.GetPlacesUc;
+import com.applications.asm.domain.use_cases.GetPricesUc;
+import com.applications.asm.domain.use_cases.GetSortCriteriaUc;
 import com.applications.asm.domain.use_cases.GetSuggestedPlacesUc;
 import com.applications.asm.domain.use_cases.LoadLocationUc;
 import com.applications.asm.domain.use_cases.SaveLocationUc;
-import com.applications.asm.domain.use_cases.ValidateFormLocationUc;
-import com.applications.asm.domain.use_cases.ValidateFormSearchUc;
 import com.applications.asm.places.di.scopes.ActivityScope;
 import com.applications.asm.places.model.mappers.CategoryMapper;
 import com.applications.asm.places.model.mappers.CategoryMapperImpl;
@@ -16,8 +16,12 @@ import com.applications.asm.places.model.mappers.LocationMapper;
 import com.applications.asm.places.model.mappers.LocationMapperImpl;
 import com.applications.asm.places.model.mappers.PlaceMapper;
 import com.applications.asm.places.model.mappers.PlaceMapperImpl;
-import com.applications.asm.places.model.mappers.StatesMapper;
-import com.applications.asm.places.model.mappers.StatesMapperImpl;
+import com.applications.asm.places.model.mappers.PriceMapper;
+import com.applications.asm.places.model.mappers.PriceMapperImpl;
+import com.applications.asm.places.model.mappers.SortCriteriaMapper;
+import com.applications.asm.places.model.mappers.SortCriteriaMapperImpl;
+import com.applications.asm.places.view_model.factories.CategoryViewModelFactory;
+import com.applications.asm.places.view_model.factories.FilterViewModelFactory;
 import com.applications.asm.places.view_model.factories.LocationViewModelFactory;
 import com.applications.asm.places.view_model.factories.MainViewModelFactory;
 import com.applications.asm.places.view_model.factories.SearchViewModelFactory;
@@ -36,18 +40,10 @@ public class ViewModelsModule {
     @Provides
     ViewModelProvider.Factory provideLocationViewModelFactory(
         SaveLocationUc saveLocationUc,
-        ValidateFormLocationUc validateFormLocationUc,
-        LoadLocationUc loadLocationUc,
-        StatesMapper statesMapper,
-        LocationMapper locationMapper,
         CompositeDisposable composite
     ) {
         return new LocationViewModelFactory(
             saveLocationUc,
-            validateFormLocationUc,
-            loadLocationUc,
-            statesMapper,
-            locationMapper,
             composite
         );
     }
@@ -56,24 +52,46 @@ public class ViewModelsModule {
     @Named("search_view_model")
     @Provides
     ViewModelProvider.Factory provideSearchViewModelFactory(
-        LoadLocationUc loadLocationUc,
-        ValidateFormSearchUc validateFormSearchUc,
         GetSuggestedPlacesUc getSuggestedPlacesUc,
-        GetCategoriesUc getCategoriesUc,
-        StatesMapper statesMapper,
-        LocationMapper locationMapper,
         PlaceMapper placeMapper,
-        CategoryMapper categoryMapper,
         CompositeDisposable composite
     ) {
         return new SearchViewModelFactory(
-            loadLocationUc,
-            validateFormSearchUc,
             getSuggestedPlacesUc,
-            getCategoriesUc,
-            statesMapper,
-            locationMapper,
             placeMapper,
+            composite
+        );
+    }
+
+    @ActivityScope
+    @Named("filter_view_model")
+    @Provides
+    ViewModelProvider.Factory provideFilterViewModelFactory(
+        GetSortCriteriaUc getSortCriteriaUc,
+        GetPricesUc getPricesUc,
+        SortCriteriaMapper sortCriteriaMapper,
+        PriceMapper priceMapper,
+        CompositeDisposable composite
+    ) {
+        return new FilterViewModelFactory(
+            getSortCriteriaUc,
+            getPricesUc,
+            sortCriteriaMapper,
+            priceMapper,
+            composite
+        );
+    }
+
+    @ActivityScope
+    @Named("category_view_model")
+    @Provides
+    ViewModelProvider.Factory provideCategoryViewModel(
+        GetCategoriesUc getCategoriesUc,
+        CategoryMapper categoryMapper,
+        CompositeDisposable composite
+    ) {
+        return new CategoryViewModelFactory(
+            getCategoriesUc,
             categoryMapper,
             composite
         );
@@ -83,24 +101,28 @@ public class ViewModelsModule {
     @Named("main_view_model")
     @Provides
     ViewModelProvider.Factory provideMainViewModelFactory(
+        LoadLocationUc loadLocationUc,
         GetPlacesUc getPlacesUc,
         PlaceMapper placeMapper,
+        LocationMapper locationMapper,
+        CategoryMapper categoryMapper,
+        SortCriteriaMapper sortCriteriaMapper,
+        PriceMapper priceMapper,
         CompositeDisposable composite
     ) {
         return new MainViewModelFactory(
+            loadLocationUc,
             getPlacesUc,
             placeMapper,
+            locationMapper,
+            categoryMapper,
+            sortCriteriaMapper,
+            priceMapper,
             composite
         );
     }
 
     //Mappers
-    @ActivityScope
-    @Provides
-    StatesMapper providerStatesMapper() {
-        return new StatesMapperImpl();
-    }
-
     @ActivityScope
     @Provides
     LocationMapper provideLocationMapper() {
@@ -115,8 +137,20 @@ public class ViewModelsModule {
 
     @ActivityScope
     @Provides
-    CategoryMapper categoryMapper() {
+    CategoryMapper provideCategoryMapper() {
         return new CategoryMapperImpl();
+    }
+
+    @ActivityScope
+    @Provides
+    SortCriteriaMapper sortCriteriaMapper() {
+        return new SortCriteriaMapperImpl();
+    }
+
+    @ActivityScope
+    @Provides
+    PriceMapper providePriceMapper() {
+        return new PriceMapperImpl();
     }
 
     //Utils
