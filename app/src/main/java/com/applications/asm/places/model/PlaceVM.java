@@ -1,6 +1,6 @@
 package com.applications.asm.places.model;
 
-public class PlaceM {
+public class PlaceVM {
     private String id;
     private String name;
     private Double latitude;
@@ -9,7 +9,7 @@ public class PlaceM {
     private String categories;
     private String address;
 
-    public PlaceM(String id, String name, Double latitude, Double longitude, String imageUrl, String categories, String address) {
+    public PlaceVM(String id, String name, Double latitude, Double longitude, String imageUrl, String categories, String address) {
         this.id = id;
         this.name = name;
         this.latitude = latitude;

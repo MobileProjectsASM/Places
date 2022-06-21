@@ -2,20 +2,20 @@ package com.applications.asm.places.model;
 
 import java.util.List;
 
-public class PlaceDetailsM {
+public class PlaceDetailsVM {
     private String id;
     private String name;
     private String imageUrl;
     private Double longitude;
     private Double latitude;
     private Double rating;
-    private PriceM price;
+    private PriceVM price;
     private String phoneNumber;
     private Integer reviewsCounter;
-    private List<ScheduleM> schedule;
+    private List<ScheduleVM> schedule;
     private Boolean isOpen;
 
-    public PlaceDetailsM(String id, String name, String imageUrl, Double longitude, Double latitude, Double rating, PriceM price, String phoneNumber, Integer reviewsCounter, List<ScheduleM> schedule, Boolean isOpen) {
+    public PlaceDetailsVM(String id, String name, String imageUrl, Double longitude, Double latitude, Double rating, PriceVM price, String phoneNumber, Integer reviewsCounter, List<ScheduleVM> schedule, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
@@ -77,11 +77,11 @@ public class PlaceDetailsM {
         this.rating = rating;
     }
 
-    public PriceM getPrice() {
+    public PriceVM getPrice() {
         return price;
     }
 
-    public void setPrice(PriceM price) {
+    public void setPrice(PriceVM price) {
         this.price = price;
     }
 
@@ -101,11 +101,11 @@ public class PlaceDetailsM {
         this.reviewsCounter = reviewsCounter;
     }
 
-    public List<ScheduleM> getSchedule() {
+    public List<ScheduleVM> getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(List<ScheduleM> schedule) {
+    public void setSchedule(List<ScheduleVM> schedule) {
         this.schedule = schedule;
     }
 

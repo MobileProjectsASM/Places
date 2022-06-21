@@ -1,6 +1,6 @@
 package com.applications.asm.places.model;
 
-public class ReviewM {
+public class ReviewVM {
     private String userName;
     private String imageUrl;
     private String date;
@@ -8,7 +8,7 @@ public class ReviewM {
     private String description;
 
 
-    public ReviewM(String userName, String imageUrl, String date, Integer rate, String description) {
+    public ReviewVM(String userName, String imageUrl, String date, Integer rate, String description) {
         this.userName = userName;
         this.imageUrl = imageUrl;
         this.date = date;

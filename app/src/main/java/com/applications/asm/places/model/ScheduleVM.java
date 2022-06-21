@@ -1,10 +1,10 @@
 package com.applications.asm.places.model;
 
-public class ScheduleM {
+public class ScheduleVM {
     private String day;
     private String hours;
 
-    public ScheduleM(String day, String hours) {
+    public ScheduleVM(String day, String hours) {
         this.day = day;
         this.hours = hours;
     }
