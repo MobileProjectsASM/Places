@@ -5,6 +5,7 @@ import android.content.Context;
 import com.applications.asm.data.R;
 import com.applications.asm.data.exception.WebServiceException;
 import com.applications.asm.data.model.CategoryModel;
+import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.ErrorResponse;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.PriceModel;
@@ -42,8 +43,8 @@ public class WebServicePlaces implements PlacesDataSourceWS {
     }
 
     @Override
-    public Single<ResponsePlacesModel> getPlacesModel(String placeToFind, Double longitude, Double latitude, Integer radius, List<CategoryModel> categories, SortCriteriaModel sortBy, List<PriceModel> prices, Boolean isOpenNow, Integer initIndex, Integer amount) {
-        return placeApi.getPlacesModel(apiKey, placeToFind, latitude, longitude, radius, getCategories(categories), sortBy.getId(), getPrices(prices), isOpenNow, initIndex, amount)
+    public Single<ResponsePlacesModel> getPlacesModel(String placeToFind, CoordinatesModel coordinatesModel, Integer radius, List<CategoryModel> categories, SortCriteriaModel sortBy, List<PriceModel> prices, Boolean isOpenNow, Integer initIndex, Integer amount) {
+        return placeApi.getPlacesModel(apiKey, placeToFind, coordinatesModel.getLatitude(), coordinatesModel.getLongitude(), radius, getCategories(categories), sortBy.getId(), getPrices(prices), isOpenNow, initIndex, amount)
             .doOnError(this::handleException);
     }
 
@@ -60,14 +61,14 @@ public class WebServicePlaces implements PlacesDataSourceWS {
     }
 
     @Override
-    public Single<ResponseSuggestedPlacesModel> getSuggestedPlaces(String word, Double latitude, Double longitude) {
-        return placeApi.getSuggestedPlacesModel(apiKey, word, latitude, longitude)
+    public Single<ResponseSuggestedPlacesModel> getSuggestedPlaces(String word, CoordinatesModel coordinatesModel) {
+        return placeApi.getSuggestedPlacesModel(apiKey, word, coordinatesModel.getLatitude(), coordinatesModel.getLongitude())
             .doOnError(this::handleException);
     }
 
     @Override
-    public Single<ResponseCategoriesModel> getCategoriesModel(String word, Double latitude, Double longitude, String locale) {
-        return placeApi.getCategoriesModel(apiKey, word, latitude, longitude, locale)
+    public Single<ResponseCategoriesModel> getCategoriesModel(String word, CoordinatesModel coordinatesModel, String locale) {
+        return placeApi.getCategoriesModel(apiKey, word, coordinatesModel.getLatitude(), coordinatesModel.getLongitude(), locale)
             .doOnError(this::handleException);
     }
 

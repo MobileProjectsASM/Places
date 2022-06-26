@@ -3,13 +3,16 @@ package com.applications.asm.data.repository;
 import android.util.Log;
 
 import com.applications.asm.data.exception.WebServiceException;
+import com.applications.asm.data.model.CoordinatesModel;
 import com.applications.asm.data.model.mapper.CategoryModelMapper;
+import com.applications.asm.data.model.mapper.CoordinatesMapper;
 import com.applications.asm.data.model.mapper.PlaceModelMapper;
 import com.applications.asm.data.model.mapper.PriceModelMapper;
 import com.applications.asm.data.model.mapper.ReviewModelMapper;
 import com.applications.asm.data.model.mapper.SortCriteriaModelMapper;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.applications.asm.domain.entities.Category;
+import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Price;
@@ -31,6 +34,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     private final CategoryModelMapper categoryModelMapper;
     private final SortCriteriaModelMapper sortCriteriaModelMapper;
     private final PriceModelMapper priceModelMapper;
+    private final CoordinatesMapper coordinatesMapper;
     private final static Integer DEFAULT_AMOUNT = 10;
     private Integer totalPages;
 
@@ -40,6 +44,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         ReviewModelMapper reviewModelMapper,
         CategoryModelMapper categoryModelMapper,
         SortCriteriaModelMapper sortCriteriaModelMapper,
+        CoordinatesMapper coordinatesMapper,
         PriceModelMapper priceModelMapper
     ) {
         this.placeDataSourceWs = placesDataSourceWs;
@@ -47,6 +52,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
         this.reviewModelMapper = reviewModelMapper;
         this.categoryModelMapper = categoryModelMapper;
         this.sortCriteriaModelMapper = sortCriteriaModelMapper;
+        this.coordinatesMapper = coordinatesMapper;
         this.priceModelMapper = priceModelMapper;
     }
 
@@ -67,14 +73,14 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
-    public Single<List<Place>> getPlaces(String placeToFind, Double longitude, Double latitude, Integer radius, List<Category> categories, SortCriteria sortBy, List<Price> prices, Boolean isOpenNow, Integer page) {
+    public Single<List<Place>> getPlaces(String placeToFind, Location location, Integer radius, List<Category> categories, SortCriteria sortBy, List<Price> prices, Boolean isOpenNow, Integer page) {
         return Single.fromCallable(() -> {
-            if(placeToFind == null || longitude == null || latitude == null || radius == null || categories == null || page == null)
+            if(placeToFind == null || location != null || radius == null || categories == null || page == null)
                 throw new ClientException("Null value was entered");
             return true;
         }).flatMap(params -> {
             if(page == 0) {
-                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaModelMapper.getSortCriteriaModel(sortBy), priceModelMapper.getPricesModel(prices), isOpenNow,0, DEFAULT_AMOUNT)
+                return placeDataSourceWs.getPlacesModel(placeToFind, coordinatesMapper.getCoordinates(location), radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaModelMapper.getSortCriteriaModel(sortBy), priceModelMapper.getPricesModel(prices), isOpenNow,0, DEFAULT_AMOUNT)
                     .flatMap(responsePlacesModel -> Single.fromCallable(() -> {
                         if(responsePlacesModel != null) {
                             int total = responsePlacesModel.getTotal();
@@ -84,7 +90,7 @@ public class PlacesRepositoryImpl implements PlacesRepository {
                         throw new PlacesServiceException("Response null");
                     }));
             } else if(page > 0 && page < totalPages)
-                return placeDataSourceWs.getPlacesModel(placeToFind, longitude, latitude, radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaModelMapper.getSortCriteriaModel(sortBy), priceModelMapper.getPricesModel(prices), isOpenNow, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
+                return placeDataSourceWs.getPlacesModel(placeToFind, coordinatesMapper.getCoordinates(location), radius, categoryModelMapper.getCategoriesModel(categories), sortCriteriaModelMapper.getSortCriteriaModel(sortBy), priceModelMapper.getPricesModel(prices), isOpenNow, (page - 1) * DEFAULT_AMOUNT , DEFAULT_AMOUNT);
             throw new PlacesServiceException("Page out of range");
         }).map(responsePlacesModel -> {
             if(responsePlacesModel != null)
@@ -110,13 +116,13 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
-    public Single<List<SuggestedPlace>> getSuggestedPlaces(String word, Double longitude, Double latitude) {
+    public Single<List<SuggestedPlace>> getSuggestedPlaces(String word, Location location) {
         return Single.fromCallable(() -> {
-            if(word == null || latitude == null || longitude == null)
+            if(word == null || location != null)
                 throw new ClientException("Null value was entered");
             return true;
         }).flatMap(
-            value -> placeDataSourceWs.getSuggestedPlaces(word, longitude, latitude)
+            value -> placeDataSourceWs.getSuggestedPlaces(word, coordinatesMapper.getCoordinates(location))
         ).map(responseSuggestedPlacesModel -> {
             if(responseSuggestedPlacesModel != null)
                 return placeModelMapper.getSuggestedPlaces(responseSuggestedPlacesModel.getSuggestPlacesModel());
@@ -125,13 +131,13 @@ public class PlacesRepositoryImpl implements PlacesRepository {
     }
 
     @Override
-    public Single<List<Category>> getCategories(String word, Double longitude, Double latitude, String locale) {
+    public Single<List<Category>> getCategories(String word, Location location, String locale) {
         return Single.fromCallable(() -> {
             if(locale == null)
                 throw new ClientException("Null value was entered");
             return true;
         }).flatMap(
-            value -> placeDataSourceWs.getCategoriesModel(word, longitude, latitude, locale)
+            value -> placeDataSourceWs.getCategoriesModel(word, coordinatesMapper.getCoordinates(location), locale)
         ).map(responseCategoriesModel -> {
             if(responseCategoriesModel != null)
                 return categoryModelMapper.getCategories(responseCategoriesModel.getCategoryModelList());
