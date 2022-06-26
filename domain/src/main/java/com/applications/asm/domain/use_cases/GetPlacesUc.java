@@ -1,6 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Category;
+import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.Price;
 import com.applications.asm.domain.entities.SortCriteria;
@@ -20,8 +21,7 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
 
     public static class Params {
         private final String placeToFind;
-        private final Double latitude;
-        private final Double longitude;
+        private final Location location;
         private final Integer radius;
         private final List<Category> categories;
         private final SortCriteria sortCriteria;
@@ -29,10 +29,9 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
         private final Boolean isOpenNow;
         private final Integer page;
 
-        private Params(String placeToFind, Double latitude, Double longitude, Integer radius, List<Category> categories, SortCriteria sortCriteria, List<Price> prices, Boolean isOpenNow, Integer page) {
+        private Params(String placeToFind, Location location, Integer radius, List<Category> categories, SortCriteria sortCriteria, List<Price> prices, Boolean isOpenNow, Integer page) {
             this.placeToFind = placeToFind;
-            this.latitude = latitude;
-            this.longitude = longitude;
+            this.location = location;
             this.radius = radius;
             this.categories = categories;
             this.sortCriteria = sortCriteria;
@@ -41,8 +40,8 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
             this.page = page;
         }
 
-        public static Params forFilterPlaces(String placeToFind, Double latitude, Double longitude, Integer radius, List<Category> categories, SortCriteria sortCriteria, List<Price> prices, Boolean isOpenNow, Integer page) {
-            return new Params(placeToFind, latitude, longitude, radius, categories, sortCriteria, prices, isOpenNow, page);
+        public static Params forFilterPlaces(String placeToFind, Location location, Integer radius, List<Category> categories, SortCriteria sortCriteria, List<Price> prices, Boolean isOpenNow, Integer page) {
+            return new Params(placeToFind, location, radius, categories, sortCriteria, prices, isOpenNow, page);
         }
     }
 
@@ -54,10 +53,10 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.placeToFind == null || params.latitude == null || params.longitude == null || params.radius == null || params.categories == null || params.sortCriteria == null || params.prices == null || params.isOpenNow == null || params.page == null)
+            if(params.placeToFind == null || params.location == null || params.radius == null || params.categories == null || params.sortCriteria == null || params.prices == null || params.isOpenNow == null || params.page == null)
                 throw new ClientException("Null value was entered");
-            if(!validators.validateLatitudeRange(params.latitude) || !validators.validateLongitudeRange(params.longitude))
-                throw new ClientException("Location out of range: " + "[" + params.latitude + ", " + params.longitude + "]");
+            if(!validators.validateLatitudeRange(params.location.getLatitude()) || !validators.validateLongitudeRange(params.location.getLongitude()))
+                throw new ClientException("Location out of range: " + "[" + params.location.getLatitude() + ", " + params.location.getLongitude() + "]");
             if(!validators.validateRadiusRange(params.radius))
                 throw new ClientException("Radius out of range: " + params.radius);
             if(!validators.validatePage(params.page))
@@ -69,7 +68,7 @@ public class GetPlacesUc extends SingleUseCase<List<Place>, GetPlacesUc.Params> 
     @Override
     protected Single<List<Place>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.longitude, param.latitude, param.radius, param.categories, param.sortCriteria, param.prices, param.isOpenNow, param.page));
+                .flatMap(param -> placesRepository.getPlaces(param.placeToFind, param.location, param.radius, param.categories, param.sortCriteria, param.prices, param.isOpenNow, param.page));
     }
 
 }

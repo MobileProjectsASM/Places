@@ -1,5 +1,6 @@
 package com.applications.asm.domain.use_cases;
 
+import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.entities.Validators;
 import com.applications.asm.domain.exception.ClientException;
@@ -17,17 +18,15 @@ public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, Ge
 
     public static class Params {
         private final String place;
-        private final Double longitude;
-        private final Double latitude;
+        private final Location location;
 
-        private Params(String place, Double longitude, Double latitude) {
+        private Params(String place, Location location) {
             this.place = place;
-            this.latitude = latitude;
-            this.longitude = longitude;
+            this.location = location;
         }
 
-        public static Params forSuggestedPlaces(String place, Double longitude, Double latitude) {
-            return new Params(place, longitude, latitude);
+        public static Params forSuggestedPlaces(String place, Location location) {
+            return new Params(place, location);
         }
     }
 
@@ -39,10 +38,10 @@ public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, Ge
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.place == null || params.longitude == null || params.latitude == null)
+            if(params.place == null || params.location != null)
                 throw new ClientException("Null value was entered");
-            if(!validators.validateLatitudeRange(params.latitude) || !validators.validateLongitudeRange(params.longitude))
-                throw new ClientException("Location input is invalid: " + "[" + params.latitude + ", " + params.longitude +"]");
+            if(!validators.validateLatitudeRange(params.location.getLatitude()) || !validators.validateLongitudeRange(params.location.getLongitude()))
+                throw new ClientException("Location input is invalid: " + "[" + params.location.getLatitude() + ", " + params.location.getLongitude() +"]");
             return params;
         });
     }
@@ -50,6 +49,6 @@ public class GetSuggestedPlacesUc extends SingleUseCase<List<SuggestedPlace>, Ge
     @Override
     protected Single<List<SuggestedPlace>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getSuggestedPlaces(param.place, param.longitude, param.latitude));
+                .flatMap(param -> placesRepository.getSuggestedPlaces(param.place, param.location));
     }
 }

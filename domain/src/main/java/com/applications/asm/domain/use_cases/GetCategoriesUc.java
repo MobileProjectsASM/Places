@@ -1,6 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Category;
+import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.exception.ClientException;
 import com.applications.asm.domain.repository.PlacesRepository;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
@@ -15,19 +16,17 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
 
     public static class Params {
         private final String category;
-        private final Double latitude;
-        private final Double longitude;
+        private final Location location;
         private final String locale;
 
-        private Params(String category, Double latitude, Double longitude, String locale) {
+        private Params(String category, Location location, String locale) {
             this.category = category;
-            this.latitude = latitude;
-            this.longitude = longitude;
+            this.location = location;
             this.locale = locale;
         }
 
-        public static Params forGetCategories(String category, Double latitude, Double longitude, String locale) {
-            return new Params(category, latitude, longitude, locale);
+        public static Params forGetCategories(String category, Location location, String locale) {
+            return new Params(category, location, locale);
         }
     }
 
@@ -38,7 +37,7 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.category == null || params.latitude == null || params.longitude == null || params.locale == null)
+            if(params.category == null || params.location != null || params.locale == null)
                 throw new ClientException("Null value was entered");
             return params;
         });
@@ -47,6 +46,6 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
     @Override
     protected Single<List<Category>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getCategories(param.category, param.longitude, param.latitude, param.locale));
+                .flatMap(param -> placesRepository.getCategories(param.category, param.location, param.locale));
     }
 }
