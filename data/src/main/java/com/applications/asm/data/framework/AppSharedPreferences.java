@@ -29,11 +29,11 @@ public class AppSharedPreferences implements CacheDataSourceSP {
 
     @Override
     public Single<Double> getLatitude() {
-        return Single.fromCallable(() -> Double.valueOf(appPreferences.getFloat(LATITUDE_KEY, 0)));
+        return Single.fromCallable(() -> Double.valueOf(appPreferences.getFloat(LATITUDE_KEY, 91)));
     }
 
     @Override
     public Single<Double> getLongitude() {
-        return Single.fromCallable(() -> Double.valueOf(appPreferences.getFloat(LONGITUDE_KEY, 0)));
+        return Single.fromCallable(() -> Double.valueOf(appPreferences.getFloat(LONGITUDE_KEY, 181)));
     }
 }
