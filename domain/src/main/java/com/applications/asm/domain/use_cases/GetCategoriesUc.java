@@ -1,24 +1,17 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Category;
-import com.applications.asm.domain.exception.GetCategoryError;
-import com.applications.asm.domain.exception.GetCategoryException;
-import com.applications.asm.domain.exception.GetReviewsError;
-import com.applications.asm.domain.exception.GetReviewsException;
-import com.applications.asm.domain.exception.PlacesRepositoryError;
-import com.applications.asm.domain.exception.PlacesRepositoryException;
+import com.applications.asm.domain.exception.ClientException;
 import com.applications.asm.domain.repository.PlacesRepository;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import io.reactivex.rxjava3.core.Single;
 
 public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategoriesUc.Params> {
     private final PlacesRepository placesRepository;
-    private static final Logger log = Logger.getLogger(GetCategoriesUc.class.getName());
 
     public static class Params {
         private final String category;
@@ -46,7 +39,7 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.category == null || params.latitude == null || params.longitude == null || params.locale == null)
-                throw new GetCategoryException(GetCategoryError.ANY_VALUE_IS_NULL);
+                throw new ClientException("Null value was entered");
             return params;
         });
     }
@@ -54,31 +47,6 @@ public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategories
     @Override
     protected Single<List<Category>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getCategories(param.category, param.longitude, param.latitude, param.locale))
-                .doOnError(throwable -> {
-                    Exception exception = (Exception) throwable;
-                    if(exception instanceof PlacesRepositoryException) {
-                        PlacesRepositoryError placesRepositoryError = ((PlacesRepositoryException) exception).getError();
-                        switch (placesRepositoryError) {
-                            case CONNECTION_WITH_SERVER_ERROR:
-                                log.warning("Connection with server error: : " + placesRepositoryError.getMessage());
-                                throw new GetCategoryException(GetCategoryError.CONNECTION_WITH_SERVER_ERROR);
-                            case DECODING_RESPONSE_ERROR:
-                            case CREATE_REQUEST_ERROR:
-                            case DO_REQUEST_ERROR:
-                                log.warning("Request error: " + placesRepositoryError.getMessage());
-                                throw new GetCategoryException(GetCategoryError.REQUEST_RESPONSE_ERROR);
-                            case RESPONSE_NULL:
-                                log.warning("Response null: " + placesRepositoryError.getMessage());
-                                throw new GetCategoryException(GetCategoryError.RESPONSE_NULL);
-                            case SERVER_ERROR:
-                                log.warning("Server error: " + placesRepositoryError.getMessage());
-                                throw new GetReviewsException(GetReviewsError.SERVER_ERROR);
-                            case NETWORK_ERROR:
-                                log.warning("Network error: " +placesRepositoryError.getMessage());
-                                throw new GetReviewsException(GetReviewsError.NETWORK_ERROR);
-                        }
-                    } throw exception;
-                });
+                .flatMap(param -> placesRepository.getCategories(param.category, param.longitude, param.latitude, param.locale));
     }
 }

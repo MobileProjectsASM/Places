@@ -1,7 +1,6 @@
 package com.applications.asm.domain.use_cases;
 
-import com.applications.asm.domain.exception.SaveLocationError;
-import com.applications.asm.domain.exception.SaveLocationException;
+import com.applications.asm.domain.exception.ClientException;
 import com.applications.asm.domain.repository.CacheRepository;
 import com.applications.asm.domain.use_cases.base.CompletableUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
@@ -33,7 +32,8 @@ public class SaveLocationUc extends CompletableUseCase<SaveLocationUc.Params> {
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.latitude == null || params.longitude == null) throw new SaveLocationException(SaveLocationError.ANY_VALUE_IS_NULL);
+            if(params.latitude == null || params.longitude == null)
+                throw new ClientException("Null value was entered");
             return params;
         });
     }

@@ -2,7 +2,6 @@ package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Location;
 import com.applications.asm.domain.repository.CacheRepository;
-import com.applications.asm.domain.repository.LocationRepository;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
