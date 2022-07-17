@@ -8,7 +8,9 @@ public class LocationModel {
     private String suburb;
     private String address;
 
-    public LocationModel() {}
+    public LocationModel() {
+
+    }
 
     public LocationModel(String country, String state, String city, String zipCode, String suburb, String address) {
         this.country = country;

@@ -1,5 +1,6 @@
 package com.applications.asm.data.framework;
 
+import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.ResponseCategoriesModel;
 import com.applications.asm.data.model.ResponsePlacesModel;
@@ -19,6 +20,9 @@ public interface PlaceApi {
 
     @GET("v3/businesses/{id}")
     Single<PlaceDetailsModel> getPlaceDetailModel(@Header("Authorization") String apiKey, @Path("id") String placeId);
+
+    @GET("v3/businesses/{id}")
+    Single<LocationModel> getPlaceLocationModel(@Header("Authorization") String apiKey, @Path("id") String placeId);
 
     @GET("v3/businesses/{id}/reviews")
     Single<ResponseReviewsModel> getReviewsModel(@Header("Authorization") String apiKey, @Path("id") String placeId);

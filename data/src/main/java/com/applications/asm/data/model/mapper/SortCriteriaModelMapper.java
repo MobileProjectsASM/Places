@@ -1,7 +1,6 @@
 package com.applications.asm.data.model.mapper;
 
 import com.applications.asm.data.model.SortCriteriaModel;
-import com.applications.asm.domain.entities.SortCriteria;
 
 import java.util.List;
 

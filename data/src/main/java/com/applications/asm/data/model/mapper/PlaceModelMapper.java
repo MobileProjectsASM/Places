@@ -1,5 +1,6 @@
 package com.applications.asm.data.model.mapper;
 
+import com.applications.asm.data.model.LocationModel;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.PlaceModel;
 import com.applications.asm.data.model.SuggestedPlaceModel;
@@ -13,6 +14,5 @@ public interface PlaceModelMapper {
     Place getPlace(PlaceModel placeModel);
     PlaceDetails getPlaceDetails(PlaceDetailsModel placeDetailsModel);
     List<Place> getPlaces(List<PlaceModel> placesModel);
-    SuggestedPlace getSuggestedPlace(SuggestedPlaceModel suggestedPlaceModel);
-    List<SuggestedPlace> getSuggestedPlaces(List<SuggestedPlaceModel> suggestedPlacesModel);
+    SuggestedPlace getSuggestedPlace(SuggestedPlaceModel suggestedPlaceModel, LocationModel locationModel);
 }

@@ -1,5 +1,7 @@
 package com.applications.asm.data.model;
 
+import androidx.annotation.NonNull;
+
 public class Error {
     private String code;
     private String description;
@@ -41,5 +43,14 @@ public class Error {
 
     public void setInstance(Object instance) {
         this.instance = instance;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        String error;
+        error = getCode() + ": " + getDescription();
+        error += getField() != null ? ". The field " + getField() + " has value " + getInstance() : "";
+        return error;
     }
 }

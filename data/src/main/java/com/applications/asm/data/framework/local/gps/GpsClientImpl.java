@@ -1,15 +1,11 @@
-package com.applications.asm.data.framework;
+package com.applications.asm.data.framework.local.gps;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 
-import com.applications.asm.data.R;
 import com.applications.asm.data.exception.LocationException;
-import com.applications.asm.data.model.CoordinatesModel;
-import com.applications.asm.data.sources.LocationDataSource;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -19,24 +15,24 @@ import com.google.android.gms.tasks.Tasks;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class LocationGoogleService implements LocationDataSource {
+public class GpsClientImpl implements GpsClient {
     private final Context context;
     private final CancellationTokenSource cancellationTokenSource;
 
-    public LocationGoogleService(Context context, CancellationTokenSource cancellationTokenSource) {
+    public GpsClientImpl(Context context, CancellationTokenSource cancellationTokenSource) {
         this.context = context;
         this.cancellationTokenSource = cancellationTokenSource;
     }
 
     @SuppressLint("MissingPermission")
     @Override
-    public Single<CoordinatesModel> getCurrentLocation() {
+    public Single<Location> getCurrentLocation() {
         return Single.fromCallable(() -> {
             FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
             Task<Location> locationTask = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken());
             Location location = Tasks.await(locationTask);
             if(location != null)
-                return new CoordinatesModel(location.getLatitude(), location.getLongitude());
+                return location;
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(!isLocationEnabled)

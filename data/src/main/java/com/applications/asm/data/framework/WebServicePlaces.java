@@ -3,9 +3,11 @@ package com.applications.asm.data.framework;
 import android.content.Context;
 
 import com.applications.asm.data.R;
+import com.applications.asm.data.exception.ClientException;
 import com.applications.asm.data.exception.WebServiceException;
 import com.applications.asm.data.model.CategoryModel;
 import com.applications.asm.data.model.CoordinatesModel;
+import com.applications.asm.data.model.Error;
 import com.applications.asm.data.model.ErrorResponse;
 import com.applications.asm.data.model.PlaceDetailsModel;
 import com.applications.asm.data.model.PriceModel;
@@ -17,6 +19,7 @@ import com.applications.asm.data.model.SortCriteriaModel;
 import com.applications.asm.data.sources.PlacesDataSourceWS;
 import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,31 +48,40 @@ public class WebServicePlaces implements PlacesDataSourceWS {
     @Override
     public Single<ResponsePlacesModel> getPlacesModel(String placeToFind, CoordinatesModel coordinatesModel, Integer radius, List<CategoryModel> categories, SortCriteriaModel sortBy, List<PriceModel> prices, Boolean isOpenNow, Integer initIndex, Integer amount) {
         return placeApi.getPlacesModel(apiKey, placeToFind, coordinatesModel.getLatitude(), coordinatesModel.getLongitude(), radius, getCategories(categories), sortBy.getId(), getPrices(prices), isOpenNow, initIndex, amount)
-            .doOnError(this::handleException);
+            .onErrorResumeNext(throwable -> Single.error(handleException(throwable)));
     }
 
     @Override
     public Single<PlaceDetailsModel> getPlaceDetailsModel(String placeId) {
         return placeApi.getPlaceDetailModel(apiKey, placeId)
-            .doOnError(this::handleException);
+            .onErrorResumeNext(throwable -> Single.error(handleException(throwable)));
     }
 
     @Override
     public Single<ResponseReviewsModel> getReviewsModel(String placeId) {
         return placeApi.getReviewsModel(apiKey, placeId)
-            .doOnError(this::handleException);
+            .onErrorResumeNext(throwable -> Single.error(handleException(throwable)));
     }
 
     @Override
     public Single<ResponseSuggestedPlacesModel> getSuggestedPlaces(String word, CoordinatesModel coordinatesModel) {
         return placeApi.getSuggestedPlacesModel(apiKey, word, coordinatesModel.getLatitude(), coordinatesModel.getLongitude())
-            .doOnError(this::handleException);
+            .onErrorResumeNext(throwable -> Single.error(handleException(throwable)))
+            .onErrorResumeNext(throwable -> {
+               Exception exception = (Exception) throwable;
+               if(exception instanceof ClientException) {
+                   Error error = ((ClientException) exception).getError();
+                   if(error.getCode().compareTo("VALIDATION_ERROR") == 0 && error.getField() != null && error.getField().compareTo("text") == 0)
+                       return Single.just(new ResponseSuggestedPlacesModel(new ArrayList<>(), 0));
+               }
+               return Single.error(throwable);
+            });
     }
 
     @Override
     public Single<ResponseCategoriesModel> getCategoriesModel(String word, CoordinatesModel coordinatesModel, String locale) {
         return placeApi.getCategoriesModel(apiKey, word, coordinatesModel.getLatitude(), coordinatesModel.getLongitude(), locale)
-            .doOnError(this::handleException);
+            .onErrorResumeNext(throwable -> Single.error(handleException(throwable)));
     }
 
     @Override
@@ -132,27 +144,30 @@ public class WebServicePlaces implements PlacesDataSourceWS {
         return pricesModel;
     }
 
-    private void handleException(Throwable throwable) throws Exception {
+    private Exception handleException(Throwable throwable) {
         Exception exception = (Exception) throwable;
         if(exception instanceof HttpException) {
             HttpException httpException = (HttpException) exception;
             Response<?> response = httpException.response();
             if(response != null) {
                 int code = response.code();
-                if(code >= 300 && code < 400) throw new WebServiceException("This endpoint has been redirected");
+                if(code >= 300 && code < 400) return new WebServiceException("This endpoint has been redirected");
                 else if(code >= 400 && code < 500) {
                     String error = "There is no description of the error";
                     ResponseBody responseBody = response.errorBody();
                     if(responseBody != null) {
-                        ErrorResponse e = gsonError.fromJson(responseBody.string(), ErrorResponse.class);
-                        error = e.getError().getCode() + ": " + e.getError().getDescription();
-                        error += e.getError().getField() != null ? "The field " + e.getError().getField() + " has value " + e.getError().getInstance() : "";
+                        try {
+                            ErrorResponse errorResponse = gsonError.fromJson(responseBody.string(), ErrorResponse.class);
+                            return new ClientException(errorResponse.getError());
+                        } catch (IOException ioException) {
+                            return ioException;
+                        }
                     }
-                    throw new WebServiceException("Error when making the request, description:\n" + error);
+                    return new ClientException(error);
                 }
-                else throw new WebServiceException("Server error");
+                return new WebServiceException("Server error");
             }
         }
-        throw exception;
+        return exception;
     }
 }

@@ -1,0 +1,96 @@
+query PlaceLocation($id: String!) {
+    business(id: $id) {
+        id
+        name
+        photos
+        location {
+            address1
+            address2
+            address3
+            city
+            state
+            postal_code
+            country
+        }
+    }
+}
+
+query SearchPlaces($term: String, $latitude: Float!, $longitude: Float!, $radius: Float, $categories: String!, $sortBy: String, $price: String, $isOpenNow: Boolean, $offSet: Int, $limit: Int) {
+    search(term: $term, latitude: $latitude, longitude: $longitude, radius: $radius, categories: $categories, sort_by: $sortBy, price: $price, open_now: $isOpenNow, offset: $offSet, limit: $limit) {
+        total
+        business {
+            id
+            name
+            photos
+            coordinates {
+                latitude
+                longitude
+            }
+            categories {
+                alias
+                title
+            }
+            location {
+                address1
+                address2
+                address3
+                city
+                state
+                postal_code
+                country
+            }
+        }
+    }
+}
+
+query PlaceDetails($id: String!) {
+    business(id: $id) {
+        id
+        name
+        photos
+        rating
+        price
+        phone
+        review_count
+        coordinates {
+            latitude
+            longitude
+        }
+        categories {
+            alias
+            title
+        }
+        location {
+            address1
+            address2
+            address3
+            city
+            state
+            postal_code
+            country
+        }
+        hours {
+            is_open_now
+            open {
+                day
+                start
+                end
+            }
+        }
+    }
+}
+
+query PlaceReviews($placeId: String!) {
+    reviews(business: $placeId) {
+        total
+        review {
+            time_created
+            rating
+            text
+            user {
+                name
+                image_url
+            }
+        }
+    }
+}
