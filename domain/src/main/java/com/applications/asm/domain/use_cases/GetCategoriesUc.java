@@ -1,9 +1,10 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Category;
-import com.applications.asm.domain.entities.Location;
+import com.applications.asm.domain.entities.Coordinates;
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.exception.ClientException;
-import com.applications.asm.domain.repository.PlacesRepository;
+import com.applications.asm.domain.repository.AllCategories;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
@@ -11,41 +12,41 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetCategoriesUc extends SingleUseCase<List<Category>, GetCategoriesUc.Params> {
-    private final PlacesRepository placesRepository;
+public class GetCategoriesUc extends SingleUseCase<Response<List<Category>>, GetCategoriesUc.Params> {
+    private final AllCategories allCategories;
 
     public static class Params {
         private final String category;
-        private final Location location;
+        private final Coordinates coordinates;
         private final String locale;
 
-        private Params(String category, Location location, String locale) {
+        private Params(String category, Coordinates coordinates, String locale) {
             this.category = category;
-            this.location = location;
+            this.coordinates = coordinates;
             this.locale = locale;
         }
 
-        public static Params forGetCategories(String category, Location location, String locale) {
-            return new Params(category, location, locale);
+        public static Params forGetCategories(String category, Coordinates coordinates, String locale) {
+            return new Params(category, coordinates, locale);
         }
     }
 
-    public GetCategoriesUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
+    public GetCategoriesUc(UseCaseScheduler useCaseScheduler, AllCategories allCategories) {
         super(useCaseScheduler);
-        this.placesRepository = placesRepository;
+        this.allCategories = allCategories;
     }
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.category == null || params.location != null || params.locale == null)
+            if(params.category == null || params.coordinates != null || params.locale == null)
                 throw new ClientException("Null value was entered");
             return params;
         });
     }
 
     @Override
-    protected Single<List<Category>> build(Params params) {
+    protected Single<Response<List<Category>>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> placesRepository.getCategories(param.category, param.location, param.locale));
+                .flatMap(param -> allCategories.withThisCriteria(param.category, param.coordinates, param.locale));
     }
 }

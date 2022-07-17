@@ -1,12 +1,12 @@
 package com.applications.asm.domain.entities;
 
-public class WorkingHours {
+public class Schedule {
     private Integer dayNumber;
     private String day;
     private Hour openHour;
     private Hour closeHour;
 
-    public WorkingHours(Integer dayNumber, String day, Hour openHour, Hour closeHour) {
+    public Schedule(Integer dayNumber, String day, Hour openHour, Hour closeHour) {
         this.dayNumber = dayNumber;
         this.day = day;
         this.openHour = openHour;

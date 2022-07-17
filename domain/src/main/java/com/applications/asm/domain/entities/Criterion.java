@@ -1,10 +1,15 @@
 package com.applications.asm.domain.entities;
 
-public class SortCriteria {
+public class Criterion {
+    public enum Type {
+        SORT,
+        PRICE
+    }
+
     private String id;
     private String name;
 
-    public SortCriteria(String id, String name) {
+    public Criterion(String id, String name) {
         this.id = id;
         this.name = name;
     }

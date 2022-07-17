@@ -1,19 +1,20 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.PlaceDetails;
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.exception.ClientException;
-import com.applications.asm.domain.repository.PlacesRepository;
+import com.applications.asm.domain.repository.AllPlacesDetails;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetPlaceDetailsUc extends SingleUseCase<PlaceDetails, String> {
-    private final PlacesRepository placesRepository;
+public class GetPlaceDetailsUc extends SingleUseCase<Response<PlaceDetails>, String> {
+    private final AllPlacesDetails allPlacesDetails;
 
-    public GetPlaceDetailsUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
+    public GetPlaceDetailsUc(UseCaseScheduler useCaseScheduler, AllPlacesDetails allPlacesDetails) {
         super(useCaseScheduler);
-        this.placesRepository = placesRepository;
+        this.allPlacesDetails = allPlacesDetails;
     }
 
     private Single<String> validateParams(String placeId) {
@@ -25,8 +26,8 @@ public class GetPlaceDetailsUc extends SingleUseCase<PlaceDetails, String> {
     }
 
     @Override
-    protected Single<PlaceDetails> build(String placeId) {
+    protected Single<Response<PlaceDetails>> build(String placeId) {
         return validateParams(placeId)
-                .flatMap(placesRepository::getPlaceDetails);
+                .flatMap(allPlacesDetails::withId);
     }
 }

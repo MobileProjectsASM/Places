@@ -7,13 +7,13 @@ public class PlaceDetails extends Place {
     private Price price;
     private String phoneNumber;
     private Integer reviewsCounter;
-    private List<WorkingHours> workingHoursDays;
+    private List<Schedule> schedule;
     private Boolean isOpen;
 
     public PlaceDetails(
         String id,
         String name,
-        Location location,
+        Coordinates coordinates,
         String imageUrl,
         List<Category> categories,
         String address,
@@ -21,15 +21,15 @@ public class PlaceDetails extends Place {
         Price price,
         String phoneNumber,
         Integer reviewsCounter,
-        List<WorkingHours> workingHoursDays,
+        List<Schedule> schedule,
         Boolean isOpen
     ) {
-        super(id, name, location, imageUrl, categories, address);
+        super(id, name, coordinates, imageUrl, categories, address);
         this.rating = rating;
         this.price = price;
         this.phoneNumber = phoneNumber;
         this.reviewsCounter = reviewsCounter;
-        this.workingHoursDays = workingHoursDays;
+        this.schedule = schedule;
         this.isOpen = isOpen;
     }
 
@@ -65,12 +65,12 @@ public class PlaceDetails extends Place {
         this.reviewsCounter = reviewsCounter;
     }
 
-    public List<WorkingHours> getWorkingHoursDays() {
-        return workingHoursDays;
+    public List<Schedule> getWorkingHoursDays() {
+        return schedule;
     }
 
-    public void setWorkingHoursDays(List<WorkingHours> workingHoursDays) {
-        this.workingHoursDays = workingHoursDays;
+    public void setWorkingHoursDays(List<Schedule> schedule) {
+        this.schedule = schedule;
     }
 
     public Boolean getOpen() {

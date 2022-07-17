@@ -1,8 +1,9 @@
 package com.applications.asm.domain.use_cases;
 
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.entities.Review;
 import com.applications.asm.domain.exception.ClientException;
-import com.applications.asm.domain.repository.PlacesRepository;
+import com.applications.asm.domain.repository.AllReviews;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
@@ -10,12 +11,12 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetReviewsUc extends SingleUseCase<List<Review>, String> {
-    private final PlacesRepository placesRepository;
+public class GetReviewsUc extends SingleUseCase<Response<List<Review>>, String> {
+    private final AllReviews allReviews;
 
-    public GetReviewsUc(UseCaseScheduler useCaseScheduler, PlacesRepository placesRepository) {
+    public GetReviewsUc(UseCaseScheduler useCaseScheduler, AllReviews allReviews) {
         super(useCaseScheduler);
-        this.placesRepository = placesRepository;
+        this.allReviews = allReviews;
     }
 
     private Single<String> validateParams(String placeId) {
@@ -27,8 +28,8 @@ public class GetReviewsUc extends SingleUseCase<List<Review>, String> {
     }
 
     @Override
-    protected Single<List<Review>> build(String placeId) {
+    protected Single<Response<List<Review>>> build(String placeId) {
         return validateParams(placeId)
-                .flatMap(placesRepository::getReviews);
+                .flatMap(allReviews::ofThisPlace);
     }
 }

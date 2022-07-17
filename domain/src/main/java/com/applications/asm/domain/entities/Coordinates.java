@@ -1,10 +1,15 @@
 package com.applications.asm.domain.entities;
 
-public class Location {
+public class Coordinates {
+    public enum State {
+        CURRENT,
+        SAVED
+    }
+
     private Double latitude;
     private Double longitude;
 
-    public Location(Double latitude, Double longitude) {
+    public Coordinates(Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

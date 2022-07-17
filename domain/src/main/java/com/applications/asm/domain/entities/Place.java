@@ -5,15 +5,15 @@ import java.util.List;
 public class Place {
     private String id;
     private String name;
-    private Location location;
+    private Coordinates coordinates;
     private String imageUrl;
     private List<Category> categories;
     private String address;
 
-    public Place(String id, String name, Location location, String imageUrl, List<Category> categories, String address) {
+    public Place(String id, String name, Coordinates coordinates, String imageUrl, List<Category> categories, String address) {
         this.id = id;
         this.name = name;
-        this.location = location;
+        this.coordinates = coordinates;
         this.imageUrl = imageUrl;
         this.categories = categories;
         this.address = address;
@@ -35,12 +35,12 @@ public class Place {
         this.name = name;
     }
 
-    public Location getLocation() {
-        return location;
+    public Coordinates getLocation() {
+        return coordinates;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setLocation(Coordinates coordinates) {
+        this.coordinates = coordinates;
     }
 
     public String getImageUrl() {
