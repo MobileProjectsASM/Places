@@ -5,7 +5,6 @@ import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
-import com.applications.asm.data.exception.LocationException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -36,8 +35,8 @@ public class GpsClientImpl implements GpsClient {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(!isLocationEnabled)
-                throw new LocationException("Location is null because the GPS is disabled");
-            throw new LocationException("No registered location");
+                throw new Exception("Location is null because the GPS is disabled");
+            throw new Exception("No registered location");
         });
     }
 }

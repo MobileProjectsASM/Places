@@ -1,6 +1,5 @@
 package com.applications.asm.data.repository;
 
-import com.applications.asm.data.framework.network.api_rest.ErrorUtils;
 import com.applications.asm.data.framework.network.api_rest.PlacesRestServer;
 import com.applications.asm.data.framework.network.api_rest.dto.APIError;
 import com.applications.asm.data.framework.network.graphql.GraphqlPlacesClient;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 
 import io.reactivex.rxjava3.core.Single;
-import retrofit2.Retrofit;
 
 public class AllSuggestedPlacesImpl implements AllSuggestedPlaces {
     private final PlacesRestServer placesRestServer;
@@ -48,7 +46,7 @@ public class AllSuggestedPlacesImpl implements AllSuggestedPlaces {
                                 .toList()
                                 .map(Response::success);
                     } else {
-                        APIError apiError = ErrorUtils.parseError(response, new Retrofit.Builder().build());
+                        APIError apiError = placesRestServer.parseError(response);
                         List<String> errors = new ArrayList<>();
                         errors.add(apiError.error.description);
                         return Single.<Response<List<SuggestedPlace>>>just(Response.error(errors));
