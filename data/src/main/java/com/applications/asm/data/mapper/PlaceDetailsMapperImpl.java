@@ -1,8 +1,5 @@
 package com.applications.asm.data.mapper;
 
-import android.content.Context;
-
-import com.applications.asm.data.R;
 import com.applications.asm.data.framework.network.graphql.PlaceDetailsQuery;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
@@ -13,16 +10,19 @@ import com.applications.asm.domain.entities.Schedule;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
-    private final Context context;
 
-    public PlaceDetailsMapperImpl(Context context) {
-        this.context = context;
+    @Inject
+    public PlaceDetailsMapperImpl() {
+
     }
 
     @Override
-    public PlaceDetails placeDetailsQueryToPlaceDetails(PlaceDetailsQuery.Business business) {
+    public PlaceDetails placeDetailsQueryToPlaceDetails(PlaceDetailsQuery.Business business, Map<String, String> days, Map<String, String> prices) {
         String id = business.id != null ? business.id : "";
         String name = business.name != null ? business.name : "";
         String imageUrl = !business.photos.isEmpty() ? business.photos.get(0) : "";
@@ -31,16 +31,16 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
         String phoneNumber = business.phone != null ? business.phone : "";
         Integer reviewsCounter = business.review_count != null ? business.review_count : 0;
         Boolean isOpen = business.hours != null && business.hours.size() > 0 && (business.hours.get(0).is_open_now != null ? business.hours.get(0).is_open_now : false);
-        Coordinates coordinates = getCoordinates(business.coordinates);
+        Coordinates coordinates = business.coordinates != null ? getCoordinates(business.coordinates) : null;
         List<Category> categories = business.categories != null ? getCategories(business.categories) : new ArrayList<>();
-        Price price = business.price != null ? getPrice(business.price) : new Price("unknown", context.getString(R.string.price_unknown));
-        List<Schedule> schedule = business.hours != null && business.hours.size() > 0  && business.hours.get(0).open != null ? getSchedule(business.hours.get(0).open) : new ArrayList<>();
+        Price price = business.price != null ? getPrice(business.price, prices) : null;
+        List<Schedule> schedule = business.hours != null && business.hours.size() > 0  && business.hours.get(0).open != null ? getSchedule(business.hours.get(0).open, days) : new ArrayList<>();
         return new PlaceDetails(id, name, coordinates, imageUrl, categories, address, rating, price, phoneNumber, reviewsCounter, schedule, isOpen);
     }
 
     private Coordinates getCoordinates(PlaceDetailsQuery.Coordinates coordinates) {
-        Double latitude = coordinates != null && coordinates.latitude != null ? coordinates.latitude : 0;
-        Double longitude = coordinates != null && coordinates.longitude != null ? coordinates.longitude : 0;
+        Double latitude = coordinates.latitude != null ? coordinates.latitude : 0;
+        Double longitude = coordinates.longitude != null ? coordinates.longitude : 0;
         return new Coordinates(latitude , longitude);
     }
 
@@ -61,43 +61,30 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
                 (location.country != null ? " " + location.country : "");
     }
 
-    private Price getPrice(String price) {
-        if(price.compareTo("$") == 0)
-            return new Price("$", context.getString(R.string.price_cheap));
-        else if(price.compareTo("$$") == 0)
-            return new Price("$$", context.getString(R.string.price_regular));
-        else if(price.compareTo("$$$") == 0)
-            return new Price("$$$", context.getString(R.string.price_expensive));
-        else if(price.compareTo("$$$$") == 0)
-            return new Price("$$$$", context.getString(R.string.price_very_expensive));
-        else return new Price("unknown", context.getString(R.string.price_unknown));
+    private Price getPrice(String priceId, Map<String, String> prices) {
+        String priceName = prices.get(priceId);
+        if(priceName != null)
+            return new Price(priceId, priceName);
+        return null;
     }
 
-    private List<Schedule> getSchedule(List<PlaceDetailsQuery.Open> listOpen) {
+    private List<Schedule> getSchedule(List<PlaceDetailsQuery.Open> listOpen, Map<String, String> days) {
         List<Schedule> schedule = new ArrayList<>();
         for(PlaceDetailsQuery.Open open : listOpen)
-            schedule.add(getScheduleDay(open));
+            schedule.add(getScheduleDay(open, days));
         return schedule;
     }
 
-    private Schedule getScheduleDay(PlaceDetailsQuery.Open open) {
+    private Schedule getScheduleDay(PlaceDetailsQuery.Open open, Map<String, String> days) {
         Integer dayNumber = open.day != null ? open.day : 0;
-        String day = getDay(dayNumber);
+        String day = getDay(dayNumber, days);
         Hour openHour = open.start != null ? getHour(open.start) : new Hour(0, 0);
         Hour closeHour = open.end != null ? getHour(open.end) : new Hour(0, 0);
         return new Schedule(dayNumber, day, openHour, closeHour);
     }
 
-    private String getDay(Integer day) {
-        switch (day) {
-            case 0: return context.getString(R.string.monday);
-            case 1: return context.getString(R.string.tuesday);
-            case 2: return context.getString(R.string.wednesday);
-            case 3: return context.getString(R.string.thursday);
-            case 4: return context.getString(R.string.friday);
-            case 5: return context.getString(R.string.saturday);
-            default: return context.getString(R.string.sunday);
-        }
+    private String getDay(Integer day, Map<String, String> days) {
+        return days.get(String.valueOf(day));
     }
 
     private Hour getHour(String hour) {

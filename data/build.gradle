@@ -35,6 +35,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    //Dagger para la inyeccion de dependecias
+    implementation 'com.google.dagger:dagger:2.41'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.41'
+
     //Rx java para programacion asincrona
     implementation "io.reactivex.rxjava3:rxjava:3.1.4"
 
@@ -43,6 +47,7 @@ dependencies {
 
     //Retrofit para el consumo de servicios
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
     //Google services location
     implementation 'com.google.android.gms:play-services-location:20.0.0'

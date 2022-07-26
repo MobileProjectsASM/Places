@@ -8,7 +8,14 @@ import com.applications.asm.domain.entities.Place;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PlaceMapperImpl implements PlaceMapper {
+
+    @Inject
+    public PlaceMapperImpl() {
+
+    }
 
     @Override
     public List<Place> placesQueryToPlaces(List<SearchPlacesQuery.Business> businesses) {

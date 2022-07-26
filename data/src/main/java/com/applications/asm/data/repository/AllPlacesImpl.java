@@ -1,21 +1,20 @@
 package com.applications.asm.data.repository;
 
-import android.util.Log;
-
 import com.apollographql.apollo3.api.Error;
-import com.apollographql.apollo3.exception.ApolloException;
 import com.applications.asm.data.framework.network.graphql.GraphqlPlacesClient;
 import com.applications.asm.data.mapper.PlaceMapper;
+import com.applications.asm.data.utils.ErrorUtils;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Criterion;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.Response;
-import com.applications.asm.domain.exception.PlacesServiceException;
 import com.applications.asm.domain.repository.AllPlaces;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Single;
 
@@ -25,6 +24,7 @@ public class AllPlacesImpl implements AllPlaces {
 
     private final static Integer PLACES_PER_PAGE = 10;
 
+    @Inject
     public AllPlacesImpl(GraphqlPlacesClient graphqlPlacesClient, PlaceMapper placeMapper) {
         this.graphqlPlacesClient = graphqlPlacesClient;
         this.placeMapper = placeMapper;
@@ -47,7 +47,7 @@ public class AllPlacesImpl implements AllPlaces {
                     }
                     return response;
                 })
-                .onErrorResumeNext(throwable -> Single.error(handleException(throwable)));
+                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
     }
 
     private String getCategories(List<Category> categories) {
@@ -78,15 +78,5 @@ public class AllPlacesImpl implements AllPlaces {
             else priceCriteriaString.add("$$$$");
         }
         return priceCriteriaString;
-    }
-
-    private Exception handleException(Throwable throwable) {
-        Exception exception = (Exception) throwable;
-        Log.e(getClass().getName(), exception.getMessage());
-        if(exception instanceof ApolloException) {
-            ApolloException apolloException = (ApolloException) exception;
-            return new PlacesServiceException(apolloException.getMessage());
-        }
-        return exception;
     }
 }

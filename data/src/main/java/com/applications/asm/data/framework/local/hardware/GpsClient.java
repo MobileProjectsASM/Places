@@ -1,4 +1,4 @@
-package com.applications.asm.data.framework.local.gps;
+package com.applications.asm.data.framework.local.hardware;
 
 import android.location.Location;
 

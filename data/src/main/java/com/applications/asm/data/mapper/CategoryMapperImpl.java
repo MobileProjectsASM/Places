@@ -5,7 +5,14 @@ import com.applications.asm.domain.entities.Category;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class CategoryMapperImpl implements CategoryMapper {
+
+    @Inject
+    public CategoryMapperImpl() {
+
+    }
 
     @Override
     public List<Category> categoriesDTOToCategories(List<com.applications.asm.data.framework.network.api_rest.dto.Category> categoriesDTO) {

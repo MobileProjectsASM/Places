@@ -6,7 +6,15 @@ import com.applications.asm.domain.entities.Review;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class ReviewMapperImpl implements ReviewMapper {
+
+    @Inject
+    public ReviewMapperImpl() {
+
+    }
+
     @Override
     public List<Review> queryReviewsToReviews(List<PlaceReviewsQuery.Review> reviewsQuery) {
         List<Review> reviews = new ArrayList<>();

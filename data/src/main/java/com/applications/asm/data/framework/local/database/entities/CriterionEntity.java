@@ -1,38 +1,31 @@
 package com.applications.asm.data.framework.local.database.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "criterion")
+@Entity(tableName = "Criterion")
 public class CriterionEntity {
     @Ignore
     public static final String priceCriterion = "price_criterion";
     @Ignore
     public static final String sortCriterion = "sort_criterion";
 
+    @NonNull
+    @ColumnInfo(name = "CRITERION_ID")
     @PrimaryKey
-    private String id;
-    @ColumnInfo(name = "criterion_name")
-    private String name;
-    @ColumnInfo(name = "criterion_type")
+    private String criterionID;
+    @ColumnInfo(name = "CRITERION_TYPE")
     private String criterionType;
 
-    public String getId() {
-        return id;
+    public String getCriterionID() {
+        return criterionID;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setCriterionID(String criterionID) {
+        this.criterionID = criterionID;
     }
 
     public String getCriterionType() {

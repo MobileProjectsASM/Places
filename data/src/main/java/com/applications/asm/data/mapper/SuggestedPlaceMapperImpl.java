@@ -1,12 +1,19 @@
 package com.applications.asm.data.mapper;
 
-import com.applications.asm.data.framework.network.graphql.PlaceLocationQuery;
+import com.applications.asm.data.framework.network.graphql.PlaceSuggestionQuery;
 import com.applications.asm.domain.entities.SuggestedPlace;
+
+import javax.inject.Inject;
 
 public class SuggestedPlaceMapperImpl implements SuggestedPlaceMapper {
 
+    @Inject
+    public SuggestedPlaceMapperImpl() {
+
+    }
+
     @Override
-    public SuggestedPlace placeLocationToSuggestedPlace(PlaceLocationQuery.Business business) {
+    public SuggestedPlace placeLocationToSuggestedPlace(PlaceSuggestionQuery.Business business) {
         String id = business.id != null ? business.id : "";
         String name = business.name != null ? business.name : "";
         String address = business.location != null ? getAddress(business.location) : "";
@@ -14,7 +21,7 @@ public class SuggestedPlaceMapperImpl implements SuggestedPlaceMapper {
         return new SuggestedPlace(id, name, address, imageUrl);
     }
 
-    private String getAddress(PlaceLocationQuery.Location location) {
+    private String getAddress(PlaceSuggestionQuery.Location location) {
         return (location.address1 != null ? location.address1 : "") +
                 (location.address2 != null ? ", " + location.address2 : "") +
                 (location.address3 != null ? ", " + location.address3 : "") +

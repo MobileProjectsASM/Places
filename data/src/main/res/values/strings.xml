@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="monday">Lunes</string>
-    <string name="tuesday">Martes</string>
-    <string name="wednesday">Miercoles</string>
-    <string name="thursday">Jueves</string>
-    <string name="friday">Viernes</string>
-    <string name="saturday">Sabado</string>
-    <string name="sunday">Domingo</string>
-    <string name="sort_by_best_match">Coincidencia</string>
-    <string name="sort_by_rating">Puntucion</string>
-    <string name="sort_by_review_count">Cantidad de evaluaciones</string>
-    <string name="sort_by_distance">Distancia</string>
-    <string name="price_cheap">Barato</string>
-    <string name="price_regular">Regular</string>
-    <string name="price_expensive">Caro</string>
-    <string name="price_very_expensive">Muy Caro</string>
-    <string name="price_unknown">Desconocido</string>
+    <string name="preload_database_name">places.db</string>
+    <string name="database_name">places.db</string>
+    <string name="preferences_name">places_preferences</string>
+    <string name="yelp_api_base_url">https://api.yelp.com/</string>
+    <string name="yelp_graphql_base_url">https://api.yelp.com/v3/graphql</string>
+    <string name="api_authorization">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
+    <string name="network_error">Error en la conexion de internet</string>
+    <string name="converter_error">Error al parsear datos</string>
+    <string name="gps_disabled_error">El GPS esta deshabilitado</string>
+    <string name="unregistered_location">Localizacion no registrada</string>
 </resources>

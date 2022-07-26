@@ -1,10 +1,11 @@
-package com.applications.asm.data.framework.local.gps;
+package com.applications.asm.data.framework.local.hardware;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
 
+import com.applications.asm.data.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -12,31 +13,41 @@ import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
 
 public class GpsClientImpl implements GpsClient {
     private final Context context;
-    private final CancellationTokenSource cancellationTokenSource;
+    private final FusedLocationProviderClient fusedLocationProviderClient;
 
-    public GpsClientImpl(Context context, CancellationTokenSource cancellationTokenSource) {
+    @Inject
+    public GpsClientImpl(Context context, FusedLocationProviderClient fusedLocationProviderClient) {
         this.context = context;
-        this.cancellationTokenSource = cancellationTokenSource;
+        this.fusedLocationProviderClient = fusedLocationProviderClient;
     }
 
     @SuppressLint("MissingPermission")
     @Override
     public Single<Location> getCurrentLocation() {
         return Single.fromCallable(() -> {
-            FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context);
-            Task<Location> locationTask = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cancellationTokenSource.getToken());
+            Task<Location> locationTask = fusedLocationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, new CancellationTokenSource().getToken());
             Location location = Tasks.await(locationTask);
             if(location != null)
                 return location;
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(!isLocationEnabled)
-                throw new Exception("Location is null because the GPS is disabled");
-            throw new Exception("No registered location");
+                throw new HardwareException(context.getString(R.string.gps_disabled_error));
+            throw new HardwareException(context.getString(R.string.unregistered_location));
+        })
+        .onErrorResumeNext(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof HardwareException) {
+                HardwareException hardwareException = (HardwareException) exception;
+                return Single.error(hardwareException);
+            }
+            return Single.error(new HardwareException(exception.getMessage()));
         });
     }
 }

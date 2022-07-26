@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 
 import com.applications.asm.data.framework.local.shared_preferences.model.CoordinatesSP;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
@@ -12,6 +14,7 @@ public class AppSharedPreferences implements LocalPersistenceClient {
     private static final String LONGITUDE_KEY = "longitude";
     private final SharedPreferences appPreferences;
 
+    @Inject
     public AppSharedPreferences(SharedPreferences appPreferences) {
         this.appPreferences = appPreferences;
     }
@@ -24,6 +27,10 @@ public class AppSharedPreferences implements LocalPersistenceClient {
             editor.putFloat(LONGITUDE_KEY, (float) coordinatesSP.getLongitude());
             editor.commit();
             emitter.onComplete();
+        })
+        .onErrorResumeNext(throwable -> {
+            Exception exception = (Exception) throwable;
+            return Completable.error(new SharedPreferencesException(exception.getMessage()));
         });
     }
 
