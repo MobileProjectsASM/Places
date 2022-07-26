@@ -30,6 +30,10 @@ public class AppSharedPreferences implements LocalPersistenceClient {
         })
         .onErrorResumeNext(throwable -> {
             Exception exception = (Exception) throwable;
+            if(exception instanceof SharedPreferencesException) {
+                SharedPreferencesException sharedPreferencesException = (SharedPreferencesException) exception;
+                return Completable.error(sharedPreferencesException);
+            }
             return Completable.error(new SharedPreferencesException(exception.getMessage()));
         });
     }

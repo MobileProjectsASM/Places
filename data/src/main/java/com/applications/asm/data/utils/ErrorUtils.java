@@ -1,12 +1,12 @@
 package com.applications.asm.data.utils;
 
 import com.apollographql.apollo3.api.Error;
-import com.applications.asm.data.exception.RepositoryException;
 import com.applications.asm.data.framework.local.database.DatabaseException;
 import com.applications.asm.data.framework.local.hardware.HardwareException;
 import com.applications.asm.data.framework.local.shared_preferences.SharedPreferencesException;
 import com.applications.asm.data.framework.network.api_rest.RestException;
 import com.applications.asm.data.framework.network.graphql.GraphqlException;
+import com.applications.asm.domain.exception.RepositoryException;
 
 import java.util.ArrayList;
 import java.util.List;

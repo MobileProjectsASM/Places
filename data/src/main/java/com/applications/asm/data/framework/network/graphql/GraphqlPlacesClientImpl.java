@@ -44,18 +44,30 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
         Optional.Present<Integer> optionalInitIndex = new Optional.Present<>(initIndex);
         Optional.Present<Integer> optionalLimit = new Optional.Present<>(limit);
         ApolloCall<SearchPlacesQuery.Data> searchPlacesCall = apolloClient.query(new SearchPlacesQuery(optionalPlace, latitude, longitude, optionalRadius, categories, optionalSortBy, optionalPrice, optionalIsOpenNow, optionalInitIndex, optionalLimit));
-        return Rx3Apollo.single(searchPlacesCall);
+        return Rx3Apollo.single(searchPlacesCall).onErrorResumeNext(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof ApolloException) return Single.error(new GraphqlException(context.getString(R.string.network_error)));
+            return Single.error(new GraphqlException(exception.getMessage()));
+        });
     }
 
     @Override
     public Single<ApolloResponse<PlaceDetailsQuery.Data>> getPlaceDetails(String placeId) {
         ApolloCall<PlaceDetailsQuery.Data> searchPlacesCall = apolloClient.query(new PlaceDetailsQuery(placeId));
-        return Rx3Apollo.single(searchPlacesCall);
+        return Rx3Apollo.single(searchPlacesCall).onErrorResumeNext(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof ApolloException) return Single.error(new GraphqlException(context.getString(R.string.network_error)));
+            return Single.error(new GraphqlException(exception.getMessage()));
+        });
     }
 
     @Override
     public Single<ApolloResponse<PlaceReviewsQuery.Data>> getPlaceReviews(String placeId) {
         ApolloCall<PlaceReviewsQuery.Data> placesReviewsCall = apolloClient.query(new PlaceReviewsQuery(placeId));
-        return Rx3Apollo.single(placesReviewsCall);
+        return Rx3Apollo.single(placesReviewsCall).onErrorResumeNext(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof ApolloException) return Single.error(new GraphqlException(context.getString(R.string.network_error)));
+            return Single.error(new GraphqlException(exception.getMessage()));
+        });
     }
 }
