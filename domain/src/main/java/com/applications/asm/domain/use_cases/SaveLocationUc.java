@@ -1,7 +1,8 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Coordinates;
-import com.applications.asm.domain.exception.ClientException;
+import com.applications.asm.domain.exception.ParameterError;
+import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCoordinates;
 import com.applications.asm.domain.use_cases.base.CompletableUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
@@ -20,7 +21,7 @@ public class SaveLocationUc extends CompletableUseCase<Coordinates> {
     private Single<Coordinates> validateParams(Coordinates coordinates) {
         return Single.fromCallable(() -> {
             if(coordinates == null)
-                throw new ClientException("Null value was entered");
+                throw new ParameterException(ParameterError.NULL_VALUE);
             return coordinates;
         });
     }

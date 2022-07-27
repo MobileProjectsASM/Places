@@ -3,7 +3,8 @@ package com.applications.asm.domain.use_cases;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Response;
-import com.applications.asm.domain.exception.ClientException;
+import com.applications.asm.domain.exception.ParameterError;
+import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCategories;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
@@ -39,7 +40,7 @@ public class GetCategoriesUc extends SingleUseCase<Response<List<Category>>, Get
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.category == null || params.coordinates != null || params.locale == null)
-                throw new ClientException("Null value was entered");
+                throw new ParameterException(ParameterError.NULL_VALUE);
             return params;
         });
     }

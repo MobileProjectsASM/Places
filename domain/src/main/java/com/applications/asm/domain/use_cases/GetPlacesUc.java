@@ -5,8 +5,9 @@ import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Criterion;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.Response;
-import com.applications.asm.domain.entities.Validators;
-import com.applications.asm.domain.exception.ClientException;
+import com.applications.asm.domain.exception.ParameterError;
+import com.applications.asm.domain.exception.ParameterException;
+import com.applications.asm.domain.repository.Validators;
 import com.applications.asm.domain.repository.AllPlaces;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
@@ -54,13 +55,13 @@ public class GetPlacesUc extends SingleUseCase<Response<List<Place>>, GetPlacesU
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.placeToFind == null || params.coordinates == null || params.radius == null || params.categories == null || params.sortCriterion == null || params.pricesCriteria == null || params.isOpenNow == null || params.page == null)
-                throw new ClientException("Null value was entered");
+                throw new ParameterException(ParameterError.NULL_VALUE);
             if(!validators.validateLatitudeRange(params.coordinates.getLatitude()) || !validators.validateLongitudeRange(params.coordinates.getLongitude()))
-                throw new ClientException("Location out of range: " + "[" + params.coordinates.getLatitude() + ", " + params.coordinates.getLongitude() + "]");
+                throw new ParameterException(ParameterError.LOCATION_OUT_OF_RANGE);
             if(!validators.validateRadiusRange(params.radius))
-                throw new ClientException("Radius out of range: " + params.radius);
+                throw new ParameterException(ParameterError.RADIUS_OUT_OF_RANGE);
             if(!validators.validatePage(params.page))
-                throw new ClientException("Page out of range: " + params.page);
+                throw new ParameterException(ParameterError.PAGE_OUT_OF_RANGE);
             return params;
         });
     }

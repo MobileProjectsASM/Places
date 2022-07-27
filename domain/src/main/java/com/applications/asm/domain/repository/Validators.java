@@ -1,4 +1,4 @@
-package com.applications.asm.domain.entities;
+package com.applications.asm.domain.repository;
 
 public interface Validators {
     Boolean validateLatitudeRange(Double latitude);

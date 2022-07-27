@@ -3,8 +3,9 @@ package com.applications.asm.domain.use_cases;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.entities.Validators;
-import com.applications.asm.domain.exception.ClientException;
+import com.applications.asm.domain.exception.ParameterError;
+import com.applications.asm.domain.exception.ParameterException;
+import com.applications.asm.domain.repository.Validators;
 import com.applications.asm.domain.repository.AllSuggestedPlaces;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
@@ -40,9 +41,9 @@ public class GetSuggestedPlacesUc extends SingleUseCase<Response<List<SuggestedP
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.place == null || params.coordinates == null)
-                throw new ClientException("Null value was entered");
+                throw new ParameterException(ParameterError.NULL_VALUE);
             if(!validators.validateLatitudeRange(params.coordinates.getLatitude()) || !validators.validateLongitudeRange(params.coordinates.getLongitude()))
-                throw new ClientException("Location input is invalid: " + "[" + params.coordinates.getLatitude() + ", " + params.coordinates.getLongitude() +"]");
+                throw new ParameterException(ParameterError.LOCATION_OUT_OF_RANGE);
             return params;
         });
     }

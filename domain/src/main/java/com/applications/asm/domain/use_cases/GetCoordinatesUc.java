@@ -1,6 +1,8 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Coordinates;
+import com.applications.asm.domain.exception.ParameterError;
+import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCoordinates;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
@@ -15,8 +17,17 @@ public class GetCoordinatesUc extends SingleUseCase<Coordinates, Coordinates.Sta
         this.allCoordinates = allCoordinates;
     }
 
+    private Single<Coordinates.State> validateParams(Coordinates.State state) {
+        return Single.fromCallable(() -> {
+            if(state == null)
+                throw new ParameterException(ParameterError.NULL_VALUE);
+            return state;
+        });
+    }
+
     @Override
     protected Single<Coordinates> build(Coordinates.State coordinatesState) {
-        return allCoordinates.myLocation(coordinatesState);
+        return validateParams(coordinatesState)
+                .flatMap(allCoordinates::myLocation);
     }
 }
