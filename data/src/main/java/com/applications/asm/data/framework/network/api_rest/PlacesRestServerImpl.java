@@ -1,6 +1,7 @@
 package com.applications.asm.data.framework.network.api_rest;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.applications.asm.data.R;
 import com.applications.asm.data.framework.network.api_rest.api.YelpApiClient;
@@ -35,6 +36,7 @@ public class PlacesRestServerImpl implements PlacesRestServer {
                 .getAutocompleteSuggestions(word, latitude, longitude, locale)
                 .onErrorResumeNext(throwable -> {
                     Exception exception = (Exception) throwable;
+                    Log.e(getClass().getName(), exception.getMessage());
                     if(exception instanceof IOException)
                         return Single.error(new RestException(context.getString(R.string.network_error)));
                     return Single.error(new RestException(context.getString(R.string.converter_error)));

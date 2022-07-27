@@ -32,6 +32,6 @@ public class AllCriteriaImpl implements AllCriteria {
         else
             criteriaSingle = placesDbClient.getCriteria(CriterionEntity.sortCriterion, "es");
         return criteriaSingle.map(criterionMapper::criteriaEntityToCriteria)
-                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 }

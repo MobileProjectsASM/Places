@@ -43,6 +43,6 @@ public class AllCategoriesImpl implements AllCategories {
                     }
                     return response;
                 })
-                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 }

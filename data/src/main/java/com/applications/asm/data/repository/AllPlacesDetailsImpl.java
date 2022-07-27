@@ -45,7 +45,7 @@ public class AllPlacesDetailsImpl implements AllPlacesDetails {
                 response = Response.error(ErrorUtils.getErrors(dataApolloResponse.errors));
             return response;
         })
-        .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+        .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 
 }

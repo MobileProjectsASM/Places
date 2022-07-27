@@ -53,6 +53,6 @@ public class AllSuggestedPlacesImpl implements AllSuggestedPlaces {
                     }
                     return suggestedPlacesSingle;
                 })
-                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 }

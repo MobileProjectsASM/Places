@@ -43,6 +43,6 @@ public class AllReviewsImpl implements AllReviews {
                     }
                     return response;
                 })
-                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 }

@@ -1,6 +1,7 @@
 package com.applications.asm.data.framework.local.shared_preferences;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.applications.asm.data.framework.local.shared_preferences.model.CoordinatesSP;
 
@@ -32,8 +33,10 @@ public class AppSharedPreferences implements LocalPersistenceClient {
             Exception exception = (Exception) throwable;
             if(exception instanceof SharedPreferencesException) {
                 SharedPreferencesException sharedPreferencesException = (SharedPreferencesException) exception;
+                Log.e(getClass().getName(), sharedPreferencesException.getMessage());
                 return Completable.error(sharedPreferencesException);
             }
+            Log.e(getClass().getName(), exception.getMessage());
             return Completable.error(new SharedPreferencesException(exception.getMessage()));
         });
     }
@@ -44,6 +47,16 @@ public class AppSharedPreferences implements LocalPersistenceClient {
             double latitude = appPreferences.getFloat(LATITUDE_KEY, 91);
             double longitude = appPreferences.getFloat(LONGITUDE_KEY, 181);
             return new CoordinatesSP(latitude, longitude);
+        })
+        .onErrorResumeNext(throwable -> {
+            Exception exception = (Exception) throwable;
+            if(exception instanceof SharedPreferencesException) {
+                SharedPreferencesException sharedPreferencesException = (SharedPreferencesException) exception;
+                Log.e(getClass().getName(), sharedPreferencesException.getMessage());
+                return Single.error(sharedPreferencesException);
+            }
+            Log.e(getClass().getName(), exception.getMessage());
+            return Single.error(new SharedPreferencesException(exception.getMessage()));
         });
     }
 }

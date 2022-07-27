@@ -47,7 +47,7 @@ public class AllPlacesImpl implements AllPlaces {
                     }
                     return response;
                 })
-                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+                .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 
     private String getCategories(List<Category> categories) {

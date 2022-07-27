@@ -1,5 +1,7 @@
 package com.applications.asm.data.framework.local.database;
 
+import android.util.Log;
+
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -19,6 +21,7 @@ public class PlacesDbClientImpl implements PlacesDbClient {
         return placesDatabase.getCriterionDao().getCriteria(criterionType, language)
                 .onErrorResumeNext(throwable -> {
                     Exception exception = (Exception) throwable;
+                    Log.e(getClass().getName(), exception.getMessage());
                     return Single.error(new DatabaseException(exception.getMessage()));
                 });
     }
@@ -28,6 +31,7 @@ public class PlacesDbClientImpl implements PlacesDbClient {
         return placesDatabase.getDayDao().getDays(language)
                 .onErrorResumeNext(throwable -> {
                     Exception exception = (Exception) throwable;
+                    Log.e(getClass().getName(), exception.getMessage());
                     return Single.error(new DatabaseException(exception.getMessage()));
                 });
     }

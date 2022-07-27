@@ -4,10 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationManager;
+import android.util.Log;
 
 import com.applications.asm.data.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.android.gms.tasks.Task;
@@ -45,8 +45,10 @@ public class GpsClientImpl implements GpsClient {
             Exception exception = (Exception) throwable;
             if(exception instanceof HardwareException) {
                 HardwareException hardwareException = (HardwareException) exception;
+                Log.e(getClass().getName(), hardwareException.getMessage());
                 return Single.error(hardwareException);
             }
+            Log.e(getClass().getName(), exception.getMessage());
             return Single.error(new HardwareException(exception.getMessage()));
         });
     }

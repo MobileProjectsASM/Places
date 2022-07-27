@@ -32,12 +32,12 @@ public class AllCoordinatesImpl implements AllCoordinates {
             coordinatesSingle = localPersistenceClient.getCoordinates().map(coordinatesMapper::coordinatesSpToCoordinates);
         else
             coordinatesSingle = gpsClient.getCurrentLocation().map(coordinatesMapper::locationToCoordinates);
-        return coordinatesSingle.onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable)));
+        return coordinatesSingle.onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 
     @Override
     public Completable saveThis(Coordinates coordinates) {
         return localPersistenceClient.saveCoordinates(new CoordinatesSP(coordinates.getLatitude(), coordinates.getLongitude()))
-                .onErrorResumeNext(throwable -> Completable.error(ErrorUtils.resolveError(throwable)));
+                .onErrorResumeNext(throwable -> Completable.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 }
