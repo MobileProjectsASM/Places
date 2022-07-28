@@ -1,8 +1,6 @@
 package com.applications.asm.domain.use_cases;
 
-import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Criterion;
-import com.applications.asm.domain.exception.ParameterError;
 import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCriteria;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
@@ -23,7 +21,7 @@ public class GetCriteriaUc extends SingleUseCase<List<Criterion>, Criterion.Type
     private Single<Criterion.Type> validateParams(Criterion.Type type) {
         return Single.fromCallable(() -> {
             if(type == null)
-                throw new ParameterException(ParameterError.NULL_VALUE);
+                throw new ParameterException("You entered a null value");
             return type;
         });
     }

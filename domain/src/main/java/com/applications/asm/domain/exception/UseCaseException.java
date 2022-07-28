@@ -1,10 +1,9 @@
 package com.applications.asm.domain.exception;
 
-public class ParameterException extends Exception {
+public class UseCaseException extends Exception {
     private final String message;
 
-    public ParameterException(String message) {
-        super();
+    public UseCaseException(String message) {
         this.message = message;
     }
 

@@ -2,7 +2,6 @@ package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.entities.Review;
-import com.applications.asm.domain.exception.ParameterError;
 import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllReviews;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
@@ -23,7 +22,7 @@ public class GetReviewsUc extends SingleUseCase<Response<List<Review>>, String> 
     private Single<String> validateParams(String placeId) {
         return Single.fromCallable(() -> {
             if (placeId == null)
-                throw new ParameterException(ParameterError.NULL_VALUE);
+                throw new ParameterException("You entered a null value");
             return placeId;
         });
     }

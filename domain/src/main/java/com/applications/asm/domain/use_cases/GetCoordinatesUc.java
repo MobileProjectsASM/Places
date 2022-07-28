@@ -1,7 +1,6 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Coordinates;
-import com.applications.asm.domain.exception.ParameterError;
 import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCoordinates;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
@@ -20,7 +19,7 @@ public class GetCoordinatesUc extends SingleUseCase<Coordinates, Coordinates.Sta
     private Single<Coordinates.State> validateParams(Coordinates.State state) {
         return Single.fromCallable(() -> {
             if(state == null)
-                throw new ParameterException(ParameterError.NULL_VALUE);
+                throw new ParameterException("You entered a null value");
             return state;
         });
     }
