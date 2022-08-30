@@ -8,11 +8,14 @@ import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
 
 public class GetCriteriaUc extends SingleUseCase<List<Criterion>, Criterion.Type> {
     private final AllCriteria allCriteria;
 
+    @Inject
     public GetCriteriaUc(UseCaseScheduler useCaseScheduler, AllCriteria allCriteria) {
         super(useCaseScheduler);
         this.allCriteria = allCriteria;

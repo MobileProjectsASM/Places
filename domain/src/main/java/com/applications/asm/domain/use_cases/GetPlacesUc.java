@@ -13,6 +13,8 @@ import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
 
 public class GetPlacesUc extends SingleUseCase<Response<List<Place>>, GetPlacesUc.Params> {
@@ -45,6 +47,7 @@ public class GetPlacesUc extends SingleUseCase<Response<List<Place>>, GetPlacesU
         }
     }
 
+    @Inject
     public GetPlacesUc(UseCaseScheduler useCaseScheduler, AllPlaces allPlaces, Validators validators) {
         super(useCaseScheduler);
         this.allPlaces = allPlaces;

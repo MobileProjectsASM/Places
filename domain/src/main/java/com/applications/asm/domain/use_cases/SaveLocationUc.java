@@ -6,12 +6,15 @@ import com.applications.asm.domain.repository.AllCoordinates;
 import com.applications.asm.domain.use_cases.base.CompletableUseCase;
 import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
 public class SaveLocationUc extends CompletableUseCase<Coordinates> {
     private final AllCoordinates allCoordinates;
 
+    @Inject
     public SaveLocationUc(UseCaseScheduler useCaseScheduler, AllCoordinates allCoordinates) {
         super(useCaseScheduler);
         this.allCoordinates = allCoordinates;

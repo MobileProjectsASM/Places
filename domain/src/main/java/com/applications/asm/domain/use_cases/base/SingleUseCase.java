@@ -29,12 +29,12 @@ public abstract class SingleUseCase<Result, Params> extends UseCase<Single<Resul
                     Exception exception = (Exception) throwable;
                     if(exception instanceof ParameterException) {
                         ParameterException parameterException = (ParameterException) exception;
-                        logger.log(Level.SEVERE, getClass().getName() + ": " + parameterException.getMessage());
+                        logger.log(Level.SEVERE, getClass().getPackage().getName() + ": " + parameterException.getMessage());
                         return Single.error(new UseCaseException(parameterException.getMessage()));
                     }
                     if(exception instanceof RepositoryException) {
                         RepositoryException repositoryException = (RepositoryException) exception;
-                        logger.log(Level.SEVERE, repositoryException.getMessage());
+                        logger.log(Level.SEVERE, getClass().getPackage().getName() + ": " + repositoryException.getMessage());
                         return Single.error(new UseCaseException(repositoryException.getMessage()));
                     }
                     logger.log(Level.SEVERE, exception.getMessage());

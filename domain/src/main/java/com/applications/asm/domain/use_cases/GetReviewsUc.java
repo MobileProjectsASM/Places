@@ -9,11 +9,14 @@ import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
 
 public class GetReviewsUc extends SingleUseCase<Response<List<Review>>, String> {
     private final AllReviews allReviews;
 
+    @Inject
     public GetReviewsUc(UseCaseScheduler useCaseScheduler, AllReviews allReviews) {
         super(useCaseScheduler);
         this.allReviews = allReviews;

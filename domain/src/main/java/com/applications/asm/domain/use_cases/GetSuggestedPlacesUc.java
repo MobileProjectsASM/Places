@@ -11,6 +11,8 @@ import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
 
 public class GetSuggestedPlacesUc extends SingleUseCase<Response<List<SuggestedPlace>>, GetSuggestedPlacesUc.Params> {
@@ -31,6 +33,7 @@ public class GetSuggestedPlacesUc extends SingleUseCase<Response<List<SuggestedP
         }
     }
 
+    @Inject
     public GetSuggestedPlacesUc(UseCaseScheduler useCaseScheduler, AllSuggestedPlaces allSuggestedPlaces, Validators validators) {
         super(useCaseScheduler);
         this.allSuggestedPlaces = allSuggestedPlaces;

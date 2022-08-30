@@ -10,6 +10,8 @@ import com.applications.asm.domain.use_cases.base.UseCaseScheduler;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Single;
 
 public class GetCategoriesUc extends SingleUseCase<Response<List<Category>>, GetCategoriesUc.Params> {
@@ -31,6 +33,7 @@ public class GetCategoriesUc extends SingleUseCase<Response<List<Category>>, Get
         }
     }
 
+    @Inject
     public GetCategoriesUc(UseCaseScheduler useCaseScheduler, AllCategories allCategories) {
         super(useCaseScheduler);
         this.allCategories = allCategories;

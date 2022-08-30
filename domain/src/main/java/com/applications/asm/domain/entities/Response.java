@@ -1,5 +1,6 @@
 package com.applications.asm.domain.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Response<T> {
@@ -20,7 +21,7 @@ public class Response<T> {
     }
 
     public static <T> Response<T> success(T data) {
-        return new Response<>(data, null);
+        return new Response<>(data, new ArrayList<>());
     }
 
     public static <T> Response<T> error(List<String> errors) {
