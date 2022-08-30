@@ -1,6 +1,7 @@
 package com.applications.asm.data.repository;
 
-import com.apollographql.apollo3.api.Error;
+import com.apollographql.apollo.api.Error;
+import com.applications.asm.data.SearchPlacesQuery;
 import com.applications.asm.data.framework.network.graphql.GraphqlPlacesClient;
 import com.applications.asm.data.mapper.PlaceMapper;
 import com.applications.asm.data.utils.ErrorUtils;
@@ -35,15 +36,21 @@ public class AllPlacesImpl implements AllPlaces {
         return graphqlPlacesClient.getSearchedPlaces(placeToFind, coordinates.getLatitude(), coordinates.getLatitude(), radius, getCategories(categories), sortCriterion.getId(), getPriceCriteria(pricesCriteria), isOpenNow, PLACES_PER_PAGE * (page - 1), PLACES_PER_PAGE)
                 .map(dataApolloResponse -> {
                     Response<List<Place>> response;
-                    if(dataApolloResponse.errors != null || dataApolloResponse.data == null) {
-                        List<String> listErrors = new ArrayList<>();
-                        List<Error> errors = dataApolloResponse.errors;
-                        for(Error error: errors)
-                            listErrors.add(error.getMessage());
-                        response = Response.error(listErrors);
+                    if(dataApolloResponse.hasErrors()) {
+                        List<Error> errors = dataApolloResponse.getErrors();
+                        if(errors != null) response = Response.error(ErrorUtils.getErrors(errors));
+                        else response = Response.error(new ArrayList<>());
                     } else {
-                        List<Place> places = placeMapper.placesQueryToPlaces(dataApolloResponse.data.search.business);
-                        response = Response.success(places);
+                        SearchPlacesQuery.Data data = dataApolloResponse.getData();
+                        if(data != null) {
+                            SearchPlacesQuery.Search search = data.search();
+                            if(search != null) {
+                                List<Place> places = placeMapper.placesQueryToPlaces(search.business());
+                                response = Response.success(places);
+                            } else
+                                response = Response.success(new ArrayList<>());
+                        } else
+                            response = Response.success(new ArrayList<>());
                     }
                     return response;
                 })

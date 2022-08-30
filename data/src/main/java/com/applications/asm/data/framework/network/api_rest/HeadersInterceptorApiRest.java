@@ -10,9 +10,11 @@ import okhttp3.Response;
 
 public class HeadersInterceptorApiRest implements Interceptor {
     private final String authorization;
+    private final String contentType;
 
-    public HeadersInterceptorApiRest(String authorization) {
+    public HeadersInterceptorApiRest(String authorization, String contentType) {
         this.authorization = authorization;
+        this.contentType = contentType;
     }
 
     @NonNull
@@ -20,7 +22,8 @@ public class HeadersInterceptorApiRest implements Interceptor {
     public Response intercept(@NonNull Chain chain) throws IOException {
         Request original = chain.request();
         Request.Builder requestBuilder = original.newBuilder()
-                .header("Authorization", authorization);
+                .header("Authorization", authorization)
+                .header("Content-Type", contentType);
         Request request = requestBuilder.build();
         return chain.proceed(request);
     }

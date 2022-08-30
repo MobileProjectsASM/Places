@@ -1,5 +1,6 @@
 package com.applications.asm.data.repository;
 
+import com.applications.asm.data.PlaceSuggestionQuery;
 import com.applications.asm.data.framework.network.api_rest.PlacesRestServer;
 import com.applications.asm.data.framework.network.api_rest.dto.APIError;
 import com.applications.asm.data.framework.network.graphql.GraphqlPlacesClient;
@@ -41,8 +42,14 @@ public class AllSuggestedPlacesImpl implements AllSuggestedPlaces {
                                 .flattenAsObservable(businesses -> businesses)
                                 .map(business -> business.id)
                                 .flatMap(id -> graphqlPlacesClient.getPlaceSuggestion(id).toObservable())
-                                .filter(dataApolloResponse -> dataApolloResponse.errors == null)
-                                .map(dataApolloResponse -> suggestedPlaceMapper.placeLocationToSuggestedPlace(Objects.requireNonNull(dataApolloResponse.data).business))
+                                .filter(dataApolloResponse -> !dataApolloResponse.hasErrors())
+                                .map(dataApolloResponse -> {
+                                    PlaceSuggestionQuery.Data data = dataApolloResponse.getData();
+                                    SuggestedPlace suggestedPlace = new SuggestedPlace("", "", "", "");
+                                    if(data != null)
+                                        suggestedPlace = suggestedPlaceMapper.businessToSuggestedPlace(data.business());
+                                    return suggestedPlace;
+                                })
                                 .toList()
                                 .map(Response::success);
                     } else {

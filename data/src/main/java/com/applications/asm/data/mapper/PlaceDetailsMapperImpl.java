@@ -1,6 +1,6 @@
 package com.applications.asm.data.mapper;
 
-import com.applications.asm.data.framework.network.graphql.PlaceDetailsQuery;
+import com.applications.asm.data.PlaceDetailsQuery;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Hour;
@@ -23,42 +23,85 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
 
     @Override
     public PlaceDetails placeDetailsQueryToPlaceDetails(PlaceDetailsQuery.Business business, Map<String, String> days, Map<String, String> prices) {
-        String id = business.id != null ? business.id : "";
-        String name = business.name != null ? business.name : "";
-        String imageUrl = !business.photos.isEmpty() ? business.photos.get(0) : "";
-        String address = business.location != null ? getAddress(business.location) : "";
-        Double rating = business.rating != null ? business.rating : 0;
-        String phoneNumber = business.phone != null ? business.phone : "";
-        Integer reviewsCounter = business.review_count != null ? business.review_count : 0;
-        Boolean isOpen = business.hours != null && business.hours.size() > 0 && (business.hours.get(0).is_open_now != null ? business.hours.get(0).is_open_now : false);
-        Coordinates coordinates = business.coordinates != null ? getCoordinates(business.coordinates) : null;
-        List<Category> categories = business.categories != null ? getCategories(business.categories) : new ArrayList<>();
-        Price price = business.price != null ? getPrice(business.price, prices) : null;
-        List<Schedule> schedule = business.hours != null && business.hours.size() > 0  && business.hours.get(0).open != null ? getSchedule(business.hours.get(0).open, days) : new ArrayList<>();
+        String id = business.id() != null ? business.id() : "";
+
+        String name = business.name() != null ? business.name() : "";
+
+        String imageUrl = "";
+        List<String> photos = business.photos();
+        if(photos != null && !photos.isEmpty()) imageUrl = photos.get(0);
+
+        String address = "";
+        PlaceDetailsQuery.Location location = business.location();
+        if(location != null) address = getAddress(location);
+
+        Double rating = (double) 0;
+        Double rating2 = business.rating();
+        if(rating2 != null) rating = rating2;
+
+        String phoneNumber = business.phone() != null ? business.phone() : "";
+
+        Integer reviewsCounter = 0;
+        Integer reviewsCount = business.review_count();
+        if(reviewsCount != null) reviewsCounter = reviewsCount;
+
+        Boolean isOpen = false;
+        List<PlaceDetailsQuery.Hour> hours = business.hours();
+        if(hours != null && hours.size() > 0) {
+            PlaceDetailsQuery.Hour hour = hours.get(0);
+            if(hour != null) isOpen = hour.is_open_now();
+        }
+
+        Coordinates coordinates = new Coordinates((double) 0, (double) 0);
+        PlaceDetailsQuery.Coordinates coordinates2 = business.coordinates();
+        if(coordinates2 != null) coordinates = getCoordinates(coordinates2);
+
+        List<Category> categories = new ArrayList<>();
+        List<PlaceDetailsQuery.Category> categories2 = business.categories();
+        if(categories2 != null) categories = getCategories(categories2);
+
+        Price price = business.price() != null ? getPrice(business.price(), prices) : null;
+
+        List<Schedule> schedule = new ArrayList<>();
+        List<PlaceDetailsQuery.Hour> hours2 = business.hours();
+        if(hours2 != null && hours2.size() > 0) {
+            PlaceDetailsQuery.Hour hour = hours2.get(0);
+            if(hour != null)  {
+                List<PlaceDetailsQuery.Open> opens = hour.open();
+                if(opens != null) schedule = getSchedule(opens, days);
+            }
+        }
+
         return new PlaceDetails(id, name, coordinates, imageUrl, categories, address, rating, price, phoneNumber, reviewsCounter, schedule, isOpen);
     }
 
     private Coordinates getCoordinates(PlaceDetailsQuery.Coordinates coordinates) {
-        Double latitude = coordinates.latitude != null ? coordinates.latitude : 0;
-        Double longitude = coordinates.longitude != null ? coordinates.longitude : 0;
-        return new Coordinates(latitude , longitude);
+        Double lat = (double) 0;
+        Double latitude = coordinates.latitude();
+        if(latitude != null) lat = latitude;
+
+        Double lon = (double) 0;
+        Double longitude = coordinates.longitude();
+        if(longitude != null) lon = longitude;
+
+        return new Coordinates(lat , lon);
     }
 
     private List<Category> getCategories(List<PlaceDetailsQuery.Category> categories) {
         List<Category> categoryList = new ArrayList<>();
         for(PlaceDetailsQuery.Category category : categories)
-            categoryList.add(new Category(category.alias, category.title));
+            categoryList.add(new Category(category.alias(), category.title()));
         return categoryList;
     }
 
     private String getAddress(PlaceDetailsQuery.Location location) {
-        return (location.address1 != null ? location.address1 : "") +
-                (location.address2 != null ? ", " + location.address2 : "") +
-                (location.address3 != null ? ", " + location.address3 : "") +
-                (location.postal_code != null ? ", " + location.postal_code : "") +
-                (location.city != null ? " " + location.city : "") +
-                (location.state != null? ", " + location.state + "." : "") +
-                (location.country != null ? " " + location.country : "");
+        return (location.address1() != null ? location.address1() : "") +
+                (location.address2() != null ? ", " + location.address2() : "") +
+                (location.address3() != null ? ", " + location.address3() : "") +
+                (location.postal_code() != null ? ", " + location.postal_code() : "") +
+                (location.city() != null ? " " + location.city() : "") +
+                (location.state() != null? ", " + location.state() + "." : "") +
+                (location.country() != null ? " " + location.country() : "");
     }
 
     private Price getPrice(String priceId, Map<String, String> prices) {
@@ -76,11 +119,23 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
     }
 
     private Schedule getScheduleDay(PlaceDetailsQuery.Open open, Map<String, String> days) {
-        Integer dayNumber = open.day != null ? open.day : 0;
+        Integer dayNum = 0;
+        Integer dayNumber = open.day();
+        if(dayNumber != null) dayNum = dayNumber;
+
         String day = getDay(dayNumber, days);
-        Hour openHour = open.start != null ? getHour(open.start) : new Hour(0, 0);
-        Hour closeHour = open.end != null ? getHour(open.end) : new Hour(0, 0);
-        return new Schedule(dayNumber, day, openHour, closeHour);
+
+        Hour openH = new Hour(0, 0);
+        String openHour = open.start();
+        if(openHour != null && !openHour.isEmpty())
+            openH = getHour(openHour);
+
+        Hour closeH = new Hour(0,0);
+        String closeHour = open.end();
+        if(closeHour != null && !closeHour.isEmpty())
+            closeH = getHour(closeHour);
+
+        return new Schedule(dayNum, day, openH, closeH);
     }
 
     private String getDay(Integer day, Map<String, String> days) {

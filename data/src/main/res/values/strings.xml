@@ -6,6 +6,8 @@
     <string name="yelp_api_base_url">https://api.yelp.com/</string>
     <string name="yelp_graphql_base_url">https://api.yelp.com/v3/graphql</string>
     <string name="api_authorization">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
+    <string name="content_type_graphql">application/graphql</string>
+    <string name="content_type_json">application/json</string>
     <string name="network_error">Error en la conexion de internet</string>
     <string name="converter_error">Error al parsear datos</string>
     <string name="gps_disabled_error">El GPS esta deshabilitado</string>

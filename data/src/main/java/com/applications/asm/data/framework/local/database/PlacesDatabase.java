@@ -13,7 +13,7 @@ import com.applications.asm.data.framework.local.database.entities.TextResourceE
     CriterionEntity.class,
     TextResourceEntity.class,
     DayEntity.class
-}, version = 1)
+}, version = 1, exportSchema = false)
 public abstract class PlacesDatabase extends RoomDatabase {
     public abstract CriterionDao getCriterionDao();
     public abstract DayDao getDayDao();

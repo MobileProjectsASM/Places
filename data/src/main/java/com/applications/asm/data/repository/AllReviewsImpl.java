@@ -1,6 +1,7 @@
 package com.applications.asm.data.repository;
 
-import com.apollographql.apollo3.api.Error;
+import com.apollographql.apollo.api.Error;
+import com.applications.asm.data.PlaceReviewsQuery;
 import com.applications.asm.data.framework.network.graphql.GraphqlPlacesClient;
 import com.applications.asm.data.mapper.ReviewMapper;
 import com.applications.asm.data.utils.ErrorUtils;
@@ -10,7 +11,6 @@ import com.applications.asm.domain.repository.AllReviews;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -31,15 +31,20 @@ public class AllReviewsImpl implements AllReviews {
         return graphqlPlacesClient.getPlaceReviews(placeId)
                 .map(dataApolloResponse -> {
                     Response<List<Review>> response;
-                    if(dataApolloResponse.errors == null) {
-                        List<Review> reviews = reviewMapper.queryReviewsToReviews(Objects.requireNonNull(dataApolloResponse.data).reviews.review);
-                        response = Response.success(reviews);
+                    if(dataApolloResponse.hasErrors()) {
+                        List<Error> errors = dataApolloResponse.getErrors();
+                        if (errors != null) response = Response.error(ErrorUtils.getErrors(errors));
+                        else response = Response.error(new ArrayList<>());
                     } else {
-                        List<String> listErrors = new ArrayList<>();
-                        List<Error> errors = dataApolloResponse.errors;
-                        for(Error error: errors)
-                            listErrors.add(error.getMessage());
-                        response = Response.error(listErrors);
+                        PlaceReviewsQuery.Data data = dataApolloResponse.getData();
+                        if(data != null) {
+                            PlaceReviewsQuery.Reviews reviews = data.reviews();
+                            if(reviews != null) {
+                                List<Review> reviewList = reviewMapper.queryReviewsToReviews(reviews.review());
+                                response = Response.success(reviewList);
+                            }
+                            else response = Response.success(new ArrayList<>());
+                        } else response = Response.success(new ArrayList<>());
                     }
                     return response;
                 })

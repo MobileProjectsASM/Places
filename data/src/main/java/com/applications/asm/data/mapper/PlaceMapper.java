@@ -1,6 +1,6 @@
 package com.applications.asm.data.mapper;
 
-import com.applications.asm.data.framework.network.graphql.SearchPlacesQuery;
+import com.applications.asm.data.SearchPlacesQuery;
 import com.applications.asm.domain.entities.Place;
 
 import java.util.List;

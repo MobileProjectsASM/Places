@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.apollographql.apollo3.ApolloClient;
+import com.apollographql.apollo.ApolloClient;
 import com.applications.asm.data.R;
 import com.applications.asm.data.framework.local.database.PlacesDatabase;
 import com.applications.asm.data.framework.network.api_rest.HeadersInterceptorApiRest;
@@ -60,6 +60,18 @@ public class UtilsModule {
         return context.getString(R.string.api_authorization);
     }
 
+    @Named("content_type_graphql")
+    @Provides
+    String provideContentTypeGraphql(Context context) {
+        return context.getString(R.string.content_type_graphql);
+    }
+
+    @Named("content_type_api_rest")
+    @Provides
+    String provideContentTypeJson(Context context) {
+        return context.getString(R.string.content_type_json);
+    }
+
     //REST SERVER
     @Provides
     ServiceGenerator<YelpApiClient> provideServiceGenerator(Retrofit retrofit) {
@@ -76,7 +88,7 @@ public class UtilsModule {
             @Named("yelp_api_base_url") String yelpApiBaseUrl,
             GsonConverterFactory gsonConverterFactory,
             CallAdapter.Factory callAdapterFactory,
-            OkHttpClient okHttpClient
+            @Named("api_rest_okhttp") OkHttpClient okHttpClient
     ) {
         return new Retrofit.Builder()
                 .baseUrl(yelpApiBaseUrl)
@@ -95,33 +107,57 @@ public class UtilsModule {
         return RxJava3CallAdapterFactory.create();
     }
 
+    @Named("api_rest_okhttp")
     @Provides
-    OkHttpClient provideHttpClientBuilder(OkHttpClient.Builder okHttpClientBuilder) {
+    OkHttpClient provideOkHttpClientApiRest(@Named("api_rest_okhttp_builder") OkHttpClient.Builder okHttpClientBuilder) {
         return okHttpClientBuilder.build();
     }
 
+    @Named("graphql_okhttp")
     @Provides
-    OkHttpClient.Builder provideOkHttpClientBuilder(@Named("interceptor_api_rest") Interceptor headerInterceptor) {
-        return new OkHttpClient.Builder()
-                .addInterceptor(headerInterceptor);
+    OkHttpClient provideOkHttpClientGraphql(@Named("graphql_okhttp_builder") OkHttpClient.Builder okHttpClientBuilder) {
+        return okHttpClientBuilder.build();
     }
 
-    @Named("interceptor_api_rest")
+    @Named("api_rest_okhttp_builder")
     @Provides
-    Interceptor provideHeaderInterceptorApiRest(@Named("api_authorization") String authorization) {
-        return new HeadersInterceptorApiRest(authorization);
+    OkHttpClient.Builder provideOkHttpClientBuilderApiRest(@Named("api_rest_interceptor") Interceptor headersInterceptor) {
+        return new OkHttpClient.Builder().addInterceptor(headersInterceptor);
+    }
+
+    @Named("graphql_okhttp_builder")
+    @Provides
+    OkHttpClient.Builder provideOkHttpClientBuilderGraphql(@Named("graphql_interceptor") Interceptor headersInterceptor) {
+        return new OkHttpClient.Builder().addInterceptor(headersInterceptor);
+    }
+
+    @Named("graphql_interceptor")
+    @Provides
+    Interceptor provideGraphqlInterceptor(
+        @Named("api_authorization") String authorization,
+        @Named("content_type_graphql") String contentType
+    ) {
+        return new HeadersInterceptorApiRest(authorization, contentType);
+    }
+
+    @Named("api_rest_interceptor")
+    @Provides
+    Interceptor provideApiRestInterceptor(
+        @Named("api_authorization") String authorization,
+        @Named("content_type_api_rest") String contentType
+    ) {
+        return new HeadersInterceptorApiRest(authorization, contentType);
     }
 
     //GRAPHQL
     @Provides
     ApolloClient provideApolloClient(
-            @Named("yelp_graphql_base_url") String yelpGraphqlBaseUrl,
-            @Named("api_authorization") String apiKey
+        @Named("yelp_graphql_base_url") String yelpGraphqlBaseUrl,
+        @Named("graphql_okhttp") OkHttpClient okHttpClient
     ) {
-        return new ApolloClient.Builder()
+        return ApolloClient.builder()
                 .serverUrl(yelpGraphqlBaseUrl)
-                .addHttpHeader("Authorization", apiKey)
-                .addHttpHeader("Content-Type:", "application/graphql")
+                .okHttpClient(okHttpClient)
                 .build();
     }
 

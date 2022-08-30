@@ -6,6 +6,7 @@ import com.applications.asm.data.di.modules.DataSourceModule;
 import com.applications.asm.data.di.modules.MappersModule;
 import com.applications.asm.data.di.modules.RepositoryModule;
 import com.applications.asm.data.di.modules.UtilsModule;
+import com.applications.asm.data.repository.ValidatorsImpl;
 import com.applications.asm.domain.repository.AllCategories;
 import com.applications.asm.domain.repository.AllCoordinates;
 import com.applications.asm.domain.repository.AllCriteria;
@@ -13,6 +14,7 @@ import com.applications.asm.domain.repository.AllPlaces;
 import com.applications.asm.domain.repository.AllPlacesDetails;
 import com.applications.asm.domain.repository.AllReviews;
 import com.applications.asm.domain.repository.AllSuggestedPlaces;
+import com.applications.asm.domain.repository.Validators;
 
 import javax.inject.Singleton;
 
@@ -34,4 +36,5 @@ public interface DataComponent {
     AllPlaces provideAllPlaces();
     AllReviews provideAllReviews();
     AllSuggestedPlaces provideAllSuggestedPlaces();
+    Validators provideValidatorsImpl();
 }

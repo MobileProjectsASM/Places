@@ -2,7 +2,7 @@ package com.applications.asm.data.utils;
 
 import android.util.Log;
 
-import com.apollographql.apollo3.api.Error;
+import com.apollographql.apollo.api.Error;
 import com.applications.asm.data.framework.local.database.DatabaseException;
 import com.applications.asm.data.framework.local.hardware.HardwareException;
 import com.applications.asm.data.framework.local.shared_preferences.SharedPreferencesException;
