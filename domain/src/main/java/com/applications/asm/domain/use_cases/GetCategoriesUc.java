@@ -41,7 +41,7 @@ public class GetCategoriesUc extends SingleUseCase<Response<List<Category>>, Get
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.category == null || params.coordinates != null || params.locale == null)
+            if(params.category == null || params.coordinates == null || params.locale == null)
                 throw new ParameterException("You entered a null value");
             return params;
         });
