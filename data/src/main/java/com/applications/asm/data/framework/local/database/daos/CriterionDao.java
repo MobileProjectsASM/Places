@@ -10,7 +10,7 @@ import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public interface CriterionDao {
-    @MapInfo(keyColumn = "CRITERION_ID", valueColumn = "CRITERION_NAME")
-    @Query("SELECT C.CRITERION_ID AS CRITERION_ID, TR.TEXT_DESCRIPTION AS CRITERION_NAME FROM Criterion C INNER JOIN TextResource TR ON C.CRITERION_ID = TR.CRITERION_ID WHERE CRITERION_TYPE = :criterionType AND TR.TEXT_LANGUAGE = :language")
+    @MapInfo(keyColumn = "CriterionId", valueColumn = "Translation")
+    @Query("SELECT C.ID AS CriterionId, AI.Translation AS Translation FROM Criterion C INNER JOIN TEXT_RESOURCE TR ON TR.Id = C.TextResourceId INNER JOIN AVAILABLE_IN AI ON AI.TextResourceId = TR.Id AND AI.LanguageId = :language WHERE C.Type = :criterionType")
     Single<Map<String, String>> getCriteria(String criterionType, String language);
 }

@@ -3,20 +3,39 @@ package com.applications.asm.data.framework.local.database.entities;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Day")
+@Entity(tableName = "DAY", foreignKeys = @ForeignKey(
+    entity = TextResourceEntity.class,
+    parentColumns = "Id",
+    childColumns = "TextResourceId"
+))
 public class DayEntity {
     @NonNull
-    @ColumnInfo(name = "DAY_ID")
+    @ColumnInfo(name = "Id")
     @PrimaryKey
-    private String dayId;
+    private String id;
 
-    public String getDayId() {
-        return dayId;
+    @NonNull
+    @ColumnInfo(name = "TextResourceId")
+    private String textResourceId;
+
+    @NonNull
+    public String getId() {
+        return id;
     }
 
-    public void setDayId(String dayId) {
-        this.dayId = dayId;
+    public void setId(@NonNull String id) {
+        this.id = id;
+    }
+
+    @NonNull
+    public String getTextResourceId() {
+        return textResourceId;
+    }
+
+    public void setTextResourceId(@NonNull String textResourceId) {
+        this.textResourceId = textResourceId;
     }
 }

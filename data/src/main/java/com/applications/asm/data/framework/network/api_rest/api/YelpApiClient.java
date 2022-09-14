@@ -9,6 +9,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.Query;
 
 public interface YelpApiClient {
-    @GET("autocomplete")
+    @GET("v3/autocomplete")
     Single<Response<AutocompleteSuggestions>> getAutocompleteSuggestions(@Query("text") String word, @Query("latitude") double latitude, @Query("longitude") double longitude, @Query("locale") String locale);
 }

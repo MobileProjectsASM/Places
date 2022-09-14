@@ -95,13 +95,33 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
     }
 
     private String getAddress(PlaceDetailsQuery.Location location) {
-        return (location.address1() != null ? location.address1() : "") +
-                (location.address2() != null ? ", " + location.address2() : "") +
-                (location.address3() != null ? ", " + location.address3() : "") +
-                (location.postal_code() != null ? ", " + location.postal_code() : "") +
-                (location.city() != null ? " " + location.city() : "") +
-                (location.state() != null? ", " + location.state() + "." : "") +
-                (location.country() != null ? " " + location.country() : "");
+        String add1 = location.address1() != null ? location.address1() : "";
+
+        String add2 = "";
+        String address2 = location.address2();
+        if(address2 != null) if(!address2.isEmpty()) add2 = ", " + address2;
+
+        String add3 = "";
+        String address3 = location.address3();
+        if(address3 != null) if(!address3.isEmpty()) add3 = ", " + address3;
+
+        String pc = "";
+        String postalCode = location.postal_code();
+        if(postalCode != null) if(!postalCode.isEmpty()) pc = ", " + postalCode;
+
+        String city = "";
+        String city2 = location.city();
+        if(city2 != null) if(!city2.isEmpty()) city = ", " + city2;
+
+        String state = "";
+        String state2 = location.state();
+        if(state2 != null) if(!state2.isEmpty()) state = ", " + state2 + ".";
+
+        String country = "";
+        String country2 = location.country();
+        if(country2 != null) if(!country2.isEmpty()) country = " " + location.country();
+
+        return add1 + add2 + add3 + pc + city + state + country;
     }
 
     private Price getPrice(String priceId, Map<String, String> prices) {

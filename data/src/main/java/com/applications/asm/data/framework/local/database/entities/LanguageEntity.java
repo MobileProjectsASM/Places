@@ -5,19 +5,32 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "TEXT_RESOURCE")
-public class TextResourceEntity {
+@Entity(tableName = "LANGUAGE")
+public class LanguageEntity {
     @NonNull
     @ColumnInfo(name = "Id")
     @PrimaryKey
-    private String Id;
+    private String id;
+
+    @NonNull
+    @ColumnInfo(name = "Name")
+    private String name;
 
     @NonNull
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(@NonNull String id) {
-        Id = id;
+        this.id = id;
+    }
+
+    @NonNull
+    public String getName() {
+        return name;
+    }
+
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 }
