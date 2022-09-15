@@ -1,6 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Coordinates;
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCoordinates;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
@@ -10,7 +11,7 @@ import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetCoordinatesUc extends SingleUseCase<Coordinates, Coordinates.State> {
+public class GetCoordinatesUc extends SingleUseCase<Response<Coordinates>, Coordinates.State> {
     private final AllCoordinates allCoordinates;
 
     @Inject
@@ -28,7 +29,7 @@ public class GetCoordinatesUc extends SingleUseCase<Coordinates, Coordinates.Sta
     }
 
     @Override
-    protected Single<Coordinates> build(Coordinates.State coordinatesState) {
+    protected Single<Response<Coordinates>> build(Coordinates.State coordinatesState) {
         return validateParams(coordinatesState)
                 .flatMap(allCoordinates::myLocation);
     }
