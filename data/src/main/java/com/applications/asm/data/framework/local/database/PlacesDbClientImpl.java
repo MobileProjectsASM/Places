@@ -22,7 +22,7 @@ public class PlacesDbClientImpl implements PlacesDbClient {
                 .onErrorResumeNext(throwable -> {
                     Exception exception = (Exception) throwable;
                     Log.e(getClass().getName(), exception.getMessage());
-                    return Single.error(new DatabaseException(exception.getMessage()));
+                    return Single.error(new DatabaseException(DatabaseExceptionCodes.DATABASE_ERROR, exception.getMessage()));
                 });
     }
 
@@ -32,7 +32,7 @@ public class PlacesDbClientImpl implements PlacesDbClient {
                 .onErrorResumeNext(throwable -> {
                     Exception exception = (Exception) throwable;
                     Log.e(getClass().getName(), exception.getMessage());
-                    return Single.error(new DatabaseException(exception.getMessage()));
+                    return Single.error(new DatabaseException(DatabaseExceptionCodes.DATABASE_ERROR, exception.getMessage()));
                 });
     }
 }

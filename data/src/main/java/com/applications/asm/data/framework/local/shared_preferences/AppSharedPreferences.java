@@ -1,8 +1,10 @@
 package com.applications.asm.data.framework.local.shared_preferences;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.applications.asm.data.R;
 import com.applications.asm.data.framework.local.shared_preferences.model.CoordinatesSP;
 
 import javax.inject.Inject;
@@ -14,10 +16,12 @@ public class AppSharedPreferences implements LocalPersistenceClient {
     private static final String LATITUDE_KEY = "latitude";
     private static final String LONGITUDE_KEY = "longitude";
     private final SharedPreferences appPreferences;
+    private final Context context;
 
     @Inject
-    public AppSharedPreferences(SharedPreferences appPreferences) {
+    public AppSharedPreferences(SharedPreferences appPreferences, Context context) {
         this.appPreferences = appPreferences;
+        this.context = context;
     }
 
     @Override
@@ -37,16 +41,22 @@ public class AppSharedPreferences implements LocalPersistenceClient {
                 return Completable.error(sharedPreferencesException);
             }
             Log.e(getClass().getName(), exception.getMessage());
-            return Completable.error(new SharedPreferencesException(exception.getMessage()));
+            return Completable.error(new SharedPreferencesException(SharedPreferencesExceptionCodes.SHARED_PREFERENCES_ERROR, exception.getMessage()));
         });
     }
 
     @Override
     public Single<CoordinatesSP> getCoordinates() {
         return Single.fromCallable(() -> {
-            double latitude = appPreferences.getFloat(LATITUDE_KEY, 91);
-            double longitude = appPreferences.getFloat(LONGITUDE_KEY, 181);
-            return new CoordinatesSP(latitude, longitude);
+            boolean latitudeExists = appPreferences.contains(LATITUDE_KEY);
+            boolean longitudeExists = appPreferences.contains(LONGITUDE_KEY);
+            double latitude, longitude;
+            if(latitudeExists && longitudeExists) {
+                latitude = appPreferences.getFloat(LATITUDE_KEY, 0);
+                longitude = appPreferences.getFloat(LONGITUDE_KEY, 0);
+                return new CoordinatesSP(latitude, longitude);
+            } else
+                throw new SharedPreferencesException(SharedPreferencesExceptionCodes.NO_LOCATION_IN_PREFERENCES, context.getString(R.string.no_data_in_memory_error));
         })
         .onErrorResumeNext(throwable -> {
             Exception exception = (Exception) throwable;
@@ -56,7 +66,7 @@ public class AppSharedPreferences implements LocalPersistenceClient {
                 return Single.error(sharedPreferencesException);
             }
             Log.e(getClass().getName(), exception.getMessage());
-            return Single.error(new SharedPreferencesException(exception.getMessage()));
+            return Single.error(new SharedPreferencesException(SharedPreferencesExceptionCodes.SHARED_PREFERENCES_ERROR, exception.getMessage()));
         });
     }
 }

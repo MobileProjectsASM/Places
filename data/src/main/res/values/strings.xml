@@ -12,4 +12,5 @@
     <string name="converter_error">Error al parsear datos</string>
     <string name="gps_disabled_error">El GPS esta deshabilitado</string>
     <string name="unregistered_location">Localizacion no registrada</string>
+    <string name="no_data_in_memory_error">No hay datos en memoria</string>
 </resources>

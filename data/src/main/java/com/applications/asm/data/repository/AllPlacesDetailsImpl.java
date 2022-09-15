@@ -41,15 +41,11 @@ public class AllPlacesDetailsImpl implements AllPlacesDetails {
         Single<com.apollographql.apollo.api.Response<PlaceDetailsQuery.Data>> placeDetailsSingle = graphqlPlacesClient.getPlaceDetails(placeId);
         return Single.zip(placeDetailsSingle, daysSingle, pricesSingle, (dataApolloResponse, daysMap, pricesMap) -> {
             Response<PlaceDetails> response;
-            if(dataApolloResponse.hasErrors()) {
-                List<Error> errors = dataApolloResponse.getErrors();
-                if (errors != null) response = Response.error(ErrorUtils.getErrors(errors));
-                else response = Response.error(new ArrayList<>());
-            } else {
+            if(!dataApolloResponse.hasErrors()) {
                 PlaceDetailsQuery.Data data = dataApolloResponse.getData();
                 if(data != null) response = Response.success(placeDetailsMapper.placeDetailsQueryToPlaceDetails(data.business(), daysMap, pricesMap));
                 else response = Response.success(new PlaceDetails("", "", new Coordinates((double) 0, (double) 0), "", new ArrayList<>(), "", (double) 0, new Price("", ""), "", (int) 0, new ArrayList<>(), false));
-            }
+            } else response = ErrorUtils.getResponseError(dataApolloResponse.getErrors());
             return response;
         })
         .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));

@@ -36,11 +36,7 @@ public class AllPlacesImpl implements AllPlaces {
         return graphqlPlacesClient.getSearchedPlaces(placeToFind, coordinates.getLatitude(), coordinates.getLatitude(), radius, getCategories(categories), sortCriterion.getId(), getPriceCriteria(pricesCriteria), isOpenNow, PLACES_PER_PAGE * (page - 1), PLACES_PER_PAGE)
                 .map(dataApolloResponse -> {
                     Response<List<Place>> response;
-                    if(dataApolloResponse.hasErrors()) {
-                        List<Error> errors = dataApolloResponse.getErrors();
-                        if(errors != null) response = Response.error(ErrorUtils.getErrors(errors));
-                        else response = Response.error(new ArrayList<>());
-                    } else {
+                    if(!dataApolloResponse.hasErrors()) {
                         SearchPlacesQuery.Data data = dataApolloResponse.getData();
                         if(data != null) {
                             SearchPlacesQuery.Search search = data.search();
@@ -51,7 +47,7 @@ public class AllPlacesImpl implements AllPlaces {
                                 response = Response.success(new ArrayList<>());
                         } else
                             response = Response.success(new ArrayList<>());
-                    }
+                    } else response = ErrorUtils.getResponseError(dataApolloResponse.getErrors());
                     return response;
                 })
                 .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));

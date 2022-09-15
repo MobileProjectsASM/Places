@@ -1,4 +1,4 @@
-package com.applications.asm.data.framework.network.api_rest;
+package com.applications.asm.data.framework.network.api_rest.interceptors;
 
 import androidx.annotation.NonNull;
 

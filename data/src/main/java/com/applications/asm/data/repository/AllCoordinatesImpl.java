@@ -6,6 +6,7 @@ import com.applications.asm.data.framework.local.shared_preferences.model.Coordi
 import com.applications.asm.data.mapper.CoordinatesMapper;
 import com.applications.asm.data.utils.ErrorUtils;
 import com.applications.asm.domain.entities.Coordinates;
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.repository.AllCoordinates;
 
 import javax.inject.Inject;
@@ -26,12 +27,12 @@ public class AllCoordinatesImpl implements AllCoordinates {
     }
 
     @Override
-    public Single<Coordinates> myLocation(Coordinates.State state) {
-        Single<Coordinates> coordinatesSingle;
+    public Single<Response<Coordinates>> myLocation(Coordinates.State state) {
+        Single<Response<Coordinates>> coordinatesSingle;
         if(state == Coordinates.State.SAVED)
-            coordinatesSingle = localPersistenceClient.getCoordinates().map(coordinatesMapper::coordinatesSpToCoordinates);
+            coordinatesSingle = localPersistenceClient.getCoordinates().map(coordinatesMapper::coordinatesSpToCoordinates).map(Response::success);
         else
-            coordinatesSingle = gpsClient.getCurrentLocation().map(coordinatesMapper::locationToCoordinates);
+            coordinatesSingle = gpsClient.getCurrentLocation().map(coordinatesMapper::locationToCoordinates).map(Response::success);
         return coordinatesSingle.onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 

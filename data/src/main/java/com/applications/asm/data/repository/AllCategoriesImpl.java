@@ -1,7 +1,6 @@
 package com.applications.asm.data.repository;
 
 import com.applications.asm.data.framework.network.api_rest.PlacesRestServer;
-import com.applications.asm.data.framework.network.api_rest.dto.APIError;
 import com.applications.asm.data.framework.network.api_rest.dto.AutocompleteSuggestions;
 import com.applications.asm.data.mapper.CategoryMapper;
 import com.applications.asm.data.utils.ErrorUtils;
@@ -12,7 +11,6 @@ import com.applications.asm.domain.repository.AllCategories;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -39,12 +37,7 @@ public class AllCategoriesImpl implements AllCategories {
                             List<Category> categories = categoryMapper.categoriesDTOToCategories(autocompleteSuggestions.categories);
                             response = Response.success(categories);
                         } else response = Response.success(new ArrayList<>());
-                    } else {
-                        APIError apiError = placesRestServer.parseError(responseApiRest);
-                        List<String> errors = new ArrayList<>();
-                        errors.add(apiError.error.description);
-                        response = Response.error(errors);
-                    }
+                    } else response = ErrorUtils.getResponseError(responseApiRest.code(), placesRestServer.parseError(responseApiRest));
                     return response;
                 })
                 .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));

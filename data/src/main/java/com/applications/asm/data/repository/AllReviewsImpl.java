@@ -31,11 +31,7 @@ public class AllReviewsImpl implements AllReviews {
         return graphqlPlacesClient.getPlaceReviews(placeId)
                 .map(dataApolloResponse -> {
                     Response<List<Review>> response;
-                    if(dataApolloResponse.hasErrors()) {
-                        List<Error> errors = dataApolloResponse.getErrors();
-                        if (errors != null) response = Response.error(ErrorUtils.getErrors(errors));
-                        else response = Response.error(new ArrayList<>());
-                    } else {
+                    if(!dataApolloResponse.hasErrors()) {
                         PlaceReviewsQuery.Data data = dataApolloResponse.getData();
                         if(data != null) {
                             PlaceReviewsQuery.Reviews reviews = data.reviews();
@@ -45,7 +41,7 @@ public class AllReviewsImpl implements AllReviews {
                             }
                             else response = Response.success(new ArrayList<>());
                         } else response = Response.success(new ArrayList<>());
-                    }
+                    } else response = ErrorUtils.getResponseError(dataApolloResponse.getErrors());
                     return response;
                 })
                 .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));

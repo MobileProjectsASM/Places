@@ -38,8 +38,8 @@ public class PlacesRestServerImpl implements PlacesRestServer {
                     Exception exception = (Exception) throwable;
                     Log.e(getClass().getName(), exception.getMessage());
                     if(exception instanceof IOException)
-                        return Single.error(new RestException(context.getString(R.string.network_error)));
-                    return Single.error(new RestException(context.getString(R.string.converter_error)));
+                        return Single.error(new RestException(RestExceptionCodes.NETWORK_CONNECTION, context.getString(R.string.network_error)));
+                    return Single.error(new RestException(RestExceptionCodes.PARSE_DATA_ERROR, context.getString(R.string.converter_error)));
                 });
     }
 

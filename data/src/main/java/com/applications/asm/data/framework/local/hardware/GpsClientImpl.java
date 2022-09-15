@@ -38,8 +38,8 @@ public class GpsClientImpl implements GpsClient {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             if(!isLocationEnabled)
-                throw new HardwareException(context.getString(R.string.gps_disabled_error));
-            throw new HardwareException(context.getString(R.string.unregistered_location));
+                throw new HardwareException(HardwareExceptionCodes.GPS_DISABLED, context.getString(R.string.gps_disabled_error));
+            throw new HardwareException(HardwareExceptionCodes.LOCATION_UNREGISTERED, context.getString(R.string.unregistered_location));
         })
         .onErrorResumeNext(throwable -> {
             Exception exception = (Exception) throwable;
@@ -49,7 +49,7 @@ public class GpsClientImpl implements GpsClient {
                 return Single.error(hardwareException);
             }
             Log.e(getClass().getName(), exception.getMessage());
-            return Single.error(new HardwareException(exception.getMessage()));
+            return Single.error(new HardwareException(HardwareExceptionCodes.HARDWARE_ERROR, exception.getMessage()));
         });
     }
 }

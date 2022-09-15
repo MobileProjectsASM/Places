@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.apollographql.apollo.ApolloClient;
 import com.applications.asm.data.R;
 import com.applications.asm.data.framework.local.database.PlacesDatabase;
-import com.applications.asm.data.framework.network.api_rest.HeadersInterceptorApiRest;
+import com.applications.asm.data.framework.network.api_rest.interceptors.HeadersInterceptorApiRest;
 import com.applications.asm.data.framework.network.api_rest.api.YelpApiClient;
 import com.applications.asm.data.framework.network.api_rest.generator.ServiceGenerator;
 import com.applications.asm.data.framework.network.api_rest.generator.ServiceGeneratorImpl;

@@ -1,16 +1,18 @@
 package com.applications.asm.data.framework.network.graphql;
 
-import androidx.annotation.Nullable;
-
 public class GraphqlException extends Exception {
+    private final Integer code;
     private final String message;
 
-    public GraphqlException(String message) {
+    public GraphqlException(Integer code, String message) {
+        this.code = code;
         this.message = message;
     }
 
-    @Nullable
-    @Override
+    public Integer getCode() {
+        return code;
+    }
+
     public String getMessage() {
         return message;
     }

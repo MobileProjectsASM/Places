@@ -1,6 +1,5 @@
 package com.applications.asm.data.framework.network.graphql;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.apollographql.apollo.ApolloCall;
@@ -11,7 +10,6 @@ import com.apollographql.apollo.rx3.Rx3Apollo;
 import com.applications.asm.data.PlaceDetailsQuery;
 import com.applications.asm.data.PlaceReviewsQuery;
 import com.applications.asm.data.PlaceSuggestionQuery;
-import com.applications.asm.data.R;
 import com.applications.asm.data.SearchPlacesQuery;
 
 import javax.inject.Inject;
@@ -21,12 +19,10 @@ import io.reactivex.rxjava3.core.Single;
 
 public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
     private final ApolloClient apolloClient;
-    private final Context context;
 
     @Inject
-    public GraphqlPlacesClientImpl(ApolloClient apolloClient, Context context) {
+    public GraphqlPlacesClientImpl(ApolloClient apolloClient) {
         this.apolloClient = apolloClient;
-        this.context = context;
     }
 
     @Override
@@ -36,9 +32,13 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
         return Single.fromObservable(obsPlaceSuggestion).onErrorResumeNext(throwable -> { //Handle protocol error
                 Exception exception = (Exception) throwable;
                 Log.e(getClass().getName(), exception.getMessage());
-                if (exception instanceof ApolloException)
-                    return Single.error(new GraphqlException(context.getString(R.string.network_error)));
-                return Single.error(new GraphqlException(exception.getMessage()));
+                if (exception instanceof ApolloException) {
+                    ApolloException apolloException = (ApolloException) exception;
+                    return Single.error(new GraphqlException(GraphqlExceptionCodes.NETWORK_ERROR, apolloException.getMessage()));
+                } else {
+                    Log.e(getClass().getName(), exception.getMessage());
+                    return Single.error(new GraphqlException(GraphqlExceptionCodes.GRAPHQL_ERROR, exception.getMessage()));
+                }
             }
         );
     }
@@ -62,8 +62,13 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
         return Single.fromObservable(obsSearchPlaces).onErrorResumeNext(throwable -> { //Handle protocol error
             Exception exception = (Exception) throwable;
             Log.e(getClass().getName(), exception.getMessage());
-            if(exception instanceof ApolloException) return Single.error(new GraphqlException(context.getString(R.string.network_error)));
-            return Single.error(new GraphqlException(exception.getMessage()));
+            if (exception instanceof ApolloException) {
+                ApolloException apolloException = (ApolloException) exception;
+                return Single.error(new GraphqlException(GraphqlExceptionCodes.NETWORK_ERROR, apolloException.getMessage()));
+            } else {
+                Log.e(getClass().getName(), exception.getMessage());
+                return Single.error(new GraphqlException(GraphqlExceptionCodes.GRAPHQL_ERROR, exception.getMessage()));
+            }
         });
     }
 
@@ -74,8 +79,13 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
         return Single.fromObservable(obsPlaceDetails).onErrorResumeNext(throwable -> {
             Exception exception = (Exception) throwable;
             Log.e(getClass().getName(), exception.getMessage());
-            if(exception instanceof ApolloException) return Single.error(new GraphqlException(context.getString(R.string.network_error)));
-            return Single.error(new GraphqlException(exception.getMessage()));
+            if (exception instanceof ApolloException) {
+                ApolloException apolloException = (ApolloException) exception;
+                return Single.error(new GraphqlException(GraphqlExceptionCodes.NETWORK_ERROR, apolloException.getMessage()));
+            } else {
+                Log.e(getClass().getName(), exception.getMessage());
+                return Single.error(new GraphqlException(GraphqlExceptionCodes.GRAPHQL_ERROR, exception.getMessage()));
+            }
         });
     }
 
@@ -85,9 +95,14 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
         Observable<Response<PlaceReviewsQuery.Data>> obsPlaceReviews = Rx3Apollo.from(placesReviewsCall);
         return Single.fromObservable(obsPlaceReviews).onErrorResumeNext(throwable -> {
             Exception exception = (Exception) throwable;
-            Log.e(getClass().getName(), exception.getMessage());
-            if(exception instanceof ApolloException) return Single.error(new GraphqlException(context.getString(R.string.network_error)));
-            return Single.error(new GraphqlException(exception.getMessage()));
+            if (exception instanceof ApolloException) {
+                ApolloException apolloException = (ApolloException) exception;
+                Log.e(getClass().getName(), apolloException.getMessage());
+                return Single.error(new GraphqlException(GraphqlExceptionCodes.NETWORK_ERROR, apolloException.getMessage()));
+            } else {
+                Log.e(getClass().getName(), exception.getMessage());
+                return Single.error(new GraphqlException(GraphqlExceptionCodes.GRAPHQL_ERROR, exception.getMessage()));
+            }
         });
     }
 }
