@@ -11,11 +11,11 @@ import javax.inject.Inject;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
 
-public class SaveLocationUc extends CompletableUseCase<Coordinates> {
+public class SaveCoordinatesUc extends CompletableUseCase<Coordinates> {
     private final AllCoordinates allCoordinates;
 
     @Inject
-    public SaveLocationUc(UseCaseScheduler useCaseScheduler, AllCoordinates allCoordinates) {
+    public SaveCoordinatesUc(UseCaseScheduler useCaseScheduler, AllCoordinates allCoordinates) {
         super(useCaseScheduler);
         this.allCoordinates = allCoordinates;
     }

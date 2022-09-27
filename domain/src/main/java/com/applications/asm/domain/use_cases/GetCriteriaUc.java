@@ -1,6 +1,7 @@
 package com.applications.asm.domain.use_cases;
 
 import com.applications.asm.domain.entities.Criterion;
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.exception.ParameterException;
 import com.applications.asm.domain.repository.AllCriteria;
 import com.applications.asm.domain.use_cases.base.SingleUseCase;
@@ -12,7 +13,7 @@ import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetCriteriaUc extends SingleUseCase<List<Criterion>, Criterion.Type> {
+public class GetCriteriaUc extends SingleUseCase<Response<List<Criterion>>, Criterion.Type> {
     private final AllCriteria allCriteria;
 
     @Inject
@@ -30,7 +31,7 @@ public class GetCriteriaUc extends SingleUseCase<List<Criterion>, Criterion.Type
     }
 
     @Override
-    protected Single<List<Criterion>> build(Criterion.Type type) {
+    protected Single<Response<List<Criterion>>> build(Criterion.Type type) {
         return validateParams(type)
                 .flatMap(allCriteria::thatAre);
     }
