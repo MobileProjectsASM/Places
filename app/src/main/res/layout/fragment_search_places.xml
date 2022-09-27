@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/default_size_expanded_style"
+    tools:context=".view.fragments.SearchPlacesFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_place_text_input_layout"
+        style="@style/text_input_layout_style"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="@string/place_label"
+        android:visibility="invisible"
+        app:startIconDrawable="@drawable/ic_baseline_search_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            style="@style/default_size_height_style"
+            android:textAppearance="@style/regular_text_style" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/suggested_place_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:textAppearance="@style/regular_text_style"
+        android:textColor="@color/primary_color"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_place_text_input_layout"
+        android:text="@string/suggested_place_label"/>
+
+    <com.google.android.material.divider.MaterialDivider
+        style="@style/default_middle_divider"
+        android:id="@+id/search_divider_1"
+        app:dividerInsetStart="20dp"
+        app:dividerInsetEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@id/suggested_place_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible"/>
+
+    <FrameLayout
+        android:id="@+id/suggested_places_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_divider_1"
+        android:layout_marginTop="10dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

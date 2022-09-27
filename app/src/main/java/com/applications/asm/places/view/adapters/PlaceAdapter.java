@@ -7,17 +7,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.applications.asm.places.R;
-import com.applications.asm.places.model.PlaceM;
+import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.view.events.PlaceClickListener;
 import com.applications.asm.places.view.view_holders.PlaceViewHolder;
 
 import java.util.List;
 
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceViewHolder> {
-    private final List<PlaceM> places;
+    private final List<PlaceVM> places;
     private final PlaceClickListener placeClickListener;
 
-    public PlaceAdapter(List<PlaceM> places, PlaceClickListener placeClickListener) {
+    public PlaceAdapter(List<PlaceVM> places, PlaceClickListener placeClickListener) {
         this.places = places;
         this.placeClickListener = placeClickListener;
     }

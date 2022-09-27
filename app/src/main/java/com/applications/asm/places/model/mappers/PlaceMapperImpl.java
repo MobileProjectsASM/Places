@@ -6,7 +6,7 @@ import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Price;
 import com.applications.asm.domain.entities.SuggestedPlace;
-import com.applications.asm.domain.entities.WorkingHours;
+import com.applications.asm.domain.entities.Schedule;
 import com.applications.asm.places.model.PlaceDetailsVM;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.PriceVM;
@@ -16,11 +16,18 @@ import com.applications.asm.places.model.SuggestedPlaceVM;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class PlaceMapperImpl implements PlaceMapper {
+
+    @Inject
+    public PlaceMapperImpl() {
+
+    }
 
     @Override
     public SuggestedPlaceVM getSuggestedPlaceVM(SuggestedPlace suggestedPlace) {
-        return new SuggestedPlaceVM(suggestedPlace.getId(), suggestedPlace.getName());
+        return new SuggestedPlaceVM(suggestedPlace.getId(), suggestedPlace.getName(), suggestedPlace.getAddress());
     }
 
     @Override
@@ -75,16 +82,16 @@ public class PlaceMapperImpl implements PlaceMapper {
         return new PriceVM(price.getId(), price.getName());
     }
 
-    private List<ScheduleVM> getSchedule(List<WorkingHours> workingHoursDays) {
+    private List<ScheduleVM> getSchedule(List<Schedule> scheduleDays) {
         List<ScheduleVM> schedule = new ArrayList<>();
-        for(WorkingHours workingHours: workingHoursDays)
+        for(Schedule workingHours: scheduleDays)
             schedule.add(mapSchedule(workingHours));
         return schedule;
     }
 
-    private ScheduleVM mapSchedule(WorkingHours workingHours) {
-        String hours = getHours(workingHours.getOpenHour(), workingHours.getCloseHour());
-        return new ScheduleVM(workingHours.getDay(), hours);
+    private ScheduleVM mapSchedule(Schedule schedule) {
+        String hours = getHours(schedule.getOpenHour(), schedule.getCloseHour());
+        return new ScheduleVM(schedule.getDay(), hours);
     }
 
     private String getHours(Hour openHour, Hour closeHour) {

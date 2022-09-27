@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Places" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Places" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryVariant">@color/primary_color_dark</item>
@@ -11,6 +11,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="materialAlertDialogTheme">@style/alert_dialog_style</item>
+        <item name="circularProgressIndicatorStyle">@style/Widget.Tabs.CircularProgressIndicator</item>
+        <item name="textAppearanceLargePopupMenu">@style/textAppearancePopUpMenu</item>
+        <item name="textAppearanceSmallPopupMenu">@style/textAppearancePopUpMenu</item>
     </style>
 
     <style name="default_size_height_style">
@@ -67,6 +71,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="text_small_style" parent="regular_text_style">
+        <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
     <style name="text_chip_style" parent="regular_text_style">
         <item name="android:textSize">@dimen/text_chip_size</item>
         <item name="android:textStyle">bold</item>
@@ -83,6 +91,10 @@
 
     <style name="text_helper_style" parent="regular_text_style">
         <item name="android:textSize">@dimen/small_text_size</item>
+    </style>
+
+    <style name="supporting_text_dialog_style" parent="android:TextAppearance.Material.Body2">
+        <item name="android:fontFamily">@font/caviar_dreams</item>
     </style>
 
     <!-- TEXT-INPUT STYLES -->
@@ -106,9 +118,13 @@
         <item name="android:textAppearance">@style/text_contained_button_style</item>
     </style>
 
-    <style name="icon_button" parent="default_size_fit_style">
+    <style name="icon_button" parent="contained_button_container_style">
         <item name="iconGravity">textStart</item>
         <item name="iconPadding">2dp</item>
+    </style>
+
+    <style name="outlined_button_container_style" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textAppearance">@style/text_contained_button_style</item>
     </style>
 
     <!-- DIVIDERS -->
@@ -136,4 +152,35 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAppearance">@style/text_chip_style</item>
     </style>
+
+    <!-- DIALOGS -->
+    <style name="alert_dialog_style" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="materialAlertDialogTitleTextStyle">@style/dialog_title_style</item>
+        <item name="buttonBarPositiveButtonStyle">@style/dialog_button_style</item>
+        <item name="buttonBarNeutralButtonStyle">@style/dialog_button_style</item>
+        <item name="buttonBarNegativeButtonStyle">@style/dialog_button_style</item>
+    </style>
+
+    <style name="dialog_title_style" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:fontFamily">@font/caviar_dreams</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="dialog_button_style" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:fontFamily">@font/caviar_dreams</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- CIRCULAR PROGRESS -->
+    <style name="Widget.Tabs.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorSize">60dp</item>
+        <item name="trackThickness">30dp</item>
+    </style>
+    
+    <!-- MENU -->
+    <style name="textAppearancePopUpMenu" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="fontFamily">@font/caviar_dreams</item>
+        <item name="android:fontFamily">@font/caviar_dreams</item>
+    </style>
+
 </resources>

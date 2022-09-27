@@ -4,17 +4,53 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.16944444444444445" />
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_baseline_category_24.xml" value="0.249" />
+        <entry key="app/src/main/res/drawable/ic_baseline_keyboard_arrow_right_24.xml" value="0.331" />
+        <entry key="app/src/main/res/drawable/ic_baseline_my_location_24.xml" value="0.3015" />
+        <entry key="app/src/main/res/drawable/ic_baseline_place_24.xml" value="0.2035" />
+        <entry key="app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_baseline_sort_24.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_baseline_view_list_24.xml" value="0.331" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.33" />
+        <entry key="app/src/main/res/drawable/ic_round_square_24.xml" value="0.33" />
         <entry key="app/src/main/res/font/font.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/alert_dialog_layout.xml" value="0.3066123188405797" />
+        <entry key="app/src/main/res/layout/category_chip_layout.xml" value="0.13385416666666666" />
+        <entry key="app/src/main/res/layout/category_item_layout.xml" value="0.32760416666666664" />
+        <entry key="app/src/main/res/layout/criterion_item.xml" value="0.32653985507246375" />
+        <entry key="app/src/main/res/layout/criterion_item_layout.xml" value="0.27355072463768115" />
+        <entry key="app/src/main/res/layout/description_dialog_layout.xml" value="0.32653985507246375" />
+        <entry key="app/src/main/res/layout/error_dialog_layout.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_advanced_search.xml" value="0.31023550724637683" />
+        <entry key="app/src/main/res/layout/fragment_categories.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_commmon_menu.xml" value="0.32019927536231885" />
+        <entry key="app/src/main/res/layout/fragment_common_search.xml" value="0.32019927536231885" />
+        <entry key="app/src/main/res/layout/fragment_coordinates.xml" value="0.15932117527862208" />
+        <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_location.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_map.xml" value="0.23020833333333332" />
         <entry key="app/src/main/res/layout/fragment_place_details.xml" value="0.33309037900874633" />
+        <entry key="app/src/main/res/layout/fragment_places.xml" value="0.28229166666666666" />
         <entry key="app/src/main/res/layout/fragment_places_map.xml" value="0.24375" />
         <entry key="app/src/main/res/layout/fragment_reviews.xml" value="0.31197916666666664" />
-        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_search.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/fragment_search_places.xml" value="0.32019927536231885" />
+        <entry key="app/src/main/res/layout/location_saved_dialog_layout.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/lock_page.xml" value="0.31197916666666664" />
+        <entry key="app/src/main/res/layout/look_page.xml" value="0.3066123188405797" />
         <entry key="app/src/main/res/layout/place_item_layout.xml" value="0.33" />
         <entry key="app/src/main/res/layout/place_suggested_item_layout.xml" value="0.5" />
-        <entry key="app/src/main/res/layout/review_item_layout.xml" value="0.67" />
+        <entry key="app/src/main/res/layout/price_chip_layout.xml" value="0.15932117527862208" />
+        <entry key="app/src/main/res/layout/review_item_layout.xml" value="0.5983263598326359" />
+        <entry key="app/src/main/res/layout/suggested_categories_layout.xml" value="0.15932117527862208" />
+        <entry key="app/src/main/res/layout/suggested_item_layout.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/suggested_places_empty_layout.xml" value="0.32653985507246375" />
+        <entry key="app/src/main/res/layout/suggested_places_layout.xml" value="0.32653985507246375" />
+        <entry key="app/src/main/res/layout/suggested_places_loading_layout.xml" value="0.32653985507246375" />
+        <entry key="app/src/main/res/menu/search_menu.xml" value="0.32760416666666664" />
       </map>
     </option>
   </component>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <!--<item android:id="@+id/advanced_search_option"
+        android:title="@string/advanced_search_option"
+        app:showAsAction="never"/>-->
+    <item android:id="@+id/change_coordinates_option"
+        android:title="@string/change_coordinates_option"
+        app:showAsAction="never"/>
+</menu>

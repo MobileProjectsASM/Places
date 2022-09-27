@@ -7,27 +7,27 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.applications.asm.places.R;
-import com.applications.asm.places.model.ReviewM;
-import com.applications.asm.places.view.view_holders.ReviewPlaceHolder;
+import com.applications.asm.places.model.ReviewVM;
+import com.applications.asm.places.view.view_holders.PlaceReviewViewHolder;
 
 import java.util.List;
 
-public class ReviewAdapter extends RecyclerView.Adapter<ReviewPlaceHolder> {
-    private final List<ReviewM> reviews;
+public class ReviewAdapter extends RecyclerView.Adapter<PlaceReviewViewHolder> {
+    private final List<ReviewVM> reviews;
 
-    public ReviewAdapter(List<ReviewM> reviews) {
+    public ReviewAdapter(List<ReviewVM> reviews) {
         this.reviews = reviews;
     }
 
     @NonNull
     @Override
-    public ReviewPlaceHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PlaceReviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        return new ReviewPlaceHolder(layoutInflater.inflate(R.layout.review_item_layout, parent, false));
+        return new PlaceReviewViewHolder(layoutInflater.inflate(R.layout.review_item_layout, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewPlaceHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PlaceReviewViewHolder holder, int position) {
         holder.render(reviews.get(position));
     }
 

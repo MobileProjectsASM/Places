@@ -1,7 +1,7 @@
 package com.applications.asm.places.view.events;
 
-import com.applications.asm.places.model.PlaceM;
+import com.applications.asm.places.model.PlaceVM;
 
 public interface PlaceClickListener {
-    void onPlaceClickListener(PlaceM placeM);
+    void onPlaceClickListener(PlaceVM placeVM);
 }

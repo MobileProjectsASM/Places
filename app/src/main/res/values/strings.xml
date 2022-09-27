@@ -44,6 +44,7 @@
     <string name="regular_text_chip">Regular</string>
     <string name="expensive_text_chip">Caro</string>
     <string name="very_expensive_text_chip">Muy Caro</string>
+    <string name="address_not_available">Direccion no disponible</string>
 
 
     <!--TEXT BUTTONS-->
@@ -51,11 +52,15 @@
     <string name="apply_filter_text_label">Aplicar filtro</string>
     <string name="text_contained_button_set_coordinates">Establecer coordenadas</string>
     <string name="text_contained_button_see_reviews">Ver reseñas</string>
+    <string name="text_outlined_button_open">Abierto</string>
+    <string name="text_outlined_button_close">Cerrado</string>
+    <string name="text_outlined_button_both">Ambos</string>
 
     <!--TEXT ERRORS -->
-    <string name="text_error_text_input_only_int_numbers">Solo numeros naturales</string>
-    <string name="text_error_text_input_only_decimal_numbers">Solo numeros</string>
-    <string name="text_error_text_input_empty">Campo vacio</string>
+    <string name="natural_invalid_error_message">Solo numeros natural</string>
+    <string name="decimal_invalid_error_message">Decimal invalido</string>
+    <string name="text_empty_error_message">Campo vacio</string>
+    <string name="radius_out_of_range_error_message">Radio fuera de rango</string>
 
 
     <string name="fragment_search_label">fragment_search</string>
@@ -63,8 +68,8 @@
 
     <!--KEYS-->
     <string name="places_service_base_url" translatable="false">https://api.yelp.com/</string>
-    <string name="places_service_api_key" translatable="false">Bearer LsV0_Qd5FDylR12CXKgfDH9aRPFGyJJ1aN0htb5qTIf5Tv4k7azpMOqmSeYSsWB73cCMdLKg3sm35mmyU-5yqjglgqTVdasClXDNQhlc3nG3UUQe51idRjzSx2BwYnYx</string>
-    <string name="MAP_API_KEY" translatable="false">AIzaSyCfaCxqbQogUqs1p3eEYdt9SZG5JbeLyWs</string>
+    <string name="places_service_api_key" translatable="false"></string>
+    <string name="map_api_key" translatable="false">AIzaSyCfaCxqbQogUqs1p3eEYdt9SZG5JbeLyWs</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="error_validate_form_search">Error al validar el formulario</string>
@@ -84,4 +89,27 @@
     <string name="view_map">Mapa</string>
     <string name="categories_text_view">Categorias:</string>
     <string name="apply_categories_text_label">Aplicar</string>
+    <string name="error_get_sort_criteria">Error al obtener los creterios de ordenamiento</string>
+    <string name="error_get_prices">Error al obtener precios</string>
+    <string name="latitude_out_of_range_error_message">Latitud fuera de rango</string>
+    <string name="longitude_out_of_range_error_message">Longitud fuera de rango</string>
+    <string name="info_title_dialog">Informacion</string>
+    <string name="permission_rationale_title">Justificacion del Permiso</string>
+    <string name="error_title_dialog">Error</string>
+    <string name="warnings_title_dialog">Advertencias</string>
+    <string name="location_saved_message_dialog">Localizacion establecida. Si quieres cambiar tu ubicacion hazlo en las configuraciones de la pantalla de busqueda</string>
+    <string name="find_searches_dialog_positive_button">Siguiente</string>
+    <string name="accept_dialog_positive_button">Aceptar</string>
+    <string name="icon">icono del dialogo</string>
+    <string name="location_permission_rational_message">Esta funcionalidad obtiene solo tu ubicacion aproximada para orientar tu busqueda a lugares cercanos</string>
+    <string name="error_location_is_disabled">La ubicacion esta desactivada. Para poder obtener tu ubicación actual, es necesario activar el GPS</string>
+    <string name="error_client_input_data">Algun dato ingresado es invalido, por favor verifica los datos</string>
+    <string name="error_to_get_suggested_places">Error al obtener sugerencias de lugares</string>
+    <string name="error_to_get_categories">Error al obtener sugerencias de categorias</string>
+    <string name="get_current_location_text_label">Localizacion actual</string>
+    <string name="suggested_place_label">Sugerencias de busqueda</string>
+    <string name="there_are_no_suggestions_label">No se encontraron sugerencias</string>
+
+    <string name="advanced_search_option">Busqueda Avanzada</string>
+    <string name="change_coordinates_option">Cambiar coordenas</string>
 </resources>

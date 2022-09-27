@@ -51,6 +51,9 @@ dependencies {
 
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0-beta01"
 
+    //RxBinding
+    implementation 'com.jakewharton.rxbinding4:rxbinding-material:4.0.0'
+
     //Navigation
     implementation "androidx.navigation:navigation-fragment:2.4.2"
     implementation "androidx.navigation:navigation-ui:2.4.2"
@@ -77,13 +80,24 @@ dependencies {
 
     //Retrofit para el consumo de servicios
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
 
     //Picasso para el renderizado de imagenes
-    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.squareup.picasso:picasso:2.8'
 
     //Circle image View para mostrar imagenes
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //Google Maps
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
+
+    //Google services location
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
+
+    //Room
+    implementation "androidx.room:room-runtime:2.4.2"
+    annotationProcessor "androidx.room:room-compiler:2.4.2"
+    implementation "androidx.room:room-rxjava3:2.4.2"
+
+    implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.5.1'
 }

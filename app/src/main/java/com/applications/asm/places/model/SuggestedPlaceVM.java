@@ -3,10 +3,12 @@ package com.applications.asm.places.model;
 public class SuggestedPlaceVM {
     private String id;
     private String name;
+    private String address;
 
-    public SuggestedPlaceVM(String id, String name) {
+    public SuggestedPlaceVM(String id, String name, String address) {
         this.id = id;
         this.name = name;
+        this.address = address;
     }
 
     public String getId() {
@@ -23,5 +25,13 @@ public class SuggestedPlaceVM {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

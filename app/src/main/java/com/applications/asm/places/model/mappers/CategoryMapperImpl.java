@@ -6,7 +6,15 @@ import com.applications.asm.places.model.CategoryVM;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class CategoryMapperImpl implements CategoryMapper {
+
+    @Inject
+    public CategoryMapperImpl() {
+
+    }
+
     @Override
     public CategoryVM getCategoryMV(Category category) {
         return new CategoryVM(category.getId(), category.getName());
