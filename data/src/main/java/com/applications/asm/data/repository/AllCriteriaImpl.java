@@ -5,6 +5,7 @@ import com.applications.asm.data.framework.local.database.entities.CriterionEnti
 import com.applications.asm.data.mapper.CriterionMapper;
 import com.applications.asm.data.utils.ErrorUtils;
 import com.applications.asm.domain.entities.Criterion;
+import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.repository.AllCriteria;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class AllCriteriaImpl implements AllCriteria {
     }
 
     @Override
-    public Single<List<Criterion>> thatAre(Criterion.Type type) {
+    public Single<Response<List<Criterion>>> thatAre(Criterion.Type type) {
         Single<Map<String, String>> criteriaSingle;
         if(type == Criterion.Type.PRICE)
             criteriaSingle = placesDbClient.getCriteria(CriterionEntity.priceCriterion, "es");
         else
             criteriaSingle = placesDbClient.getCriteria(CriterionEntity.sortCriterion, "es");
-        return criteriaSingle.map(criterionMapper::criteriaEntityToCriteria)
+        return criteriaSingle.map(criterionMapper::criteriaEntityToCriteria).map(Response::success)
                 .onErrorResumeNext(throwable -> Single.error(ErrorUtils.resolveError(throwable, getClass())));
     }
 }
