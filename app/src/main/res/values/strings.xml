@@ -60,7 +60,7 @@
     <string name="natural_invalid_error_message">Solo numeros natural</string>
     <string name="decimal_invalid_error_message">Decimal invalido</string>
     <string name="text_empty_error_message">Campo vacio</string>
-    <string name="radius_out_of_range_error_message">Radio fuera de rango</string>
+    <string name="radius_out_of_range_error_message">Radio fuera de rango [0, 400]</string>
 
 
     <string name="fragment_search_label">fragment_search</string>
@@ -68,7 +68,6 @@
 
     <!--KEYS-->
     <string name="places_service_base_url" translatable="false">https://api.yelp.com/</string>
-    <string name="places_service_api_key" translatable="false"></string>
     <string name="map_api_key" translatable="false">AIzaSyCfaCxqbQogUqs1p3eEYdt9SZG5JbeLyWs</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -112,4 +111,5 @@
 
     <string name="advanced_search_option">Busqueda Avanzada</string>
     <string name="change_coordinates_option">Cambiar coordenas</string>
+    <string name="categories_cannot_be_repeated">No se pueden repetir categorias</string>
 </resources>

@@ -15,6 +15,7 @@ import com.applications.asm.domain.use_cases.GetCoordinatesUc;
 import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.CriterionVM;
+import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.mappers.CoordinatesMapper;
 
@@ -32,6 +33,7 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<CoordinatesVM> workCoordinates;
     private MutableLiveData<List<CategoryVM>> categoriesSelectedVM;
+    private MutableLiveData<ParametersAdvancedSearch> parametersAdvancedSearchVM;
 
     public MainViewModel(GetCoordinatesUc getCoordinatesUc, CoordinatesMapper coordinatesMapper) {
         this.getCoordinatesUc = getCoordinatesUc;
@@ -81,6 +83,11 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<List<CategoryVM>> getCategoriesSelected() {
         if(categoriesSelectedVM == null) categoriesSelectedVM = new MutableLiveData<>();
         return categoriesSelectedVM;
+    }
+
+    public MutableLiveData<ParametersAdvancedSearch> getParametersAdvancedSearchVM() {
+        if(parametersAdvancedSearchVM == null) parametersAdvancedSearchVM = new MutableLiveData<>();
+        return parametersAdvancedSearchVM;
     }
 
 }

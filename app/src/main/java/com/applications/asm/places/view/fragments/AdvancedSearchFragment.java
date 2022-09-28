@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.applications.asm.places.databinding.PriceChipLayoutBinding;
 import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.CriterionVM;
+import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.ResourceStatus;
 import com.applications.asm.places.view.AdvancedSearchView;
@@ -38,6 +40,7 @@ import com.applications.asm.places.view.utils.Pair;
 import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.AdvancedSearchViewModel;
 import com.applications.asm.places.view_model.MainViewModel;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
 import com.jakewharton.rxbinding4.widget.RxTextView;
 
@@ -55,19 +58,17 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdvancedSearchBinding> implements AdvancedSearchView {
-    private static final String CURRENT_LOCATION = "current_location";
-    private static final String SORT_CRITERIA = "sort_criteria";
-    private static final String PRICES = "prices";
-
     private CompositeDisposable formDisposable;
-    private Dialog loadingGetData;
+    private Dialog loadingGetSortAndPrices;
     private MainViewModel mainViewModel;
     private AdvancedSearchViewModel advancedSearchViewModel;
     private Map<Integer, CriterionVM> pricesMap;
-    private CoordinatesVM coordinatesSelected;
+    private CoordinatesVM workCoordinates;
     private CriterionVM sortCriterionSelected;
     private List<CriterionVM> pricesSelected;
     private List<CategoryVM> categoriesSelected;
+    private Boolean isRecreatedView;
+    private Boolean placesOpen;
 
     private ActivityResultLauncher<Intent> activityResultLauncher;
 
@@ -86,13 +87,13 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainViewParent mainViewParent = (MainViewParent) context;
-        mainViewParent.getActivityComponent().inject(this);
+        getActivityComponent().inject(this);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        isRecreatedView = false;
     }
 
     @Override
@@ -103,12 +104,15 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         formDisposable = new CompositeDisposable();
         initViewObservables();
         setListeners();
+        if(!isRecreatedView)
+            advancedSearchViewModel.loadSortAndPrices().observe(getViewLifecycleOwner(), this::callbackLoadData);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         formDisposable.clear();
+        isRecreatedView = true;
     }
 
     @Override
@@ -116,44 +120,37 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         return FragmentAdvancedSearchBinding.inflate(inflater, container, false);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void callbackLoadData(Resource<Map<String, Object>> resource) {
         switch (resource.getStatus()) {
             case LOADING:
-                loadingGetData = ViewUtils.loading(requireContext());
+                loadingGetSortAndPrices = ViewUtils.loading(requireContext());
                 break;
             case SUCCESS:
-                ViewUtils.loaded(loadingGetData);
-                Map<String, Object> data = resource.getData();
-                CoordinatesVM coordinates = (CoordinatesVM) data.get(CURRENT_LOCATION);
-                List<CriterionVM> sortCriteria = (List<CriterionVM>) data.get(SORT_CRITERIA);
-                List<CriterionVM> prices = (List<CriterionVM>) data.get(PRICES);
-                setCoordinates(coordinates);
-                setSortCriteria(sortCriteria);
-                setPricesCriteria(prices);
+                ViewUtils.loaded(loadingGetSortAndPrices);
+                advancedSearchViewModel.getSortAndPricesVM().setValue(resource.getData());
                 break;
             case WARNING:
-                ViewUtils.loaded(loadingGetData);
+                ViewUtils.loaded(loadingGetSortAndPrices);
                 ViewUtils.showGeneralWarningDialog(requireContext(), resource.getWarning());
                 break;
             case ERROR:
-                ViewUtils.loaded(loadingGetData);
+                ViewUtils.loaded(loadingGetSortAndPrices);
                 ViewUtils.showGeneralErrorDialog(requireContext(), resource.getErrorMessage());
                 break;
         }
     }
 
     private void setListeners() {
-        getViewBinding().applyFilterButton.setOnClickListener(view -> {
-            List<Integer> chipIdsSelected = getViewBinding().chipGroupPrices.getCheckedChipIds();
-            pricesSelected = new ArrayList<>();
-            for(Integer chipIdSelected : chipIdsSelected)
-                pricesSelected.add(pricesMap.get(chipIdSelected));
-        });
+        getViewBinding().applyFilterButton.setOnClickListener(view -> applyFilter());
         getViewBinding().categoriesTextInputLayout.setEndIconOnClickListener(view -> {
             NavController navController = NavHostFragment.findNavController(this);
             navController.navigate(R.id.action_advancedSearchFragment_to_categoriesFragment);
+        });
+        getViewBinding().materialButtonToggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
+            int idCheckedButton = group.getCheckedButtonId();
+            if(idCheckedButton != View.NO_ID) placesOpen = idCheckedButton == R.id.buttonOpen;
+            else placesOpen = null;
         });
         AutoCompleteTextView sortCriteriaAutocompleteTextView = (AutoCompleteTextView) getViewBinding().sortByTextInputLayout.getEditText();
         if(sortCriteriaAutocompleteTextView != null) {
@@ -162,10 +159,6 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
                 sortCriterionSelected = adapter.getItem(i);
             });
         }
-    }
-
-    private void setCoordinates(CoordinatesVM coordinates) {
-        coordinatesSelected = coordinates;
     }
 
     private void setSortCriteria(List<CriterionVM> sortCriteria) {
@@ -203,19 +196,32 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         }
     }
 
+    private void setWorkCoordinates(CoordinatesVM coordinatesVM) {
+        workCoordinates = coordinatesVM;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setSortAndPrices(Map<String, Object> sortAndPrices) {
+        List<CriterionVM> sortCriteria = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.SORT_CRITERIA_LIST);
+        List<CriterionVM> prices = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.PRICES_LIST);
+        setSortCriteria(sortCriteria);
+        setPricesCriteria(prices);
+    }
+
     private void initViewObservables() {
         EditText radiusEditText = getViewBinding().radiusTextInputLayout.getEditText();
         if(radiusEditText != null) {
             Observable<String> radiusObservable = RxTextView.textChanges(radiusEditText).map(CharSequence::toString);
-            Observable<Boolean> observableForm = radiusObservable.map(this::validateForm);
+            Observable<Boolean> observableForm = radiusObservable.map(this::validateRadiusField);
             Disposable disposable = observableForm.subscribe(getViewBinding().applyFilterButton::setEnabled);
             formDisposable.add(disposable);
         }
-        //loadData().observe(getViewLifecycleOwner(), this::callbackLoadData);
         mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::setCategories);
+        mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setWorkCoordinates);
+        advancedSearchViewModel.getSortAndPricesVM().observe(getViewLifecycleOwner(), this::setSortAndPrices);
     }
 
-    private Boolean validateForm(String radius) {
+    private Boolean validateRadiusField(String radius) {
         boolean isValidRadius;
         if(!radius.isEmpty()) {
             if(!FormValidators.isNaturalNumber(radius)) {
@@ -228,44 +234,27 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
                 getViewBinding().radiusTextInputLayout.setError(null);
                 isValidRadius = true;
             }
-        } else isValidRadius = true;
+        } else {
+            getViewBinding().radiusTextInputLayout.setError(null);
+            isValidRadius = true;
+        }
         return isValidRadius;
     }
 
-    private LiveData<Resource<Map<String, Object>>> loadData() {
-        AtomicBoolean isFirstEmitted = new AtomicBoolean(false);
-        AtomicBoolean isSecondEmitted = new AtomicBoolean(false);
-        LiveData<Resource<CoordinatesVM>> liveDataCoordinates = mainViewModel.loadCoordinates(CoordinatesVM.StateVM.SAVED);
-        LiveData<Resource<Map<String, Object>>> liveDataCriteria = advancedSearchViewModel.loadData();
-        MediatorLiveData<Pair<Resource<CoordinatesVM>, Resource<Map<String, Object>>>> mediatorLiveData = new MediatorLiveData<>();
-        mediatorLiveData.addSource(liveDataCoordinates, resource -> {
-            isFirstEmitted.set(true);
-            if(isFirstEmitted.get() && isSecondEmitted.get())
-                mediatorLiveData.setValue(new Pair<>(liveDataCoordinates.getValue(), liveDataCriteria.getValue()));
-        });
-        mediatorLiveData.addSource(liveDataCriteria, resource -> {
-            isSecondEmitted.set(true);
-            if(isFirstEmitted.get() && isSecondEmitted.get())
-                mediatorLiveData.setValue(new Pair<>(liveDataCoordinates.getValue(), liveDataCriteria.getValue()));
-        });
-        return Transformations.map(mediatorLiveData, pair -> {
-            Resource<Map<String, Object>> dataResource;
-            Resource<CoordinatesVM> resourceCoordinates = pair.getFirst();
-            Resource<Map<String, Object>> resourceCriteria = pair.getSecond();
-            if(resourceCoordinates.getStatus() == ResourceStatus.SUCCESS && resourceCriteria.getStatus() == ResourceStatus.SUCCESS) {
-                Map<String, Object> data = new HashMap<>();
-                data.put(CURRENT_LOCATION, resourceCoordinates.getData());
-                data.put(SORT_CRITERIA, resourceCriteria.getData().get(AdvancedSearchViewModel.SORT_CRITERIA_LIST));
-                data.put(PRICES, resourceCriteria.getData().get(AdvancedSearchViewModel.PRICES_LIST));
-                dataResource = Resource.success(data);
-            } else if(resourceCoordinates.getStatus() == ResourceStatus.SUCCESS) {
-                if(resourceCriteria.getStatus() == ResourceStatus.WARNING) dataResource = Resource.warning(resourceCriteria.getWarning());
-                else dataResource = Resource.error(resourceCriteria.getErrorMessage());
-            } else {
-                if(resourceCoordinates.getStatus() == ResourceStatus.WARNING) dataResource = Resource.warning(resourceCoordinates.getWarning());
-                else dataResource = Resource.error(resourceCoordinates.getErrorMessage());
-            }
-            return dataResource;
-        });
+    private void applyFilter() {
+        String placeToSearch = "";
+        EditText editTextPlace = getViewBinding().placeTextInputLayout.getEditText();
+        if(editTextPlace != null) placeToSearch = editTextPlace.getText().toString();
+
+        int radius = 0;
+        EditText editTextRadius = getViewBinding().radiusTextInputLayout.getEditText();
+        if(editTextRadius != null && !editTextRadius.getText().toString().isEmpty()) radius = Integer.parseInt(editTextRadius.getText().toString());
+
+        List<Integer> chipIdsSelected = getViewBinding().chipGroupPrices.getCheckedChipIds();
+        pricesSelected = new ArrayList<>();
+        for(Integer chipIdSelected : chipIdsSelected)
+            pricesSelected.add(pricesMap.get(chipIdSelected));
+
+        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesSelected, placesOpen, 1));
     }
 }

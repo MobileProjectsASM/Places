@@ -55,7 +55,7 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
     private Dialog loadingGetCoordinates;
     private MainViewModel mainViewModel;
     private SearchPlacesViewModel searchPlacesViewModel;
-    private CoordinatesVM currentCoordinatesVM;
+    private CoordinatesVM workCoordinates;
     private boolean isRecreatedView;
 
     @Named("mainVMFactory")
@@ -198,7 +198,7 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
                     .skip(1)
                     .map(CharSequence::toString);
             Disposable disposable = placeObservable.subscribe(text -> {
-                if(!text.isEmpty()) searchPlacesViewModel.getSuggestedPlaces(text, currentCoordinatesVM).observe(getViewLifecycleOwner(), this::callbackSuggestedPlaces);
+                if(!text.isEmpty()) searchPlacesViewModel.getSuggestedPlaces(text, workCoordinates).observe(getViewLifecycleOwner(), this::callbackSuggestedPlaces);
                 else callbackSuggestedPlaces(Resource.success(new ArrayList<>()));
             });
             formDisposable.add(disposable);
@@ -206,7 +206,7 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
         mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), coordinatesVM -> {
             if(areValidCoordinates(coordinatesVM)) {
                 renderView();
-                currentCoordinatesVM = coordinatesVM;
+                workCoordinates = coordinatesVM;
             } else {
                 NavController navController = NavHostFragment.findNavController(this);
                 navController.navigate(R.id.coordinatesFragment);

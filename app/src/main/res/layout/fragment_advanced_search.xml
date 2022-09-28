@@ -67,7 +67,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             style="@style/default_size_height_style"
-            android:textAppearance="@style/regular_text_style"/>
+            android:textAppearance="@style/regular_text_style"
+            android:singleLine="true"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -136,31 +137,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp"/>
 
-    <!--<CheckBox
-        style="@style/default_size_height_style"
-        android:checked="true"
-        android:textAppearance="@style/text_check_box_style"
-        android:text="@string/places_only_open_text_check_box"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/divider2"/>-->
-
     <com.google.android.material.button.MaterialButtonToggleGroup
         android:id="@+id/materialButtonToggleGroup"
         style="@style/default_size_height_style"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
+        app:singleSelection="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/divider2">
 
         <Button
             android:id="@+id/buttonOpen"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/outlined_button_container_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
@@ -168,19 +158,11 @@
 
         <Button
             android:id="@+id/buttonClose"
-            style="?attr/materialButtonOutlinedStyle"
+            style="@style/outlined_button_container_style"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:text="@string/text_outlined_button_close" />
-
-        <Button
-            android:id="@+id/buttonBoth"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="@string/text_outlined_button_both" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

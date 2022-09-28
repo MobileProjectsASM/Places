@@ -2,6 +2,7 @@ package com.applications.asm.places.view_model;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.applications.asm.domain.use_cases.GetCategoriesUc;
@@ -30,20 +31,26 @@ public class SearchCategoriesViewModel extends ViewModel {
     }
 
     public LiveData<Resource<List<CategoryVM>>> getCategories(String category, String locale, CoordinatesVM coordinatesVM) {
-        Flowable<Resource<List<CategoryVM>>> flowableCategories = getCategoriesUc.execute(GetCategoriesUc.Params.forGetCategories(category, coordinatesMapper.getCoordinates(coordinatesVM), locale))
+        MediatorLiveData<Resource<List<CategoryVM>>> liveDataCategories = new MediatorLiveData<>();
+        liveDataCategories.setValue(Resource.loading());
+        LiveData<Resource<List<CategoryVM>>> sourceCategories = LiveDataReactiveStreams.fromPublisher(getCategoriesUc.execute(GetCategoriesUc.Params.forGetCategories(category, coordinatesMapper.getCoordinates(coordinatesVM), locale))
                 .flatMap(response -> {
                     Single<Resource<List<CategoryVM>>> categoriesResource;
                     if(response.getError().isEmpty()) {
                         categoriesResource = Observable.fromIterable(response.getData())
-                            .map(categoryMapper::getCategoryMV)
-                            .toList()
-                            .map(Resource::success);
+                                .map(categoryMapper::getCategoryMV)
+                                .toList()
+                                .map(Resource::success);
                     } else
                         categoriesResource = Single.just(response.getError()).map(Resource::warning);
                     return categoriesResource;
                 })
                 .onErrorReturn(throwable -> ErrorUtils.resolveError(throwable, AdvancedSearchViewModel.class))
-                .toFlowable();
-        return LiveDataReactiveStreams.fromPublisher(flowableCategories);
+                .toFlowable());
+        liveDataCategories.addSource(sourceCategories, resource -> {
+            liveDataCategories.setValue(resource);
+            liveDataCategories.removeSource(sourceCategories);
+        });
+        return liveDataCategories;
     }
 }

@@ -1,6 +1,5 @@
 package com.applications.asm.places.view.fragments;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,10 +10,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.CategoryChipLayoutBinding;
 import com.applications.asm.places.databinding.FragmentSearchCategoriesBinding;
 import com.applications.asm.places.databinding.SuggestedCategoriesLayoutBinding;
@@ -24,18 +24,17 @@ import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.view.SearchCategoriesView;
-import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view.adapters.SuggestedCategoryAdapter;
 import com.applications.asm.places.view.events.CategoryClickListener;
+import com.applications.asm.places.view.fragments.base.BaseFragment;
 import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.MainViewModel;
 import com.applications.asm.places.view_model.SearchCategoriesViewModel;
-import com.applications.asm.places.view_model.factories.MainVMFactory;
-import com.applications.asm.places.view_model.factories.SearchCategoriesVMFactory;
 import com.google.android.material.chip.Chip;
 import com.jakewharton.rxbinding4.widget.RxTextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,14 +46,13 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class SearchCategoriesFragment extends Fragment implements SearchCategoriesView, CategoryClickListener {
-    private FragmentSearchCategoriesBinding binding;
+public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategoriesBinding> implements SearchCategoriesView, CategoryClickListener {
     private CompositeDisposable formDisposable;
-    private Dialog loadingCoordinates;
     private MainViewModel mainViewModel;
     private SearchCategoriesViewModel searchCategoriesViewModel;
-    private CoordinatesVM currentCoordinatesVM;
+    private CoordinatesVM workCoordinates;
     private Map<String, CategoryVM> categoriesMap;
+    private Boolean categoriesAreBeingApplied;
 
     @Named("mainVMFactory")
     @Inject
@@ -71,20 +69,7 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        MainViewParent mainViewParent = (MainViewParent) context;
-        mainViewParent.getActivityComponent().inject(this);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentSearchCategoriesBinding.inflate(getLayoutInflater(), container, false);
-        return binding.getRoot();
+        getActivityComponent().inject(this);
     }
 
     @Override
@@ -93,10 +78,10 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
         mainViewModel = new ViewModelProvider(requireActivity(), mainViewModelFactory).get(MainViewModel.class);
         searchCategoriesViewModel = new ViewModelProvider(this, searchCategoriesViewModelFactory).get(SearchCategoriesViewModel.class);
         formDisposable = new CompositeDisposable();
+        categoriesAreBeingApplied = false;
         initViewObservables();
         setListeners();
         categoriesMap = new HashMap<>();
-        mainViewModel.loadCoordinates(CoordinatesVM.StateVM.SAVED).observe(getViewLifecycleOwner(), this::callbackCoordinates);
     }
 
     @Override
@@ -106,34 +91,17 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
     }
 
     @Override
-    public void callbackCoordinates(Resource<CoordinatesVM> resource) {
-        switch(resource.getStatus()) {
-            case LOADING:
-                loadingCoordinates = ViewUtils.loading(requireContext());
-                break;
-            case SUCCESS:
-                ViewUtils.loaded(loadingCoordinates);
-                renderView();
-                currentCoordinatesVM = resource.getData();
-                break;
-            case WARNING:
-                ViewUtils.loaded(loadingCoordinates);
-                ViewUtils.showGeneralWarningDialog(requireContext(), resource.getWarning());
-                break;
-            case ERROR:
-                ViewUtils.loaded(loadingCoordinates);
-                ViewUtils.showGeneralErrorDialog(requireContext(), resource.getErrorMessage());
-                break;
-        }
+    protected FragmentSearchCategoriesBinding bindingInflater(LayoutInflater inflater, ViewGroup container) {
+        return FragmentSearchCategoriesBinding.inflate(inflater, container, false);
     }
 
     @Override
     public void callbackCategories(Resource<List<CategoryVM>> resource) {
-        binding.suggestedCategoriesView.removeAllViews();
+        getViewBinding().suggestedCategoriesView.removeAllViews();
         switch (resource.getStatus()) {
             case LOADING:
                 SuggestedPlacesLoadingLayoutBinding viewLoadingBinding = SuggestedPlacesLoadingLayoutBinding.inflate(getLayoutInflater());
-                binding.suggestedCategoriesView.addView(viewLoadingBinding.getRoot());
+                getViewBinding().suggestedCategoriesView.addView(viewLoadingBinding.getRoot());
                 break;
             case SUCCESS:
                 List<CategoryVM> categories = resource.getData();
@@ -148,7 +116,7 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
                     suggestedCategoriesLayoutBinding.suggestedCategoriesRecyclerView.setAdapter(suggestedCategoryAdapter);
                     suggestedCategoriesView = suggestedCategoriesLayoutBinding.getRoot();
                 }
-                binding.suggestedCategoriesView.addView(suggestedCategoriesView);
+                getViewBinding().suggestedCategoriesView.addView(suggestedCategoriesView);
                 break;
             case WARNING:
                 ViewUtils.showGeneralWarningDialog(requireContext(), resource.getWarning());
@@ -167,45 +135,67 @@ public class SearchCategoriesFragment extends Fragment implements SearchCategori
             chip.setText(categoryVM.getName());
             chip.setId(chipId);
             chip.setCheckable(false);
-            chip.setOnCloseIconClickListener(view -> {
-                binding.categoriesChipGroup.removeView(view);
-                categoriesMap.remove(categoryVM.getId());
-            });
-            binding.categoriesChipGroup.addView(chip, 0);
+            chip.setOnCloseIconClickListener(view -> removeChip(view, categoryVM));
+            getViewBinding().categoriesChipGroup.addView(chip, 0);
             categoriesMap.put(categoryVM.getId(), categoryVM);
-        } else {
-            Toast.makeText(requireContext(), "No se puden repetir elementos", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void initViewObservables() {
-        EditText categoryEditText = binding.searchCategoryTextInputLayout.getEditText();
-        if(categoryEditText != null) {
-            Observable<String> categoryObservable = RxTextView.textChanges(categoryEditText).skip(1).map(CharSequence::toString);
-            Disposable disposable = categoryObservable.subscribe(text -> searchCategoriesViewModel.getCategories(text, "es_MX", currentCoordinatesVM).observe(getViewLifecycleOwner(), this::callbackCategories));
-            formDisposable.add(disposable);
-        }
+        } else Toast.makeText(requireContext(), R.string.categories_cannot_be_repeated, Toast.LENGTH_SHORT).show();
     }
 
     private void renderView() {
-        binding.linearLayout.setVisibility(View.VISIBLE);
-        binding.divider3.setVisibility(View.VISIBLE);
-        binding.searchCategoryTextInputLayout.setVisibility(View.VISIBLE);
-        binding.applyCategoriesButton.setVisibility(View.VISIBLE);
+        getViewBinding().linearLayout.setVisibility(View.VISIBLE);
+        getViewBinding().divider3.setVisibility(View.VISIBLE);
+        getViewBinding().searchCategoryTextInputLayout.setVisibility(View.VISIBLE);
+        getViewBinding().applyCategoriesButton.setVisibility(View.VISIBLE);
+    }
+
+    private void callbackWorkingCoordinates(CoordinatesVM coordinatesVM) {
+        workCoordinates = coordinatesVM;
+        renderView();
+    }
+
+    private void callbackCategoriesSelected(List<CategoryVM> categoriesVM) {
+        if(!categoriesAreBeingApplied) {
+            Collections.reverse(categoriesVM);
+            for(CategoryVM categoryVM: categoriesVM) {
+                int chipId = View.generateViewId();
+                Chip chip = CategoryChipLayoutBinding.inflate(getLayoutInflater()).getRoot();
+                chip.setText(categoryVM.getName());
+                chip.setId(chipId);
+                chip.setCheckable(false);
+                chip.setOnCloseIconClickListener(view -> removeChip(view, categoryVM));
+                getViewBinding().categoriesChipGroup.addView(chip, 0);
+                categoriesMap.put(categoryVM.getId(), categoryVM);
+            }
+        }
+    }
+
+    private void removeChip(View view, CategoryVM categoryVM) {
+        getViewBinding().categoriesChipGroup.removeView(view);
+        categoriesMap.remove(categoryVM.getId());
+    }
+
+    private void initViewObservables() {
+        EditText categoryEditText = getViewBinding().searchCategoryTextInputLayout.getEditText();
+        if(categoryEditText != null) {
+            Observable<String> categoryObservable = RxTextView.textChanges(categoryEditText).skip(1).map(CharSequence::toString);
+            Disposable disposable = categoryObservable.subscribe(text -> {
+                if(!text.isEmpty()) searchCategoriesViewModel.getCategories(text, "es_MX", workCoordinates).observe(getViewLifecycleOwner(), this::callbackCategories);
+                else callbackCategories(Resource.success(new ArrayList<>()));
+            });
+            formDisposable.add(disposable);
+        }
+        mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::callbackWorkingCoordinates);
+        mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::callbackCategoriesSelected);
     }
 
     private void setListeners() {
-        binding.applyCategoriesButton.setOnClickListener(view -> {
+        getViewBinding().applyCategoriesButton.setOnClickListener(view -> {
             List<CategoryVM> categoriesSelected = new ArrayList<>();
-            StringBuilder categoriesBuilder = new StringBuilder();
-            int countCategories = 0;
-            for(CategoryVM categoryVM : categoriesMap.values()) {
-                if(countCategories < 1) categoriesBuilder.append(categoryVM.getName());
-                else categoriesBuilder.append(", ").append(categoryVM.getName());
-                categoriesSelected.add(categoryVM);
-                countCategories++;
-            }
+            boolean isSuccessful = categoriesSelected.addAll(categoriesMap.values());
+            if(isSuccessful) Collections.reverse(categoriesSelected);
+            categoriesAreBeingApplied = true;
             mainViewModel.getCategoriesSelected().setValue(categoriesSelected);
+            NavHostFragment.findNavController(this).popBackStack();
         });
     }
 }
