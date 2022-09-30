@@ -57,13 +57,13 @@ public class GetPlacesUc extends SingleUseCase<Response<List<Place>>, GetPlacesU
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
             if(params.placeToFind == null || params.coordinates == null || params.radius == null || params.categories == null || params.sortCriterion == null || params.pricesCriteria == null || params.isOpenNow == null || params.page == null)
-                throw new ParameterException("You entered a null value");
+                throw new ParameterException("Error: You entered a null value");
             if(!validators.validateLatitudeRange(params.coordinates.getLatitude()) || !validators.validateLongitudeRange(params.coordinates.getLongitude()))
-                throw new ParameterException("Coordinates out of range");
+                throw new ParameterException("Error: Coordinates out of range");
             if(!validators.validateRadiusRange(params.radius))
-                throw new ParameterException("Search radius out of range");
-            if(!validators.validatePage(params.page))
-                throw new ParameterException("Page out of range");
+                throw new ParameterException("Error: Search radius out of range");
+            if(!validators.isValidPage(params.page))
+                throw new ParameterException("Error: Page out of range");
             return params;
         });
     }
