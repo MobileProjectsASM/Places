@@ -55,7 +55,7 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
                 .price(price)
                 .isOpenNow(isOpenNow)
                 .offSet(initIndex)
-                .isOpenNow(isOpenNow)
+                .limit(limit)
         .build();
         ApolloCall<SearchPlacesQuery.Data> searchPlacesCall = apolloClient.query(searchPlacesQuery);
         Observable<Response<SearchPlacesQuery.Data>> obsSearchPlaces = Rx3Apollo.from(searchPlacesCall);
