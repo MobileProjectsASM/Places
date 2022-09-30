@@ -27,7 +27,7 @@ public class ValidatorsImpl implements Validators {
     }
 
     @Override
-    public Boolean validatePage(Integer page) {
-        return page < 0;
+    public Boolean isValidPage(Integer page) {
+        return page > 0;
     }
 }
