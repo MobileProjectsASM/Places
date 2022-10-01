@@ -23,7 +23,7 @@ public class ValidatorsImpl implements Validators {
 
     @Override
     public Boolean validateRadiusRange(Integer radius) {
-        return radius >= 0 && radius < 10000;
+        return radius >= 0 && radius < 40000;
     }
 
     @Override
