@@ -23,17 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentSearchPlacesBinding;
-import com.applications.asm.places.databinding.SuggestedPlacesEmptyLayoutBinding;
+import com.applications.asm.places.databinding.LoadingLayoutBinding;
+import com.applications.asm.places.databinding.MessageLayoutBinding;
 import com.applications.asm.places.databinding.SuggestedPlacesLayoutBinding;
-import com.applications.asm.places.databinding.SuggestedPlacesLoadingLayoutBinding;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.SuggestedPlaceVM;
 import com.applications.asm.places.view.SearchPlacesView;
-import com.applications.asm.places.view.activities.interfaces.MainViewParent;
 import com.applications.asm.places.view.adapters.SuggestedPlaceAdapter;
 import com.applications.asm.places.view.events.SuggestedPlaceClickListener;
-import com.applications.asm.places.view.fragments.base.BaseFragment;
 import com.applications.asm.places.view.fragments.base.CommonMenuSearchFragment;
 import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.MainViewModel;
@@ -143,14 +141,15 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
         getViewBinding().suggestedPlacesView.removeAllViews();
         switch(resource.getStatus()) {
             case LOADING:
-                SuggestedPlacesLoadingLayoutBinding viewLoadingBinding = SuggestedPlacesLoadingLayoutBinding.inflate(getLayoutInflater());
+                LoadingLayoutBinding viewLoadingBinding = LoadingLayoutBinding.inflate(getLayoutInflater());
                 getViewBinding().suggestedPlacesView.addView(viewLoadingBinding.getRoot());
                 break;
             case SUCCESS:
                 List<SuggestedPlaceVM> suggestedPlacesVM = resource.getData();
                 View suggestedPlacesView;
                 if(suggestedPlacesVM.isEmpty()) {
-                    SuggestedPlacesEmptyLayoutBinding viewEmptyBinding = SuggestedPlacesEmptyLayoutBinding.inflate(getLayoutInflater());
+                    MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                    viewEmptyBinding.noSuggestionsTextView.setText(R.string.there_are_no_suggestions_label);
                     suggestedPlacesView = viewEmptyBinding.getRoot();
                 } else {
                     SuggestedPlacesLayoutBinding suggestedPlacesLayoutBinding = SuggestedPlacesLayoutBinding.inflate(getLayoutInflater());

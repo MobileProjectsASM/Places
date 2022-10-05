@@ -6,37 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".view.fragments.PlacesFragment">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/kind_visibility"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/total_results_text_view"
+        style="@style/default_size_fit_style"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:textAppearance="@style/text_info_place_style"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        tools:text="Resultados" />
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_view_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_baseline_view_list_24"
-            android:text="@string/view_list" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_view_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_baseline_map_24"
-            android:text="@string/view_map" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager_views"
-        android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/results_places_frame_layout"
+        android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tab_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/total_results_text_view"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/change_view_floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/description_change_view_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_map_24"
+        app:tint="@color/white"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

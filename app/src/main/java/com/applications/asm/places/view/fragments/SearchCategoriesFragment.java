@@ -17,9 +17,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.CategoryChipLayoutBinding;
 import com.applications.asm.places.databinding.FragmentSearchCategoriesBinding;
+import com.applications.asm.places.databinding.LoadingLayoutBinding;
+import com.applications.asm.places.databinding.MessageLayoutBinding;
 import com.applications.asm.places.databinding.SuggestedCategoriesLayoutBinding;
-import com.applications.asm.places.databinding.SuggestedPlacesEmptyLayoutBinding;
-import com.applications.asm.places.databinding.SuggestedPlacesLoadingLayoutBinding;
 import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.Resource;
@@ -28,6 +28,7 @@ import com.applications.asm.places.view.adapters.SuggestedCategoryAdapter;
 import com.applications.asm.places.view.events.CategoryClickListener;
 import com.applications.asm.places.view.fragments.base.BaseFragment;
 import com.applications.asm.places.view.utils.ViewUtils;
+import com.applications.asm.places.view_model.AdvancedSearchViewModel;
 import com.applications.asm.places.view_model.MainViewModel;
 import com.applications.asm.places.view_model.SearchCategoriesViewModel;
 import com.google.android.material.chip.Chip;
@@ -48,8 +49,9 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategoriesBinding> implements SearchCategoriesView, CategoryClickListener {
     private CompositeDisposable formDisposable;
-    private MainViewModel mainViewModel;
+    private AdvancedSearchViewModel advancedSearchViewModel;
     private SearchCategoriesViewModel searchCategoriesViewModel;
+    private MainViewModel mainViewModel;
     private CoordinatesVM workCoordinates;
     private Map<String, CategoryVM> categoriesMap;
     private Boolean categoriesAreBeingApplied;
@@ -100,14 +102,15 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
         getViewBinding().suggestedCategoriesView.removeAllViews();
         switch (resource.getStatus()) {
             case LOADING:
-                SuggestedPlacesLoadingLayoutBinding viewLoadingBinding = SuggestedPlacesLoadingLayoutBinding.inflate(getLayoutInflater());
+                LoadingLayoutBinding viewLoadingBinding = LoadingLayoutBinding.inflate(getLayoutInflater());
                 getViewBinding().suggestedCategoriesView.addView(viewLoadingBinding.getRoot());
                 break;
             case SUCCESS:
                 List<CategoryVM> categories = resource.getData();
                 View suggestedCategoriesView;
                 if(categories.isEmpty()) {
-                    SuggestedPlacesEmptyLayoutBinding viewEmptyBinding = SuggestedPlacesEmptyLayoutBinding.inflate(getLayoutInflater());
+                    MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                    viewEmptyBinding.noSuggestionsTextView.setText(R.string.there_are_no_categories_label  );
                     suggestedCategoriesView = viewEmptyBinding.getRoot();
                 } else {
                     SuggestedCategoryAdapter suggestedCategoryAdapter = new SuggestedCategoryAdapter(categories, this);

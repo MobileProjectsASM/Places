@@ -9,7 +9,9 @@ import androidx.lifecycle.ViewModel;
 import com.applications.asm.domain.entities.Criterion;
 import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.use_cases.GetCriteriaUc;
+import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CriterionVM;
+import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.ResourceStatus;
 import com.applications.asm.places.model.mappers.CriterionMapper;
@@ -26,6 +28,7 @@ public class AdvancedSearchViewModel extends ViewModel {
     private final CriterionMapper criterionMapper;
     public static final String SORT_CRITERIA_LIST = "sort_criteria_list";
     public static final String PRICES_LIST = "prices_criteria_list";
+
     private MutableLiveData<Map<String, Object>> sortAndPricesVM;
 
     public AdvancedSearchViewModel(GetCriteriaUc getCriteriaUc, CriterionMapper criterionMapper) {

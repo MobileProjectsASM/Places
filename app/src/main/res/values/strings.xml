@@ -60,7 +60,7 @@
     <string name="natural_invalid_error_message">Solo numeros natural</string>
     <string name="decimal_invalid_error_message">Decimal invalido</string>
     <string name="text_empty_error_message">Campo vacio</string>
-    <string name="radius_out_of_range_error_message">Radio fuera de rango [0, 400]</string>
+    <string name="radius_out_of_range_error_message">Radio fuera de rango [0, 40000]</string>
 
 
     <string name="fragment_search_label">fragment_search</string>
@@ -108,8 +108,13 @@
     <string name="get_current_location_text_label">Localizacion actual</string>
     <string name="suggested_place_label">Sugerencias de busqueda</string>
     <string name="there_are_no_suggestions_label">No se encontraron sugerencias</string>
+    <string name="there_are_no_categories_label">No se encontraron categorias</string>
+    <string name="there_are_no_places_label">No se encontraron lugares</string>
 
     <string name="advanced_search_option">Busqueda Avanzada</string>
     <string name="change_coordinates_option">Cambiar coordenas</string>
     <string name="categories_cannot_be_repeated">No se pueden repetir categorias</string>
+    <string name="description_change_view_button">Boton para cambiar el modo de vista</string>
+    <string name="number_results_text">No. Resultados:</string>
+    <string name="empty_places">No hay mas resultados</string>
 </resources>

@@ -9,20 +9,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.applications.asm.places.databinding.FragmentMapPlacesBinding;
 import com.applications.asm.places.databinding.FragmentPlacesBinding;
-import com.applications.asm.places.databinding.FragmentPlacesMapBinding;
 
-public class PlacesMapFragment extends Fragment {
+public class MapPlacesFragment extends Fragment {
     private FragmentPlacesBinding binding;
 
-    public PlacesMapFragment() {
+    public MapPlacesFragment() {
         // Required empty public constructor
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentPlacesMapBinding binding = FragmentPlacesMapBinding.inflate(inflater, container, false);
+        FragmentMapPlacesBinding binding = FragmentMapPlacesBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 

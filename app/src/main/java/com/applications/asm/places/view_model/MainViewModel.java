@@ -89,5 +89,4 @@ public class MainViewModel extends ViewModel {
         if(parametersAdvancedSearchVM == null) parametersAdvancedSearchVM = new MutableLiveData<>();
         return parametersAdvancedSearchVM;
     }
-
 }
