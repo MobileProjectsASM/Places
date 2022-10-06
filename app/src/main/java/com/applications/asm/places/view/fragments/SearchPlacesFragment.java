@@ -149,7 +149,7 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
                 View suggestedPlacesView;
                 if(suggestedPlacesVM.isEmpty()) {
                     MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
-                    viewEmptyBinding.noSuggestionsTextView.setText(R.string.there_are_no_suggestions_label);
+                    viewEmptyBinding.messageTextView.setText(R.string.there_are_no_suggestions_label);
                     suggestedPlacesView = viewEmptyBinding.getRoot();
                 } else {
                     SuggestedPlacesLayoutBinding suggestedPlacesLayoutBinding = SuggestedPlacesLayoutBinding.inflate(getLayoutInflater());
@@ -161,10 +161,14 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
                 getViewBinding().suggestedPlacesView.addView(suggestedPlacesView);
                 break;
             case WARNING:
-                ViewUtils.showGeneralWarningDialog(requireContext(), resource.getWarning());
+                MessageLayoutBinding  warningBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                warningBinding.messageTextView.setText(resource.getWarning());
+                getViewBinding().suggestedPlacesView.addView(warningBinding.getRoot());
                 break;
             case ERROR:
-                ViewUtils.showGeneralErrorDialog(requireContext(), resource.getErrorMessage());
+                MessageLayoutBinding  errorBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                errorBinding.messageTextView.setText(resource.getErrorMessage());
+                getViewBinding().suggestedPlacesView.addView(errorBinding.getRoot());
                 break;
         }
     }

@@ -19,8 +19,8 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void render(PlaceVM placeM, PlaceClickListener placeClickListener) {
-        if(placeM.getImageUrl().compareTo("") != 0) Picasso.get().load(placeM.getImageUrl()).fit().centerCrop().into(binding.placeImageView);
-        else Picasso.get().load(R.drawable.place).fit().centerCrop().into(binding.placeImageView);
+        if(placeM.getImageUrl().compareTo("") != 0) Picasso.get().load(placeM.getImageUrl()).placeholder(R.drawable.place_image).error(R.drawable.no_image).fit().centerCrop().into(binding.placeImageView);
+        else Picasso.get().load(R.drawable.no_image).fit().centerCrop().into(binding.placeImageView);
         binding.namePlaceTextView.setText(placeM.getName());
         binding.addressPlaceTextView.setText(placeM.getAddress());
         binding.categoriesPlaceTextView.setText(placeM.getCategories());

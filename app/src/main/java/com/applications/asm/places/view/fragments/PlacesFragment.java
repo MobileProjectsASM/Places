@@ -133,7 +133,7 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
                 View placesView;
                 if(placesVM.isEmpty()) {
                     MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
-                    viewEmptyBinding.noSuggestionsTextView.setText(R.string.empty_places);
+                    viewEmptyBinding.messageTextView.setText(R.string.empty_places);
                     String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
                     getViewBinding().totalResultsTextView.setText(message);
                     placesView = viewEmptyBinding.getRoot();
@@ -150,10 +150,14 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
                 getViewBinding().resultsPlacesFrameLayout.addView(placesView);
                 break;
             case WARNING:
-                ViewUtils.showGeneralWarningDialog(requireContext(), resource.getWarning());
+                MessageLayoutBinding  warningBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                warningBinding.messageTextView.setText(resource.getWarning());
+                getViewBinding().resultsPlacesFrameLayout.addView(warningBinding.getRoot());
                 break;
             case ERROR:
-                ViewUtils.showGeneralWarningDialog(requireContext(), resource.getErrorMessage());
+                MessageLayoutBinding  errorBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                errorBinding.messageTextView.setText(resource.getErrorMessage());
+                getViewBinding().resultsPlacesFrameLayout.addView(errorBinding.getRoot());
                 break;
         }
     }

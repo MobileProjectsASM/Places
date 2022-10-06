@@ -110,7 +110,7 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
                 View suggestedCategoriesView;
                 if(categories.isEmpty()) {
                     MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
-                    viewEmptyBinding.noSuggestionsTextView.setText(R.string.there_are_no_categories_label  );
+                    viewEmptyBinding.messageTextView.setText(R.string.there_are_no_categories_label  );
                     suggestedCategoriesView = viewEmptyBinding.getRoot();
                 } else {
                     SuggestedCategoryAdapter suggestedCategoryAdapter = new SuggestedCategoryAdapter(categories, this);
@@ -122,10 +122,14 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
                 getViewBinding().suggestedCategoriesView.addView(suggestedCategoriesView);
                 break;
             case WARNING:
-                ViewUtils.showGeneralWarningDialog(requireContext(), resource.getWarning());
+                MessageLayoutBinding  warningBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                warningBinding.messageTextView.setText(resource.getWarning());
+                getViewBinding().suggestedCategoriesView.addView(warningBinding.getRoot());
                 break;
             case ERROR:
-                ViewUtils.showGeneralErrorDialog(requireContext(), resource.getErrorMessage());
+                MessageLayoutBinding  errorBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                errorBinding.messageTextView.setText(resource.getErrorMessage());
+                getViewBinding().suggestedCategoriesView.addView(errorBinding.getRoot());
                 break;
         }
     }
