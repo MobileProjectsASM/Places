@@ -1,7 +1,6 @@
 package com.applications.asm.places.view.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -72,5 +71,9 @@ public class PlaceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void removeLastPlace() {
         places.remove(places.size() - 1);
         notifyItemRemoved(places.size());
+    }
+
+    public List<PlaceVM> getPlacesList() {
+        return places;
     }
 }

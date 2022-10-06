@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -72,6 +73,7 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
         placesViewModel = new ViewModelProvider(this, placesViewModelFactory).get(PlacesViewModel.class);
         initViewObservables();
         initAdapter();
+        setListeners();
     }
 
     @Override
@@ -90,6 +92,13 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
 
     private void initAdapter() {
         placeAdapter = new PlaceAdapter(new ArrayList<>(), this);
+    }
+
+    private void setListeners() {
+        getViewBinding().changeViewFloatingActionButton.setOnClickListener(view -> {
+            mainViewModel.getPlacesVM().setValue(placeAdapter.getPlacesList());
+            NavHostFragment.findNavController(this).navigate(R.id.action_placesFragment_to_mapPlacesFragment);
+        });
     }
 
     private void initScrollListener(RecyclerView placesRecyclerView) {
