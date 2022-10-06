@@ -29,7 +29,6 @@ import com.applications.asm.places.databinding.SuggestedPlacesLayoutBinding;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.SuggestedPlaceVM;
-import com.applications.asm.places.view.SearchPlacesView;
 import com.applications.asm.places.view.adapters.SuggestedPlaceAdapter;
 import com.applications.asm.places.view.events.SuggestedPlaceClickListener;
 import com.applications.asm.places.view.fragments.base.CommonMenuSearchFragment;
@@ -48,7 +47,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearchPlacesBinding> implements SearchPlacesView, SuggestedPlaceClickListener {
+public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearchPlacesBinding> implements SuggestedPlaceClickListener {
     private CompositeDisposable formDisposable;
     private Dialog loadingGetCoordinates;
     private MainViewModel mainViewModel;
@@ -115,7 +114,6 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
         return FragmentSearchPlacesBinding.inflate(inflater, container, false);
     }
 
-    @Override
     public void callbackCoordinates(Resource<CoordinatesVM> resource) {
         switch(resource.getStatus()) {
             case LOADING:
@@ -136,7 +134,6 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
         }
     }
 
-    @Override
     public void callbackSuggestedPlaces(Resource<List<SuggestedPlaceVM>> resource) {
         getViewBinding().suggestedPlacesView.removeAllViews();
         switch(resource.getStatus()) {

@@ -54,6 +54,9 @@
         android:label="fragment_places"
         tools:layout="@layout/fragment_places" >
         <action
+            android:id="@+id/action_placesFragment_to_mapPlacesFragment"
+            app:destination="@id/mapPlacesFragment" />
+        <action
             android:id="@+id/action_placesFragment_to_placeDetailsFragment"
             app:destination="@id/placeDetailsFragment" />
     </fragment>
@@ -62,4 +65,13 @@
         android:name="com.applications.asm.places.view.fragments.SearchCategoriesFragment"
         android:label="fragment_categories"
         tools:layout="@layout/fragment_search_categories" />
+    <fragment
+        android:id="@+id/mapPlacesFragment"
+        android:name="com.applications.asm.places.view.fragments.MapPlacesFragment"
+        android:label="fragment_map_places"
+        tools:layout="@layout/fragment_map_places" >
+        <action
+            android:id="@+id/action_mapPlacesFragment_to_placeDetailsFragment"
+            app:destination="@id/placeDetailsFragment" />
+    </fragment>
 </navigation>

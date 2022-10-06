@@ -23,11 +23,9 @@ import com.applications.asm.places.databinding.SuggestedCategoriesLayoutBinding;
 import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.Resource;
-import com.applications.asm.places.view.SearchCategoriesView;
 import com.applications.asm.places.view.adapters.SuggestedCategoryAdapter;
 import com.applications.asm.places.view.events.CategoryClickListener;
 import com.applications.asm.places.view.fragments.base.BaseFragment;
-import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.AdvancedSearchViewModel;
 import com.applications.asm.places.view_model.MainViewModel;
 import com.applications.asm.places.view_model.SearchCategoriesViewModel;
@@ -47,7 +45,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategoriesBinding> implements SearchCategoriesView, CategoryClickListener {
+public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategoriesBinding> implements CategoryClickListener {
     private CompositeDisposable formDisposable;
     private AdvancedSearchViewModel advancedSearchViewModel;
     private SearchCategoriesViewModel searchCategoriesViewModel;
@@ -97,7 +95,6 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
         return FragmentSearchCategoriesBinding.inflate(inflater, container, false);
     }
 
-    @Override
     public void callbackCategories(Resource<List<CategoryVM>> resource) {
         getViewBinding().suggestedCategoriesView.removeAllViews();
         switch (resource.getStatus()) {

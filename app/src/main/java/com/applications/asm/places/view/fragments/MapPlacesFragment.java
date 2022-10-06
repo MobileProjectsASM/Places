@@ -13,7 +13,7 @@ import com.applications.asm.places.databinding.FragmentMapPlacesBinding;
 import com.applications.asm.places.databinding.FragmentPlacesBinding;
 
 public class MapPlacesFragment extends Fragment {
-    private FragmentPlacesBinding binding;
+    private FragmentMapPlacesBinding binding;
 
     public MapPlacesFragment() {
         // Required empty public constructor

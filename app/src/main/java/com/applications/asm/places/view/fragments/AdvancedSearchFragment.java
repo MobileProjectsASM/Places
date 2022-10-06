@@ -23,7 +23,6 @@ import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.CriterionVM;
 import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.Resource;
-import com.applications.asm.places.view.AdvancedSearchView;
 import com.applications.asm.places.view.adapters.SortCriteriaAdapter;
 import com.applications.asm.places.view.fragments.base.CommonMenuSearchFragment;
 import com.applications.asm.places.view.utils.FormValidators;
@@ -45,7 +44,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdvancedSearchBinding> implements AdvancedSearchView {
+public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdvancedSearchBinding> {
     private CompositeDisposable formDisposable;
     private Dialog loadingGetSortAndPrices;
     private MainViewModel mainViewModel;
@@ -107,7 +106,6 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         return FragmentAdvancedSearchBinding.inflate(inflater, container, false);
     }
 
-    @Override
     public void callbackLoadData(Resource<Map<String, Object>> resource) {
         switch (resource.getStatus()) {
             case LOADING:

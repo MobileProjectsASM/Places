@@ -26,7 +26,6 @@ import com.applications.asm.places.databinding.AlertDialogLayoutBinding;
 import com.applications.asm.places.databinding.FragmentCoordinatesBinding;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.Resource;
-import com.applications.asm.places.view.CoordinatesView;
 import com.applications.asm.places.view.fragments.base.BaseFragment;
 import com.applications.asm.places.view.utils.FormValidators;
 import com.applications.asm.places.view.utils.ViewUtils;
@@ -43,7 +42,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
-public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding> implements CoordinatesView {
+public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding> {
     public static String COORDINATES_ESTABLISHED = "COORDINATES_ESTABLISHED";
 
     private CompositeDisposable formDisposable;
@@ -99,8 +98,7 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
         return FragmentCoordinatesBinding.inflate(inflater, container, false);
     }
 
-    @Override
-    public void callbackCoordinates(Resource<CoordinatesVM> resource) {
+    private void callbackCoordinates(Resource<CoordinatesVM> resource) {
         switch(resource.getStatus()) {
             case LOADING:
                 loadingGetCoordinates = ViewUtils.loading(requireContext());
@@ -129,8 +127,7 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
         }
     }
 
-    @Override
-    public void callbackCoordinatesSaved(Resource<Boolean> resource) {
+    private void callbackCoordinatesSaved(Resource<Boolean> resource) {
         switch(resource.getStatus()) {
             case LOADING:
                 loadingCoordinatesSave = ViewUtils.loading(requireContext());
