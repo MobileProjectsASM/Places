@@ -12,161 +12,164 @@
         tools:context=".view.fragments.PlaceDetailsFragment">
 
         <ImageView
-            android:id="@+id/placeDetailsImageView"
+            android:id="@+id/place_details_image_view"
             android:layout_width="0dp"
             android:layout_height="300dp"
+            android:contentDescription="@string/place_content_description_image_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/place" />
+            tools:src="@drawable/place_image" />
 
         <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/name_place_title_text"
             style="@style/default_size_height_style"
-            android:id="@+id/namePlaceTitle"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
             android:textAppearance="@style/text_title_style"
             android:textColor="?attr/colorOnPrimary"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="5dp"
-            app:layout_constraintBottom_toBottomOf="@+id/placeDetailsImageView"
+            app:layout_constraintBottom_toBottomOf="@+id/place_details_image_view"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="Este es el ejemplo de un titulo"/>
+            tools:text="Este es el ejemplo de un titulo" />
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/default_size_fit_style"
-            android:id="@+id/ratingPlaceText"
+            android:id="@+id/rating_place_text"
             android:textAppearance="@style/regular_text_style"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/placeDetailsImageView"
+            app:layout_constraintTop_toBottomOf="@+id/place_details_image_view"
             tools:text="5.4" />
 
         <RatingBar
-            android:id="@+id/ratingBar"
+            android:id="@+id/rating_bar"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="5dp"
             style="?android:attr/ratingBarStyleSmall"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingPlaceText"
-            app:layout_constraintStart_toEndOf="@+id/ratingPlaceText"
-            app:layout_constraintTop_toTopOf="@+id/ratingPlaceText"
+            app:layout_constraintBottom_toBottomOf="@+id/rating_place_text"
+            app:layout_constraintStart_toEndOf="@+id/rating_place_text"
+            app:layout_constraintTop_toTopOf="@+id/rating_place_text"
             android:isIndicator="true"/>
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/default_size_fit_style"
-            android:id="@+id/countReviewsPlaceText"
+            android:id="@+id/count_reviews_place_text"
             android:textAppearance="@style/regular_text_style"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-            app:layout_constraintStart_toEndOf="@+id/ratingBar"
-            app:layout_constraintTop_toTopOf="@+id/ratingBar"
+            app:layout_constraintBottom_toBottomOf="@+id/rating_bar"
+            app:layout_constraintStart_toEndOf="@+id/rating_bar"
+            app:layout_constraintTop_toTopOf="@+id/rating_bar"
             tools:text="300 opiniones" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/pricePlaceText"
+            android:id="@+id/price_place_text"
             style="@style/default_size_fit_style"
             android:layout_height="0dp"
             android:layout_marginEnd="10dp"
             android:textAppearance="@style/regular_text_style"
-            app:layout_constraintBottom_toBottomOf="@+id/phoneNumberPlaceText"
+            app:layout_constraintBottom_toBottomOf="@+id/phone_number_place_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/phoneNumberPlaceText"
+            app:layout_constraintTop_toTopOf="@+id/phone_number_place_text"
             tools:text="Muy Caro" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/phoneNumberPlaceText"
+            android:id="@+id/phone_number_place_text"
             style="@style/default_size_fit_style"
             android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:textAppearance="@style/regular_text_style"
-            app:layout_constraintStart_toStartOf="@+id/ratingPlaceText"
-            app:layout_constraintTop_toBottomOf="@+id/ratingPlaceText"
+            app:layout_constraintStart_toStartOf="@+id/rating_place_text"
+            app:layout_constraintTop_toBottomOf="@+id/rating_place_text"
             tools:text="2223881589" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/address_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/regular_text_style"
+            app:layout_constraintStart_toStartOf="@+id/phone_number_place_text"
+            app:layout_constraintTop_toBottomOf="@+id/phone_number_place_text"
+            tools:text="Direccion" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/categories_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:textAppearance="@style/regular_text_style"
+            app:layout_constraintStart_toStartOf="@+id/address_text"
+            app:layout_constraintTop_toBottomOf="@+id/address_text"
+            tools:text="Categorias"/>
+
         <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/materialDivider"
+            android:id="@+id/material_divider"
             style="@style/default_middle_divider"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/phoneNumberPlaceText" />
+            app:layout_constraintTop_toBottomOf="@+id/categories_text" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/scheduleSubtitleText"
+            android:id="@+id/schedule_subtitle_text"
             style="@style/default_size_fit_style"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:textAppearance="@style/text_subtitle_style"
             android:textColor="@color/primary_color"
             android:text="@string/text_helper_schedule"
-            app:layout_constraintStart_toStartOf="@+id/phoneNumberPlaceText"
-            app:layout_constraintTop_toBottomOf="@+id/materialDivider"/>
+            app:layout_constraintStart_toStartOf="@+id/phone_number_place_text"
+            app:layout_constraintTop_toBottomOf="@+id/material_divider"/>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/isOpenText"
+            android:id="@+id/is_open_text"
             style="@style/default_size_fit_style"
             android:layout_height="0dp"
             android:textAppearance="@style/regular_text_style"
             android:layout_marginStart="10dp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/scheduleSubtitleText"
-            app:layout_constraintStart_toEndOf="@+id/scheduleSubtitleText"
+            app:layout_constraintBaseline_toBaselineOf="@+id/schedule_subtitle_text"
+            app:layout_constraintStart_toEndOf="@+id/schedule_subtitle_text"
             tools:text="Abierto" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/scheduleText"
+            android:id="@+id/schedule_text"
             style="@style/default_size_fit_style"
             android:layout_height="0dp"
             android:textAlignment="textStart"
             android:layout_marginTop="10dp"
             android:textAppearance="@style/regular_text_style"
-            app:layout_constraintStart_toStartOf="@+id/scheduleSubtitleText"
-            app:layout_constraintTop_toBottomOf="@+id/scheduleSubtitleText"
+            app:layout_constraintStart_toStartOf="@+id/schedule_subtitle_text"
+            app:layout_constraintTop_toBottomOf="@+id/schedule_subtitle_text"
             tools:text="Lunes: 10:00 - 11:00\nMartes: 08:00 - 12:00" />
 
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/materialDivider2"
-            style="@style/default_middle_divider"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/scheduleText" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/reviewsTitleText"
-            style="@style/default_size_fit_style"
-            android:layout_height="0dp"
-            android:layout_marginTop="20dp"
-            android:textAppearance="@style/text_subtitle_style"
-            android:textColor="@color/primary_color"
-            android:text="@string/text_subtitle_map"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/scheduleText"
-            app:layout_constraintTop_toBottomOf="@+id/materialDivider2"/>
-
-        <fragment
-            android:id="@+id/fragmentMap"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="400dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/reviewsTitleText"/>
+        <Button
+            android:id="@+id/show_map_button"
+            style="@style/icon_button_container_style"
+            android:layout_width="0dp"
+            android:layout_marginTop="40dp"
+            android:text="@string/text_contained_button_see_map"
+            app:icon="@drawable/ic_baseline_map_24"
+            app:layout_constraintEnd_toEndOf="@+id/show_reviews_button"
+            app:layout_constraintStart_toStartOf="@+id/show_reviews_button"
+            app:layout_constraintTop_toBottomOf="@id/schedule_text" />
 
         <Button
-            android:id="@+id/showReviewsButton"
+            android:id="@+id/show_reviews_button"
             style="@style/contained_button_container_style"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:layout_marginBottom="20dp"
             android:text="@string/text_contained_button_see_reviews"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fragmentMap" />
+            app:layout_constraintTop_toBottomOf="@id/show_map_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

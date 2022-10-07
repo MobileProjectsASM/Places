@@ -52,6 +52,7 @@
     <string name="apply_filter_text_label">Aplicar filtro</string>
     <string name="text_contained_button_set_coordinates">Establecer coordenadas</string>
     <string name="text_contained_button_see_reviews">Ver reseñas</string>
+    <string name="text_contained_button_see_map">Ver mapa</string>
     <string name="text_outlined_button_open">Abierto</string>
     <string name="text_outlined_button_close">Cerrado</string>
     <string name="text_outlined_button_both">Ambos</string>
@@ -117,4 +118,5 @@
     <string name="description_change_view_button">Boton para cambiar el modo de vista</string>
     <string name="number_results_text">No. Resultados:</string>
     <string name="empty_places">No hay mas resultados</string>
+    <string name="place_content_description_image_view">Imagen del lugar</string>
 </resources>
