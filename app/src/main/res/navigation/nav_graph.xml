@@ -25,6 +25,9 @@
         <action
             android:id="@+id/action_placeDetailsFragment_to_reviewsFragment"
             app:destination="@id/reviewsFragment" />
+        <action
+            android:id="@+id/action_placeDetailsFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/reviewsFragment"
@@ -35,7 +38,11 @@
         android:id="@+id/coordinatesFragment"
         android:name="com.applications.asm.places.view.fragments.CoordinatesFragment"
         android:label="fragment_location"
-        tools:layout="@layout/fragment_coordinates" />
+        tools:layout="@layout/fragment_coordinates" >
+        <action
+            android:id="@+id/action_coordinatesFragment_to_searchLocationFragment"
+            app:destination="@id/searchLocationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/searchPlacesFragment"
         android:name="com.applications.asm.places.view.fragments.SearchPlacesFragment"
@@ -74,4 +81,14 @@
             android:id="@+id/action_mapPlacesFragment_to_placeDetailsFragment"
             app:destination="@id/placeDetailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.applications.asm.places.view.fragments.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/searchLocationFragment"
+        android:name="com.applications.asm.places.view.fragments.SearchLocationFragment"
+        android:label="fragment_search_location"
+        tools:layout="@layout/fragment_search_location" />
 </navigation>
