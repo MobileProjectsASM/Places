@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.applications.asm.places.di.scopes.ActivityScope;
 import com.applications.asm.places.view_model.factories.AdvancedSearchVMFactory;
 import com.applications.asm.places.view_model.factories.CoordinatesVMFactory;
+import com.applications.asm.places.view_model.factories.PlaceDetailsVMFactory;
 import com.applications.asm.places.view_model.factories.PlacesVMFactory;
 import com.applications.asm.places.view_model.factories.MainVMFactory;
 import com.applications.asm.places.view_model.factories.SearchCategoriesVMFactory;
@@ -17,6 +18,11 @@ import dagger.Module;
 
 @Module
 public abstract class ViewModelsModule {
+
+    @ActivityScope
+    @Named("placeDetailsVMFactory")
+    @Binds
+    abstract ViewModelProvider.Factory providePlaceDetailsVMFactory(PlaceDetailsVMFactory placeDetailsVMFactory);
 
     @ActivityScope
     @Named("placesVMFactory")

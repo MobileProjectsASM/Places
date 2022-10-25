@@ -56,7 +56,7 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/location_button"
-        style="@style/icon_button"
+        style="@style/icon_button_container_style"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"

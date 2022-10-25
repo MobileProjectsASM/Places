@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_placeDetailsFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <argument
+            android:name="place_id"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/reviewsFragment"
@@ -51,9 +54,6 @@
         <action
             android:id="@+id/action_searchPlacesFragment_to_advancedSearchFragment"
             app:destination="@id/advancedSearchFragment" />
-        <action
-            android:id="@+id/action_searchPlacesFragment_to_placeDetailsFragment"
-            app:destination="@id/placeDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/placesFragment"
@@ -63,9 +63,6 @@
         <action
             android:id="@+id/action_placesFragment_to_mapPlacesFragment"
             app:destination="@id/mapPlacesFragment" />
-        <action
-            android:id="@+id/action_placesFragment_to_placeDetailsFragment"
-            app:destination="@id/placeDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchCategoriesFragment"
@@ -76,11 +73,7 @@
         android:id="@+id/mapPlacesFragment"
         android:name="com.applications.asm.places.view.fragments.MapPlacesFragment"
         android:label="fragment_map_places"
-        tools:layout="@layout/fragment_map_places" >
-        <action
-            android:id="@+id/action_mapPlacesFragment_to_placeDetailsFragment"
-            app:destination="@id/placeDetailsFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_map_places" />
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.applications.asm.places.view.fragments.MapFragment"
@@ -91,4 +84,5 @@
         android:name="com.applications.asm.places.view.fragments.SearchLocationFragment"
         android:label="fragment_search_location"
         tools:layout="@layout/fragment_search_location" />
+    <action android:id="@+id/action_global_placeDetailsFragment" app:destination="@id/placeDetailsFragment" />
 </navigation>

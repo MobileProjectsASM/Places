@@ -8,10 +8,13 @@ import com.applications.asm.domain.use_cases.GetPlaceDetailsUc;
 import com.applications.asm.places.model.mappers.PlaceMapper;
 import com.applications.asm.places.view_model.PlaceDetailsViewModel;
 
+import javax.inject.Inject;
+
 public class PlaceDetailsVMFactory implements ViewModelProvider.Factory {
     private final GetPlaceDetailsUc getPlaceDetailsUc;
     private final PlaceMapper placeMapper;
 
+    @Inject
     public PlaceDetailsVMFactory(GetPlaceDetailsUc getPlaceDetailsUc, PlaceMapper placeMapper) {
         this.getPlaceDetailsUc = getPlaceDetailsUc;
         this.placeMapper = placeMapper;

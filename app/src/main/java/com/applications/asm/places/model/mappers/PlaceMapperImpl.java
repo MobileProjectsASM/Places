@@ -7,6 +7,7 @@ import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Price;
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.entities.Schedule;
+import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.PlaceDetailsVM;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.PriceVM;
@@ -42,10 +43,12 @@ public class PlaceMapperImpl implements PlaceMapper {
             placeDetails.getId(),
             placeDetails.getName(),
             placeDetails.getImageUrl(),
+            placeDetails.getAddress(),
             placeDetails.getLocation().getLongitude(),
             placeDetails.getLocation().getLatitude(),
             placeDetails.getRating(),
             getPrice(placeDetails.getPrice()),
+            getCategories(placeDetails.getCategories()),
             placeDetails.getPhoneNumber(),
             placeDetails.getReviewsCounter(),
             getSchedule(placeDetails.getWorkingHoursDays()),
@@ -79,7 +82,9 @@ public class PlaceMapperImpl implements PlaceMapper {
     }
 
     private PriceVM getPrice(Price price) {
-        return new PriceVM(price.getId(), price.getName());
+        if(price != null)
+            return new PriceVM(price.getId(), price.getName());
+        return null;
     }
 
     private List<ScheduleVM> getSchedule(List<Schedule> scheduleDays) {

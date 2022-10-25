@@ -5,6 +5,7 @@ import com.applications.asm.places.di.modules.ViewModelsModule;
 import com.applications.asm.places.di.scopes.ActivityScope;
 import com.applications.asm.places.view.activities.MainActivity;
 import com.applications.asm.places.view.fragments.MapPlacesFragment;
+import com.applications.asm.places.view.fragments.PlaceDetailsFragment;
 import com.applications.asm.places.view.fragments.PlacesFragment;
 import com.applications.asm.places.view.fragments.SearchCategoriesFragment;
 import com.applications.asm.places.view.fragments.CoordinatesFragment;
@@ -32,4 +33,5 @@ public interface ActivityComponent {
     void inject(SearchCategoriesFragment searchCategoriesFragment);
     void inject(PlacesFragment placesFragment);
     void inject(MapPlacesFragment mapPlacesFragment);
+    void inject(PlaceDetailsFragment placeDetailsFragment);
 }

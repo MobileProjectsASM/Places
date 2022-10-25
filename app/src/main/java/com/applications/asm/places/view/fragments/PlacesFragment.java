@@ -1,5 +1,7 @@
 package com.applications.asm.places.view.fragments;
 
+import static com.applications.asm.places.view.fragments.PlaceDetailsFragment.PLACE_ID_KEY;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -83,7 +85,9 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
 
     @Override
     public void onPlaceClickListener(PlaceVM placeVM) {
-        Toast.makeText(requireContext(), "Se hizo click en " + placeVM.getName(), Toast.LENGTH_LONG).show();
+        Bundle bundle = new Bundle();
+        bundle.putString(PLACE_ID_KEY, placeVM.getId());
+        NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
     }
 
     private void initViewObservables() {

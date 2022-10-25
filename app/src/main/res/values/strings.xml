@@ -10,8 +10,8 @@
     <string name="text_helper_rates">Evaluacion(es)</string>
     <string name="text_helper_price">Precio: </string>
     <string name="text_helper_schedule">Horario</string>
-    <string name="text_helper_place_open">Abierto</string>
-    <string name="text_helper_place_close">Cerrado</string>
+    <string name="place_open_text">Abierto</string>
+    <string name="place_close_text">Cerrado</string>
     <string name="text_helper_button_set_coordinates">Establece las coordenadas para que el campo de autocompletado muestre lugares de tu zona</string>
 
     <!-- Text Subtitle -->
@@ -119,4 +119,10 @@
     <string name="number_results_text">No. Resultados:</string>
     <string name="empty_places">No hay mas resultados</string>
     <string name="place_content_description_image_view">Imagen del lugar</string>
+    <string name="ratings">Evaluaciones</string>
+    <string name="phone_number">Telefono:</string>
+    <string name="address">Direccion:</string>
+    <string name="categories">Categorias:</string>
+    <string name="price">Precio:</string>
+    <string name="there_is_no_information">Sin datos</string>
 </resources>

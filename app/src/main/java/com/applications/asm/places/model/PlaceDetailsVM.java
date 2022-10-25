@@ -6,23 +6,27 @@ public class PlaceDetailsVM {
     private String id;
     private String name;
     private String imageUrl;
+    private String address;
     private Double longitude;
     private Double latitude;
     private Double rating;
     private PriceVM price;
+    private String categories;
     private String phoneNumber;
     private Integer reviewsCounter;
     private List<ScheduleVM> schedule;
     private Boolean isOpen;
 
-    public PlaceDetailsVM(String id, String name, String imageUrl, Double longitude, Double latitude, Double rating, PriceVM price, String phoneNumber, Integer reviewsCounter, List<ScheduleVM> schedule, Boolean isOpen) {
+    public PlaceDetailsVM(String id, String name, String imageUrl, String address, Double longitude, Double latitude, Double rating, PriceVM price, String categories, String phoneNumber, Integer reviewsCounter, List<ScheduleVM> schedule, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
+        this.address = address;
         this.longitude = longitude;
         this.latitude = latitude;
         this.rating = rating;
         this.price = price;
+        this.categories = categories;
         this.phoneNumber = phoneNumber;
         this.reviewsCounter = reviewsCounter;
         this.schedule = schedule;
@@ -43,6 +47,14 @@ public class PlaceDetailsVM {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getImageUrl() {
@@ -115,5 +127,13 @@ public class PlaceDetailsVM {
 
     public void setOpen(Boolean open) {
         isOpen = open;
+    }
+
+    public String getCategories() {
+        return categories;
+    }
+
+    public void setCategories(String categories) {
+        this.categories = categories;
     }
 }

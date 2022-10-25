@@ -16,4 +16,8 @@
     <color name="cyan">#FF00FFFF</color>
     <color name="blue">#FF0040FF</color>
     <color name="gold">#FFFFD700</color>
+    <color name="blue_2">#FF51d1f6</color>
+    <color name="green_2">#FF07b120</color>
+    <color name="orange_2">#FFff7514</color>
+    <color name="red_2">#FFf52d1b</color>
 </resources>

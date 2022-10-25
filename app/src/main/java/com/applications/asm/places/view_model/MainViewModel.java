@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import com.applications.asm.domain.exception.UseCaseException;
@@ -14,16 +13,12 @@ import com.applications.asm.domain.exception.UseCaseExceptionCodes;
 import com.applications.asm.domain.use_cases.GetCoordinatesUc;
 import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
-import com.applications.asm.places.model.CriterionVM;
 import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.mappers.CoordinatesMapper;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.rxjava3.core.Flowable;
 
 public class MainViewModel extends ViewModel {
     public static final double INVALID_LATITUDE = 91;

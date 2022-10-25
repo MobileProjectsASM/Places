@@ -1,5 +1,7 @@
 package com.applications.asm.places.view.fragments;
 
+import static com.applications.asm.places.view.fragments.PlaceDetailsFragment.PLACE_ID_KEY;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -188,7 +190,9 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
 
     @Override
     public void onSuggestedPlaceClickListener(SuggestedPlaceVM suggestedPlaceVM) {
-
+        Bundle bundle = new Bundle();
+        bundle.putString(PLACE_ID_KEY, suggestedPlaceVM.getId());
+        NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
     }
 
     private void initViewObservables() {

@@ -1,5 +1,7 @@
 package com.applications.asm.places.view.fragments;
 
+import static com.applications.asm.places.view.fragments.PlaceDetailsFragment.PLACE_ID_KEY;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentMapPlacesBinding;
@@ -116,11 +119,10 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
     }
 
     private void clickOnMarkerTitle(Marker marker) {
-        Toast.makeText(requireContext(), "Se hizo click en " + marker.getTitle(), Toast.LENGTH_SHORT).show();
         String placeId = markers.get(marker.getId());
-        /*String placeId = markers.get(marker.getId());
-        mainViewModel.getPlaceDetail(placeId);
-        NavHostFragment.findNavController(this).navigate(R.id.action_placesMapFragment_to_placeDetailsFragment);
-        map.clear();*/
+        Bundle bundle = new Bundle();
+        bundle.putString(PLACE_ID_KEY, placeId);
+        NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
+        /*map.clear();*/
     }
 }
