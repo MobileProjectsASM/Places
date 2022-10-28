@@ -6,6 +6,6 @@ import com.applications.asm.places.model.ReviewVM;
 import java.util.List;
 
 public interface ReviewMapper {
-    ReviewVM getReview(Review review);
-    List<ReviewVM> getReviews(List<Review> reviews);
+    ReviewVM getReviewVM(Review review);
+    List<ReviewVM> getReviewsVM(List<Review> reviews);
 }

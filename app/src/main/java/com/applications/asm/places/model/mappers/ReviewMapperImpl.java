@@ -6,17 +6,25 @@ import com.applications.asm.places.model.ReviewVM;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class ReviewMapperImpl implements ReviewMapper {
+
+    @Inject
+    public ReviewMapperImpl() {
+
+    }
+
     @Override
-    public ReviewVM getReview(Review review) {
+    public ReviewVM getReviewVM(Review review) {
         return new ReviewVM(review.getUserName(), review.getImageUrl(), review.getDate(), review.getRate(), review.getDescription());
     }
 
     @Override
-    public List<ReviewVM> getReviews(List<Review> reviews) {
+    public List<ReviewVM> getReviewsVM(List<Review> reviews) {
         List<ReviewVM> reviewsVM = new ArrayList<>();
         for(Review review: reviews)
-            reviewsVM.add(getReview(review));
+            reviewsVM.add(getReviewVM(review));
         return reviewsVM;
     }
 }

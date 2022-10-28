@@ -9,6 +9,8 @@ import com.applications.asm.places.model.mappers.CriterionMapper;
 import com.applications.asm.places.model.mappers.CriterionMapperImpl;
 import com.applications.asm.places.model.mappers.PlaceMapper;
 import com.applications.asm.places.model.mappers.PlaceMapperImpl;
+import com.applications.asm.places.model.mappers.ReviewMapper;
+import com.applications.asm.places.model.mappers.ReviewMapperImpl;
 
 import dagger.Binds;
 import dagger.Module;
@@ -29,5 +31,9 @@ public abstract class MappersModule {
 
     @ActivityScope
     @Binds
-    abstract CriterionMapper sortCriteriaMapper(CriterionMapperImpl criterionMapperImpl);
+    abstract CriterionMapper provideSortCriteriaMapper(CriterionMapperImpl criterionMapperImpl);
+
+    @ActivityScope
+    @Binds
+    abstract ReviewMapper provideReviewMapper(ReviewMapperImpl reviewMapperImpl);
 }

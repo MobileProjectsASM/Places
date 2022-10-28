@@ -123,6 +123,6 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
         Bundle bundle = new Bundle();
         bundle.putString(PLACE_ID_KEY, placeId);
         NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
-        /*map.clear();*/
+        map.clear();
     }
 }

@@ -117,8 +117,10 @@
     <string name="categories_cannot_be_repeated">No se pueden repetir categorias</string>
     <string name="description_change_view_button">Boton para cambiar el modo de vista</string>
     <string name="number_results_text">No. Resultados:</string>
-    <string name="empty_places">No hay mas resultados</string>
+    <string name="empty_results">No hay resultados</string>
+    <string name="no_more_results">No hay mas resultados</string>
     <string name="place_content_description_image_view">Imagen del lugar</string>
+    <string name="rating">Evaluacion</string>
     <string name="ratings">Evaluaciones</string>
     <string name="phone_number">Telefono:</string>
     <string name="address">Direccion:</string>

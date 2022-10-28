@@ -35,4 +35,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<PlaceReviewViewHolder> {
     public int getItemCount() {
         return reviews.size();
     }
+
+    public void addReviews(List<ReviewVM> reviewsVM) {
+        int positionStart = reviews.size();
+        reviews.addAll(reviewsVM);
+        notifyItemRangeInserted(positionStart, reviewsVM.size());
+    }
 }

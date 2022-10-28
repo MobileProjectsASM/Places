@@ -10,6 +10,7 @@
         android:id="@+id/placeImageView"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:layout_gravity="center"
         tools:src="@drawable/ic_baseline_checklist_24"/>
 
     <LinearLayout
@@ -63,13 +64,13 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.textview.MaterialTextView
-            style="@style/default_size_height_style"
             android:id="@+id/descriptionReviewTextView"
+            style="@style/default_size_height_style"
             android:layout_marginTop="10dp"
             android:ellipsize="end"
-            android:maxLines="3"
+            android:maxLines="4"
             android:textAppearance="@style/text_info_place_style"
-            tools:text="@tools:sample/lorem/random"/>
+            tools:text="@tools:sample/lorem/random" />
 
     </LinearLayout>
 

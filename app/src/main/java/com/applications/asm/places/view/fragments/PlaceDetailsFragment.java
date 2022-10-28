@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentPlaceDetailsBinding;
@@ -50,11 +51,6 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         placeDetailsViewModel = new ViewModelProvider(this, placeDetailsViewModelFactory).get(PlaceDetailsViewModel.class);
@@ -73,8 +69,17 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
     }
 
     private void setListeners() {
-        getViewBinding().showMapButton.setOnClickListener(view -> Toast.makeText(requireContext(), "Se presiono el boton para ir al mapa", Toast.LENGTH_SHORT).show());
-        getViewBinding().showReviewsButton.setOnClickListener(view -> Toast.makeText(requireContext(), "Se presiono el boton para mostrar reseñas", Toast.LENGTH_SHORT).show());
+        getViewBinding().showMapButton.setOnClickListener(view -> {
+
+        });
+        getViewBinding().showReviewsButton.setOnClickListener(view -> {
+            Bundle bundle = getArguments();
+            if(bundle != null) {
+                Bundle bundle2 = new Bundle();
+                bundle2.putString(ReviewsFragment.PLACE_REVIEWS_KEY, bundle.getString(PLACE_ID_KEY));
+                NavHostFragment.findNavController(this).navigate(R.id.action_placeDetailsFragment_to_reviewsFragment, bundle2);
+            }
+        });
     }
 
     private void getPlaceDetails(Resource<PlaceDetailsVM> resource) {
@@ -102,7 +107,7 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
         getViewBinding().namePlaceTitleText.setText(placeDetailsVM.getName());
         getViewBinding().ratingPlaceText.setText(String.valueOf(placeDetailsVM.getRating()));
         getViewBinding().ratingBar.setRating(placeDetailsVM.getRating().floatValue());
-        String ratings = placeDetailsVM.getReviewsCounter() + " " + getString(R.string.ratings);
+        String ratings = placeDetailsVM.getReviewsCounter() + " " + (placeDetailsVM.getReviewsCounter() == 1 ? getString(R.string.rating) : getString(R.string.ratings));
         getViewBinding().countReviewsPlaceText.setText(ratings);
         PriceVM priceVM = placeDetailsVM.getPrice();
         String priceName = getString(R.string.there_is_no_information);
