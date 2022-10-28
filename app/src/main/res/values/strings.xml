@@ -127,4 +127,6 @@
     <string name="categories">Categorias:</string>
     <string name="price">Precio:</string>
     <string name="there_is_no_information">Sin datos</string>
+    <string name="page">Pagina</string>
+    <string name="of">de</string>
 </resources>

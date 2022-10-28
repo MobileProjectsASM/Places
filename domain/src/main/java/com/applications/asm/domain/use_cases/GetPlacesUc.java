@@ -3,6 +3,7 @@ package com.applications.asm.domain.use_cases;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Criterion;
+import com.applications.asm.domain.entities.FoundPlaces;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.exception.ParameterException;
@@ -17,7 +18,7 @@ import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetPlacesUc extends SingleUseCase<Response<List<Place>>, GetPlacesUc.Params> {
+public class GetPlacesUc extends SingleUseCase<Response<FoundPlaces>, GetPlacesUc.Params> {
     private final AllPlaces allPlaces;
     private final Validators validators;
 
@@ -69,7 +70,7 @@ public class GetPlacesUc extends SingleUseCase<Response<List<Place>>, GetPlacesU
     }
 
     @Override
-    protected Single<Response<List<Place>>> build(Params params) {
+    protected Single<Response<FoundPlaces>> build(Params params) {
         return validateParams(params)
                 .flatMap(param -> allPlaces.withThisCriteria(param.placeToFind, param.coordinates, param.radius, param.categories, param.sortCriterion, param.pricesCriteria, param.isOpenNow, param.page));
     }

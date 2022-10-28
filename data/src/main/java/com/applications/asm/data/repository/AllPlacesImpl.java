@@ -1,6 +1,5 @@
 package com.applications.asm.data.repository;
 
-import com.apollographql.apollo.api.Error;
 import com.applications.asm.data.SearchPlacesQuery;
 import com.applications.asm.data.framework.network.graphql.GraphqlPlacesClient;
 import com.applications.asm.data.mapper.PlaceMapper;
@@ -8,6 +7,7 @@ import com.applications.asm.data.utils.ErrorUtils;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Criterion;
+import com.applications.asm.domain.entities.FoundPlaces;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.Response;
 import com.applications.asm.domain.repository.AllPlaces;
@@ -32,21 +32,28 @@ public class AllPlacesImpl implements AllPlaces {
     }
 
     @Override
-    public Single<Response<List<Place>>> withThisCriteria(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page) {
+    public Single<Response<FoundPlaces>> withThisCriteria(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page) {
         return graphqlPlacesClient.getSearchedPlaces(placeToFind, coordinates.getLatitude(), coordinates.getLongitude(), radius, getCategories(categories), sortCriterion.getId(), getPriceCriteria(pricesCriteria), isOpenNow, PLACES_PER_PAGE * (page - 1), PLACES_PER_PAGE)
                 .map(dataApolloResponse -> {
-                    Response<List<Place>> response;
+                    Response<FoundPlaces> response;
                     if(!dataApolloResponse.hasErrors()) {
                         SearchPlacesQuery.Data data = dataApolloResponse.getData();
                         if(data != null) {
                             SearchPlacesQuery.Search search = data.search();
                             if(search != null) {
+                                Integer totalResults = search.total();
+                                int totalPages = 0;
+                                if(totalResults != null) {
+                                    boolean isExact = totalResults % PLACES_PER_PAGE == 0;
+                                    int auxPages = totalResults / PLACES_PER_PAGE;
+                                    totalPages = isExact ? auxPages : auxPages + 1;
+                                }
                                 List<Place> places = placeMapper.placesQueryToPlaces(search.business());
-                                response = Response.success(places);
+                                response = Response.success(new FoundPlaces(places, totalPages));
                             } else
-                                response = Response.success(new ArrayList<>());
+                                response = Response.success(new FoundPlaces(new ArrayList<>(), 0));
                         } else
-                            response = Response.success(new ArrayList<>());
+                            response = Response.success(new FoundPlaces(new ArrayList<>(), 0));
                     } else response = ErrorUtils.getResponseError(dataApolloResponse.getErrors());
                     return response;
                 })

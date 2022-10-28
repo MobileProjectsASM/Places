@@ -23,6 +23,7 @@ import com.applications.asm.places.databinding.LoadingItemLayoutBinding;
 import com.applications.asm.places.databinding.LoadingLayoutBinding;
 import com.applications.asm.places.databinding.MessageLayoutBinding;
 import com.applications.asm.places.databinding.PlacesLayoutBinding;
+import com.applications.asm.places.model.FoundPlacesVM;
 import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.Resource;
@@ -46,6 +47,7 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
     private ParametersAdvancedSearch parametersAdvancedSearch;
     private boolean isLoading;
     private boolean isRecreatedView;
+    private int maxPage;
 
     @Named("placesVMFactory")
     @Inject
@@ -142,31 +144,18 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
                 if(!isLoading) {
                     LinearLayoutManager linearLayoutManager= (LinearLayoutManager) placesRecyclerView.getLayoutManager();
                     if(linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == placeAdapter.getItemCount() - 1) {
-                        isLoading = true;
-                        parametersAdvancedSearch.setPage(parametersAdvancedSearch.getPage() + 1);
-                        placesViewModel.getPlaces(parametersAdvancedSearch).observe(getViewLifecycleOwner(), PlacesFragment.this::getMorePlaces);
+                        if(maxPage >= parametersAdvancedSearch.getPage() + 1) {
+                            isLoading = true;
+                            parametersAdvancedSearch.setPage(parametersAdvancedSearch.getPage() + 1);
+                            placesViewModel.getPlaces(parametersAdvancedSearch).observe(getViewLifecycleOwner(), PlacesFragment.this::getMorePlaces);
+                        }
                     }
                 }
             }
         });
     }
 
-    private void getSearchPlaces(ParametersAdvancedSearch parametersAdvancedSearch) {
-        if(!isRecreatedView) {
-            if(parametersAdvancedSearch.getPage() > 1) placesViewModel.getPlaces(parametersAdvancedSearch).observe(getViewLifecycleOwner(), this::getMorePlaces);
-            else placesViewModel.getPlaces(parametersAdvancedSearch).observe(getViewLifecycleOwner(), this::getFirstPlaces);
-        } else {
-            PlacesLayoutBinding placesLayoutBinding = PlacesLayoutBinding.inflate(getLayoutInflater());
-            placesLayoutBinding.placesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-            placesLayoutBinding.placesRecyclerView.setAdapter(placeAdapter);
-            initScrollListener(placesLayoutBinding.placesRecyclerView);
-            getViewBinding().resultsPlacesFrameLayout.addView(placesLayoutBinding.getRoot());
-            String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
-            getViewBinding().totalResultsTextView.setText(message);
-        }
-    }
-
-    private void getFirstPlaces(Resource<List<PlaceVM>> resource) {
+    private void getFirstPlaces(Resource<FoundPlacesVM> resource) {
         getViewBinding().resultsPlacesFrameLayout.removeAllViews();
         switch(resource.getStatus()) {
             case LOADING:
@@ -174,9 +163,9 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
                 getViewBinding().resultsPlacesFrameLayout.addView(viewLoadingBinding.getRoot());
                 break;
             case SUCCESS:
-                List<PlaceVM> placesVM = resource.getData();
+                FoundPlacesVM foundPlacesVM = resource.getData();
                 View placesView;
-                if(placesVM.isEmpty()) {
+                if(foundPlacesVM.getPlaces().isEmpty()) {
                     MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
                     viewEmptyBinding.messageTextView.setText(R.string.empty_results);
                     placesView = viewEmptyBinding.getRoot();
@@ -185,11 +174,14 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
                     placesLayoutBinding.placesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
                     placesLayoutBinding.placesRecyclerView.setAdapter(placeAdapter);
                     initScrollListener(placesLayoutBinding.placesRecyclerView);
-                    placeAdapter.addPlaces(placesVM);
+                    placeAdapter.addPlaces(foundPlacesVM.getPlaces());
                     placesView = placesLayoutBinding.getRoot();
                 }
-                String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
-                getViewBinding().totalResultsTextView.setText(message);
+                String results = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
+                String pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + foundPlacesVM.getPages();
+                maxPage = foundPlacesVM.getPages();
+                getViewBinding().totalResultsTextView.setText(results);
+                getViewBinding().totalPagesTextView.setText(pages);
                 getViewBinding().resultsPlacesFrameLayout.addView(placesView);
                 break;
             case WARNING:
@@ -205,17 +197,20 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
         }
     }
 
-    private void getMorePlaces(Resource<List<PlaceVM>> resource) {
+    private void getMorePlaces(Resource<FoundPlacesVM> resource) {
         switch(resource.getStatus()) {
             case LOADING:
                 placeAdapter.addPlace(null);
                 break;
             case SUCCESS:
+                FoundPlacesVM foundPlacesVM = resource.getData();
                 placeAdapter.removeLastPlace();
-                if(!resource.getData().isEmpty()) {
-                    placeAdapter.addPlaces(resource.getData());
-                    String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
-                    getViewBinding().totalResultsTextView.setText(message);
+                if(!foundPlacesVM.getPlaces().isEmpty()) {
+                    placeAdapter.addPlaces(foundPlacesVM.getPlaces());
+                    String results = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
+                    String pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + foundPlacesVM.getPages();
+                    getViewBinding().totalResultsTextView.setText(results);
+                    getViewBinding().totalPagesTextView.setText(pages);
                 } else Toast.makeText(requireContext(), R.string.no_more_results, Toast.LENGTH_SHORT).show();
                 isLoading = false;
                 break;

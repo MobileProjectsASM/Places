@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.applications.asm.domain.use_cases.GetPlacesUc;
+import com.applications.asm.places.model.FoundPlacesVM;
 import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.Resource;
@@ -18,9 +19,6 @@ import com.applications.asm.places.view_model.exception.ErrorUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 
 public class PlacesViewModel extends ViewModel {
     private final GetPlacesUc getPlacesUc;
@@ -39,23 +37,16 @@ public class PlacesViewModel extends ViewModel {
         this.criterionMapper = criterionMapper;
     }
 
-    public LiveData<Resource<List<PlaceVM>>> getPlaces(ParametersAdvancedSearch parametersAdvancedSearch) {
-        MediatorLiveData<Resource<List<PlaceVM>>> liveDataPlaces = new MediatorLiveData<>();
+    public LiveData<Resource<FoundPlacesVM>> getPlaces(ParametersAdvancedSearch parametersAdvancedSearch) {
+        MediatorLiveData<Resource<FoundPlacesVM>> liveDataPlaces = new MediatorLiveData<>();
         liveDataPlaces.setValue(Resource.loading());
         GetPlacesUc.Params params = GetPlacesUc.Params.forFilterPlaces(parametersAdvancedSearch.getPlace(), coordinatesMapper.getCoordinates(parametersAdvancedSearch.getCoordinatesVM()), parametersAdvancedSearch.getRadius(), categoryMapper.getCategories(parametersAdvancedSearch.getCategories()), criterionMapper.getCriterion(parametersAdvancedSearch.getSortCriterion()), criterionMapper.getCriteria(parametersAdvancedSearch.getPricesCriterion()), parametersAdvancedSearch.getOpenNow(), parametersAdvancedSearch.getPage());
-        LiveData<Resource<List<PlaceVM>>> sourcePlaces = LiveDataReactiveStreams.fromPublisher(getPlacesUc.execute(params)
-            .flatMap(listResponse ->  {
-                Single<Resource<List<PlaceVM>>> placesResource;
-                if(listResponse.getError() == null || listResponse.getError().isEmpty()) {
-                    placesResource = Observable.fromIterable(listResponse.getData())
-                        .map(placeMapper::getPlaceVM)
-                        .toList()
-                        .map(Resource::success);
-                } else {
-                    String error = listResponse.getError();
-                    placesResource = Single.just(Resource.warning(error));
-                }
-                return placesResource;
+        LiveData<Resource<FoundPlacesVM>> sourcePlaces = LiveDataReactiveStreams.fromPublisher(getPlacesUc.execute(params)
+            .map(response -> {
+                Resource<FoundPlacesVM> resource;
+                if(response.getError() == null || response.getError().isEmpty()) resource = Resource.success(placeMapper.getFoundPlacesVM(response.getData()));
+                else resource = Resource.warning(response.getError());
+                return resource;
             })
             .onErrorReturn(throwable -> ErrorUtils.resolveError(throwable, PlacesViewModel.class))
             .toFlowable());

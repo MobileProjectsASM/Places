@@ -1,8 +1,10 @@
 package com.applications.asm.places.model.mappers;
 
+import com.applications.asm.domain.entities.FoundPlaces;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.SuggestedPlace;
+import com.applications.asm.places.model.FoundPlacesVM;
 import com.applications.asm.places.model.PlaceDetailsVM;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.SuggestedPlaceVM;
@@ -15,4 +17,5 @@ public interface PlaceMapper {
     PlaceDetailsVM getPlaceDetailsVM(PlaceDetails placeDetails);
     List<PlaceVM> getPlacesVM(List<Place> places);
     List<SuggestedPlaceVM> getSuggestedPlaces(List<SuggestedPlace> suggestedPlaces);
+    FoundPlacesVM getFoundPlacesVM(FoundPlaces foundPlaces);
 }

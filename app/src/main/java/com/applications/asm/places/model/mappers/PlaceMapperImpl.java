@@ -1,6 +1,7 @@
 package com.applications.asm.places.model.mappers;
 
 import com.applications.asm.domain.entities.Category;
+import com.applications.asm.domain.entities.FoundPlaces;
 import com.applications.asm.domain.entities.Hour;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
@@ -8,6 +9,7 @@ import com.applications.asm.domain.entities.Price;
 import com.applications.asm.domain.entities.SuggestedPlace;
 import com.applications.asm.domain.entities.Schedule;
 import com.applications.asm.places.model.CategoryVM;
+import com.applications.asm.places.model.FoundPlacesVM;
 import com.applications.asm.places.model.PlaceDetailsVM;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.PriceVM;
@@ -70,6 +72,11 @@ public class PlaceMapperImpl implements PlaceMapper {
         for(SuggestedPlace suggestedPlace: suggestedPlaces)
             suggestedPlacesVM.add(getSuggestedPlaceVM(suggestedPlace));
         return suggestedPlacesVM;
+    }
+
+    @Override
+    public FoundPlacesVM getFoundPlacesVM(FoundPlaces foundPlaces) {
+        return new FoundPlacesVM(getPlacesVM(foundPlaces.getPlaces()), foundPlaces.getTotalPages());
     }
 
     private String getCategories(List<Category> categories) {

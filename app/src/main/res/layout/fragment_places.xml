@@ -7,6 +7,16 @@
     tools:context=".view.fragments.PlacesFragment">
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/total_pages_text_view"
+        style="@style/default_size_fit_style"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:textAppearance="@style/text_info_place_style"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Paginas" />
+
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/total_results_text_view"
         style="@style/default_size_fit_style"
         android:layout_marginTop="10dp"
