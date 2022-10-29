@@ -72,6 +72,7 @@ query PlaceDetails($id: String!) {
         hours {
             is_open_now
             open {
+                is_overnight
                 day
                 start
                 end

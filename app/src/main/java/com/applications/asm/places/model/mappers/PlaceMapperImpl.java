@@ -3,6 +3,7 @@ package com.applications.asm.places.model.mappers;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.FoundPlaces;
 import com.applications.asm.domain.entities.Hour;
+import com.applications.asm.domain.entities.Hours;
 import com.applications.asm.domain.entities.Place;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Price;
@@ -102,17 +103,27 @@ public class PlaceMapperImpl implements PlaceMapper {
     }
 
     private ScheduleVM mapSchedule(Schedule schedule) {
-        String hours = getHours(schedule.getOpenHour(), schedule.getCloseHour());
-        return new ScheduleVM(schedule.getDay(), hours);
+        List<String> strings = new ArrayList<>();
+        for(Hours hours : schedule.getHours()) strings.add(getHours(hours.getOpenHour(), hours.getCloseHour()));
+        return new ScheduleVM(schedule.getDay(), strings);
     }
 
     private String getHours(Hour openHour, Hour closeHour) {
-        return formatHour(openHour) + " - " + formatHour(closeHour);
+        return formatHour12(openHour) + " - " + formatHour12(closeHour);
     }
 
-    private String formatHour(Hour hour) {
-        String h = hour.getHour() < 10 ? ("0" + hour.getHour()) : hour.getHour() + "";
+    private String formatHour12(Hour hour) {
+        String suffix = "";
+        int auxHour;
+        if(hour.getHour() <= 12) {
+            suffix = hour.getHour() < 12 ? "AM" : "PM";
+            auxHour = hour.getHour();
+        } else {
+            suffix = "PM";
+            auxHour = hour.getHour() % 12;
+        }
+        String h = auxHour < 10 ? ("0" + auxHour) : auxHour + "";
         String m = hour.getMinutes() < 10 ? ("0" + hour.getMinutes()) : hour.getMinutes() + "";
-        return h + ":" + m;
+        return h + ":" + m + " " + suffix;
     }
 }

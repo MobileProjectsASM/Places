@@ -4,11 +4,13 @@ import com.applications.asm.data.PlaceDetailsQuery;
 import com.applications.asm.domain.entities.Category;
 import com.applications.asm.domain.entities.Coordinates;
 import com.applications.asm.domain.entities.Hour;
+import com.applications.asm.domain.entities.Hours;
 import com.applications.asm.domain.entities.PlaceDetails;
 import com.applications.asm.domain.entities.Price;
 import com.applications.asm.domain.entities.Schedule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -132,30 +134,33 @@ public class PlaceDetailsMapperImpl implements PlaceDetailsMapper {
     }
 
     private List<Schedule> getSchedule(List<PlaceDetailsQuery.Open> listOpen, Map<String, String> days) {
+        Map<Integer, Schedule> scheduleMap = new HashMap<>();
+        for(PlaceDetailsQuery.Open open : listOpen){
+            int dayNum = 0;
+            Integer dayNumber = open.day();
+            if(dayNumber != null) dayNum = dayNumber;
+
+            String day = getDay(dayNumber, days);
+
+            Hour openH = new Hour(0, 0);
+            String openHour = open.start();
+            if(openHour != null && !openHour.isEmpty())
+                openH = getHour(openHour);
+
+            Hour closeH = new Hour(0,0);
+            String closeHour = open.end();
+            if(closeHour != null && !closeHour.isEmpty())
+                closeH = getHour(closeHour);
+
+            Hours hours = new Hours(openH, closeH);
+
+            Schedule schedule = scheduleMap.get(dayNum);
+            if(schedule == null) scheduleMap.put(dayNum, new Schedule(dayNum, day, new ArrayList<Hours>() {{add(hours);}}));
+            else schedule.getHours().add(hours);
+        }
         List<Schedule> schedule = new ArrayList<>();
-        for(PlaceDetailsQuery.Open open : listOpen)
-            schedule.add(getScheduleDay(open, days));
+        for(Integer key : scheduleMap.keySet()) schedule.add(scheduleMap.get(key));
         return schedule;
-    }
-
-    private Schedule getScheduleDay(PlaceDetailsQuery.Open open, Map<String, String> days) {
-        Integer dayNum = 0;
-        Integer dayNumber = open.day();
-        if(dayNumber != null) dayNum = dayNumber;
-
-        String day = getDay(dayNumber, days);
-
-        Hour openH = new Hour(0, 0);
-        String openHour = open.start();
-        if(openHour != null && !openHour.isEmpty())
-            openH = getHour(openHour);
-
-        Hour closeH = new Hour(0,0);
-        String closeHour = open.end();
-        if(closeHour != null && !closeHour.isEmpty())
-            closeH = getHour(closeHour);
-
-        return new Schedule(dayNum, day, openH, closeH);
     }
 
     private String getDay(Integer day, Map<String, String> days) {

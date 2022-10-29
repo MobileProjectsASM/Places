@@ -32,7 +32,7 @@ public class ReviewMapperImpl implements ReviewMapper {
 
         String imageUrl = "";
         PlaceReviewsQuery.User user2 = review.user();
-        if(user2 != null) imageUrl = user2.image_url();
+        if(user2 != null) imageUrl = user2.image_url() != null ? user2.image_url() : "";
 
         String date = "";
         String timeCreated = review.time_created();

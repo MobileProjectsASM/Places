@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
+import com.applications.asm.domain.entities.Hours;
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentPlaceDetailsBinding;
 import com.applications.asm.places.model.PlaceDetailsVM;
@@ -144,7 +145,12 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
             schedule = new StringBuilder();
             for(int i = 0; i < scheduleVM.size() ; i++) {
                 if(i != 0) schedule.append("\n");
-                schedule.append(scheduleVM.get(i).getDay()).append(": ").append(scheduleVM.get(i).getHours());
+                StringBuilder hoursS = new StringBuilder();
+                for(int j = 0; j < scheduleVM.get(i).getHours().size() ; j++) {
+                    if(j != 0) hoursS.append(", ");
+                    hoursS.append(scheduleVM.get(i).getHours().get(j));
+                }
+                schedule.append(scheduleVM.get(i).getDay()).append(": ").append(hoursS);
             }
         }
         getViewBinding().scheduleText.setText(schedule.toString());
