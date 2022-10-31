@@ -36,6 +36,8 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
 
     private PlaceDetailsViewModel placeDetailsViewModel;
     private Dialog loadingGetCoordinates;
+    private PlaceDetailsVM placeDetailsVM;
+    private boolean isRecreated;
 
     @Named("placeDetailsVMFactory")
     @Inject
@@ -52,6 +54,12 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isRecreated = false;
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         placeDetailsViewModel = new ViewModelProvider(this, placeDetailsViewModelFactory).get(PlaceDetailsViewModel.class);
@@ -60,13 +68,21 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isRecreated = true;
+    }
+
+    @Override
     protected FragmentPlaceDetailsBinding bindingInflater(LayoutInflater inflater, ViewGroup container) {
         return FragmentPlaceDetailsBinding.inflate(inflater, container, false);
     }
 
     private void initViewObservables() {
-        Bundle bundle = getArguments();
-        if(bundle != null) placeDetailsViewModel.loadPlaceDetailsVM(bundle.getString(PLACE_ID_KEY)).observe(getViewLifecycleOwner(), this::getPlaceDetails);
+        if(!isRecreated) {
+            Bundle bundle = getArguments();
+            if(bundle != null) placeDetailsViewModel.loadPlaceDetailsVM(bundle.getString(PLACE_ID_KEY)).observe(getViewLifecycleOwner(), this::getPlaceDetails);
+        } else renderPlaceDetail(placeDetailsVM);
     }
 
     private void setListeners() {
@@ -90,6 +106,7 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
                 break;
             case SUCCESS:
                 ViewUtils.loaded(loadingGetCoordinates);
+                placeDetailsVM = resource.getData();
                 renderPlaceDetail(resource.getData());
                 break;
             case WARNING:

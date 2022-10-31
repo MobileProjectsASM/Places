@@ -104,15 +104,7 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
 
     private void initViewObservables() {
         if(!isRecreatedView) mainViewModel.getParametersAdvancedSearchVM().observe(getViewLifecycleOwner(), this::getParametersSearch);
-        else {
-            PlacesLayoutBinding placesLayoutBinding = PlacesLayoutBinding.inflate(getLayoutInflater());
-            placesLayoutBinding.placesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-            placesLayoutBinding.placesRecyclerView.setAdapter(placeAdapter);
-            initScrollListener(placesLayoutBinding.placesRecyclerView);
-            getViewBinding().resultsPlacesFrameLayout.addView(placesLayoutBinding.getRoot());
-            String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
-            getViewBinding().totalResultsTextView.setText(message);
-        }
+        else renderViewPlaces();
     }
 
     private void getParametersSearch(ParametersAdvancedSearch parametersAdvancedSearch) {
@@ -223,4 +215,15 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
         }
     }
 
+    private void renderViewPlaces() {
+        PlacesLayoutBinding placesLayoutBinding = PlacesLayoutBinding.inflate(getLayoutInflater());
+        placesLayoutBinding.placesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        placesLayoutBinding.placesRecyclerView.setAdapter(placeAdapter);
+        initScrollListener(placesLayoutBinding.placesRecyclerView);
+        getViewBinding().resultsPlacesFrameLayout.addView(placesLayoutBinding.getRoot());
+        String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
+        String pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + maxPage;
+        getViewBinding().totalResultsTextView.setText(message);
+        getViewBinding().totalPagesTextView.setText(pages);
+    }
 }

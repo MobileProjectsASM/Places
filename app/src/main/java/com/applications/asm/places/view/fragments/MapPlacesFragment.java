@@ -42,11 +42,18 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
     private final String PLACES = "PLACES";
     private MainViewModel mainViewModel;
     private GoogleMap map;
-    private Map<String, String> markers;
+    private Map<String, PlaceVM> markers;
+    private List<PlaceVM> placesVM;
+    private CoordinatesVM mapCoordinates;
+    private boolean isRecreated;
 
     @Named("mainVMFactory")
     @Inject
     ViewModelProvider.Factory mainViewModelFactory;
+
+    public MapPlacesFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -54,28 +61,37 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
         getActivityComponent().inject(this);
     }
 
-    public MapPlacesFragment() {
-        // Required empty public constructor
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isRecreated = false;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mainViewModel = new ViewModelProvider(requireActivity(), mainViewModelFactory).get(MainViewModel.class);
-        initViewObservables();
         createMapFragment();
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        isRecreated = true;
+    }
+
     private void initViewObservables() {
-        LiveData<CoordinatesVM> coordinatesVM = mainViewModel.getWorkCoordinates();
-        LiveData<List<PlaceVM>> placesVW = mainViewModel.getPlacesVM();
-        LiveData<Map<String, Object>> placesAndCoordinates = MultipleLiveDataTransformation.combineLatest(coordinatesVM, placesVW, (coordinates, places) -> {
-            Map<String, Object> data = new HashMap<>();
-            data.put(WORK_COORDINATES, coordinates);
-            data.put(PLACES, places);
-            return data;
-        });
-        placesAndCoordinates.observe(getViewLifecycleOwner(), this::callbackPlacesAndCoordinates);
+        if(!isRecreated) {
+            LiveData<CoordinatesVM> coordinatesVM = mainViewModel.getWorkCoordinates();
+            LiveData<List<PlaceVM>> placesVW = mainViewModel.getPlacesVM();
+            LiveData<Map<String, Object>> placesAndCoordinates = MultipleLiveDataTransformation.combineLatest(coordinatesVM, placesVW, (coordinates, places) -> {
+                Map<String, Object> data = new HashMap<>();
+                data.put(WORK_COORDINATES, coordinates);
+                data.put(PLACES, places);
+                return data;
+            });
+            placesAndCoordinates.observe(getViewLifecycleOwner(), this::callbackPlacesAndCoordinates);
+        } else renderMap();
     }
 
     @Override
@@ -95,20 +111,20 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
     }
 
     private void callbackPlacesAndCoordinates(Map<String, Object> placesAndCoordinates) {
-        List<PlaceVM> placesVM = (List<PlaceVM>) placesAndCoordinates.get(PLACES);
-        CoordinatesVM coordinatesVM = (CoordinatesVM) placesAndCoordinates.get(WORK_COORDINATES);
-        renderMap(coordinatesVM, placesVM);
+        placesVM = (List<PlaceVM>) placesAndCoordinates.get(PLACES);
+        mapCoordinates = (CoordinatesVM) placesAndCoordinates.get(WORK_COORDINATES);
+        renderMap();
     }
 
-    private void renderMap(CoordinatesVM workCoordinates, List<PlaceVM> places) {
+    private void renderMap() {
         if(map != null) {
             markers = new HashMap<>();
-            for(PlaceVM placeVM: places) {
+            for(PlaceVM placeVM: placesVM) {
                 Marker marker = createMarker(placeVM.getLatitude(), placeVM.getLongitude(), placeVM.getName());
-                markers.put(marker.getId(), placeVM.getId());
+                markers.put(marker.getId(), placeVM);
             }
             map.setOnInfoWindowClickListener(this::clickOnMarkerTitle);
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(workCoordinates.getLatitude(), workCoordinates.getLongitude()), 15f), 2000, null);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCoordinates.getLatitude(), mapCoordinates.getLongitude()), 15f), 2000, null);
         }
     }
 
@@ -119,10 +135,13 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
     }
 
     private void clickOnMarkerTitle(Marker marker) {
-        String placeId = markers.get(marker.getId());
-        Bundle bundle = new Bundle();
-        bundle.putString(PLACE_ID_KEY, placeId);
-        NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
-        map.clear();
+        PlaceVM placeVM = markers.get(marker.getId());
+        if(placeVM != null) {
+            Bundle bundle = new Bundle();
+            mapCoordinates = new CoordinatesVM(placeVM.getLatitude(), placeVM.getLongitude());
+            bundle.putString(PLACE_ID_KEY, placeVM.getId());
+            NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
+            map.clear();
+        }
     }
 }
