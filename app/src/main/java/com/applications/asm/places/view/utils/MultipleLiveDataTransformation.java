@@ -10,6 +10,7 @@ public class MultipleLiveDataTransformation {
     public static <X, Y, O> LiveData<O> combineLatest(LiveData<X> liveDataX, LiveData<Y> liveDataY, BiFunction<X, Y, O> combine) {
         return new CombineLiveData<>(liveDataX, liveDataY, combine);
     }
+
     private static final class CombineLiveData<X, Y, O> extends MediatorLiveData<O> {
         private X x;
         private Y y;

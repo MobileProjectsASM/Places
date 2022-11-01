@@ -145,7 +145,8 @@
         app:selectionRequired="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/divider2">
+        app:layout_constraintTop_toTopOf="@id/divider2"
+        app:checkedButton="@id/button_close">
 
         <Button
             android:id="@+id/button_open"
@@ -161,7 +162,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
-            android:text="@string/text_outlined_button_close" />
+            android:text="@string/text_outlined_button_close"/>
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

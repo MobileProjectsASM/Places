@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -26,6 +27,7 @@ import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.view.adapters.SortCriteriaAdapter;
 import com.applications.asm.places.view.fragments.base.CommonMenuSearchFragment;
 import com.applications.asm.places.view.utils.FormValidators;
+import com.applications.asm.places.view.utils.MultipleLiveDataTransformation;
 import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.AdvancedSearchViewModel;
 import com.applications.asm.places.view_model.MainViewModel;
@@ -45,6 +47,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdvancedSearchBinding> {
+    private static final String COORDINATES_KEY = "COORDINATES_KEY";
+    private static final String CATEGORIES_KEY = "CATEGORIES_KEY";
+
     private CompositeDisposable formDisposable;
     private Dialog loadingGetSortAndPrices;
     private MainViewModel mainViewModel;
@@ -53,6 +58,7 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     private CoordinatesVM workCoordinates;
     private CriterionVM sortCriterionSelected;
     private List<CategoryVM> categoriesSelected;
+    private Map<String, Object> sortAndPrices;
     private Boolean isRecreatedView;
     private Boolean placesOpen;
 
@@ -89,9 +95,6 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         categoriesSelected = new ArrayList<>();
         placesOpen = false;
         initViewObservables();
-        setListeners();
-        if(!isRecreatedView)
-            advancedSearchViewModel.loadSortAndPrices().observe(getViewLifecycleOwner(), this::callbackLoadData);
     }
 
     @Override
@@ -113,7 +116,8 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
                 break;
             case SUCCESS:
                 ViewUtils.loaded(loadingGetSortAndPrices);
-                advancedSearchViewModel.getSortAndPricesVM().setValue(resource.getData());
+                sortAndPrices = resource.getData();
+                renderView();
                 break;
             case WARNING:
                 ViewUtils.loaded(loadingGetSortAndPrices);
@@ -124,6 +128,25 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
                 ViewUtils.showGeneralErrorDialog(requireContext(), resource.getErrorMessage());
                 break;
         }
+    }
+
+    private void initViewObservables() {
+        if(!isRecreatedView) advancedSearchViewModel.loadSortAndPrices().observe(getViewLifecycleOwner(), this::callbackLoadData);
+        else renderView();
+    }
+
+    private void renderView() {
+        EditText radiusEditText = getViewBinding().radiusTextInputLayout.getEditText();
+        if(radiusEditText != null) {
+            Observable<String> radiusObservable = RxTextView.textChanges(radiusEditText).map(CharSequence::toString);
+            Observable<Boolean> observableForm = radiusObservable.map(this::validateRadiusField);
+            Disposable disposable = observableForm.subscribe(getViewBinding().applyFilterButton::setEnabled);
+            formDisposable.add(disposable);
+        }
+        setListeners();
+        setSortAndPrices(sortAndPrices);
+        if(!isRecreatedView) mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setWorkCoordinates);
+        else mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::setCategories);
     }
 
     private void setListeners() {
@@ -144,6 +167,14 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
                 sortCriterionSelected = adapter.getItem(i);
             });
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setSortAndPrices(Map<String, Object> sortAndPrices) {
+        List<CriterionVM> sortCriteria = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.SORT_CRITERIA_LIST);
+        List<CriterionVM> prices = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.PRICES_LIST);
+        setSortCriteria(sortCriteria);
+        setPricesCriteria(prices);
     }
 
     private void setSortCriteria(List<CriterionVM> sortCriteria) {
@@ -168,6 +199,10 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         }
     }
 
+    private void setWorkCoordinates(CoordinatesVM coordinatesVM) {
+        workCoordinates = coordinatesVM;
+    }
+
     private void setCategories(List<CategoryVM> categoriesVM) {
         categoriesSelected = categoriesVM;
         EditText categoriesEditText = getViewBinding().categoriesTextInputLayout.getEditText();
@@ -179,31 +214,6 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
             }
             categoriesEditText.setText(categories.toString());
         }
-    }
-
-    private void setWorkCoordinates(CoordinatesVM coordinatesVM) {
-        workCoordinates = coordinatesVM;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void setSortAndPrices(Map<String, Object> sortAndPrices) {
-        List<CriterionVM> sortCriteria = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.SORT_CRITERIA_LIST);
-        List<CriterionVM> prices = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.PRICES_LIST);
-        setSortCriteria(sortCriteria);
-        setPricesCriteria(prices);
-    }
-
-    private void initViewObservables() {
-        EditText radiusEditText = getViewBinding().radiusTextInputLayout.getEditText();
-        if(radiusEditText != null) {
-            Observable<String> radiusObservable = RxTextView.textChanges(radiusEditText).map(CharSequence::toString);
-            Observable<Boolean> observableForm = radiusObservable.map(this::validateRadiusField);
-            Disposable disposable = observableForm.subscribe(getViewBinding().applyFilterButton::setEnabled);
-            formDisposable.add(disposable);
-        }
-        mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setWorkCoordinates);
-        mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::setCategories);
-        advancedSearchViewModel.getSortAndPricesVM().observe(getViewLifecycleOwner(), this::setSortAndPrices);
     }
 
     private Boolean validateRadiusField(String radius) {

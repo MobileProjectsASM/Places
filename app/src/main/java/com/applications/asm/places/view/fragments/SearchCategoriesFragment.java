@@ -47,12 +47,12 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategoriesBinding> implements CategoryClickListener {
     private CompositeDisposable formDisposable;
-    private AdvancedSearchViewModel advancedSearchViewModel;
     private SearchCategoriesViewModel searchCategoriesViewModel;
     private MainViewModel mainViewModel;
     private CoordinatesVM workCoordinates;
     private Map<String, CategoryVM> categoriesMap;
     private Boolean categoriesAreBeingApplied;
+    private boolean isRecreatedView;
 
     @Named("mainVMFactory")
     @Inject
@@ -70,6 +70,12 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         getActivityComponent().inject(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isRecreatedView = false;
     }
 
     @Override
