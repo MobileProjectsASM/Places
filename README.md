@@ -44,4 +44,5 @@ Esta capa está modelada siguiente el patrón **MVVM**, en esta se realiza toda 
 
 ## Ejemplo
 
-![places image 1](places_1.jpeg)
+![places image 1](preview/places_1.jpeg)
+![places image 2](preview/places_2.jpeg)
