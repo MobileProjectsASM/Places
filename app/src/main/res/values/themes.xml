@@ -97,6 +97,14 @@
         <item name="android:fontFamily">@font/caviar_dreams</item>
     </style>
 
+    <style name="text_title_info_window" parent="text_small_style">
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="text_snippet_info_window" parent="text_small_style">
+        <item name="android:textStyle">normal</item>
+    </style>
+
     <!-- TEXT-INPUT STYLES -->
     <style name="text_input_layout_style">
         <item name="startIconTint">@color/primary_color</item>

@@ -5,12 +5,14 @@ public class PlaceMapVM {
     private Double latitude;
     private Double longitude;
     private String address;
+    private String imageUrl;
 
-    public PlaceMapVM(String name, Double latitude, Double longitude, String address) {
+    public PlaceMapVM(String name, Double latitude, Double longitude, String address, String imageUrl) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -43,5 +45,13 @@ public class PlaceMapVM {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

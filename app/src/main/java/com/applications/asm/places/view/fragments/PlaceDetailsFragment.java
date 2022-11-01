@@ -95,7 +95,7 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
 
     private void setListeners() {
         getViewBinding().showMapButton.setOnClickListener(view -> {
-            mainViewModel.getPlaceMapVM().setValue(new PlaceMapVM(placeDetailsVM.getName(), placeDetailsVM.getLatitude(), placeDetailsVM.getLongitude(), placeDetailsVM.getAddress()));
+            mainViewModel.getPlaceMapVM().setValue(new PlaceMapVM(placeDetailsVM.getName(), placeDetailsVM.getLatitude(), placeDetailsVM.getLongitude(), placeDetailsVM.getAddress(), placeDetailsVM.getImageUrl()));
             NavHostFragment.findNavController(this).navigate(R.id.action_placeDetailsFragment_to_mapFragment);
         });
         getViewBinding().showReviewsButton.setOnClickListener(view -> {

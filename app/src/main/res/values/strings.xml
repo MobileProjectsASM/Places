@@ -129,4 +129,5 @@
     <string name="there_is_no_information">Sin datos</string>
     <string name="page">Pagina</string>
     <string name="of">de</string>
+    <string name="content_description_place_image_map">Imagen del lugar en el mapa</string>
 </resources>
