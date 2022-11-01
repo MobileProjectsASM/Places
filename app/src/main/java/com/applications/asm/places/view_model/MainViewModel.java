@@ -14,6 +14,8 @@ import com.applications.asm.domain.use_cases.GetCoordinatesUc;
 import com.applications.asm.places.model.CategoryVM;
 import com.applications.asm.places.model.CoordinatesVM;
 import com.applications.asm.places.model.ParametersAdvancedSearch;
+import com.applications.asm.places.model.PlaceDetailsVM;
+import com.applications.asm.places.model.PlaceMapVM;
 import com.applications.asm.places.model.PlaceVM;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.mappers.CoordinatesMapper;
@@ -31,6 +33,7 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<List<CategoryVM>> categoriesSelectedVM;
     private MutableLiveData<ParametersAdvancedSearch> parametersAdvancedSearchVM;
     private MutableLiveData<List<PlaceVM>> placesVM;
+    private MutableLiveData<PlaceMapVM> placeMapVM;
 
     public MainViewModel(GetCoordinatesUc getCoordinatesUc, CoordinatesMapper coordinatesMapper) {
         this.getCoordinatesUc = getCoordinatesUc;
@@ -90,5 +93,10 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<List<PlaceVM>> getPlacesVM() {
         if(placesVM == null) placesVM = new MutableLiveData<>();
         return placesVM;
+    }
+
+    public MutableLiveData<PlaceMapVM> getPlaceMapVM() {
+        if(placeMapVM == null) placeMapVM = new MutableLiveData<>();
+        return placeMapVM;
     }
 }

@@ -18,11 +18,13 @@ import com.applications.asm.domain.entities.Hours;
 import com.applications.asm.places.R;
 import com.applications.asm.places.databinding.FragmentPlaceDetailsBinding;
 import com.applications.asm.places.model.PlaceDetailsVM;
+import com.applications.asm.places.model.PlaceMapVM;
 import com.applications.asm.places.model.PriceVM;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.model.ScheduleVM;
 import com.applications.asm.places.view.fragments.base.BaseFragment;
 import com.applications.asm.places.view.utils.ViewUtils;
+import com.applications.asm.places.view_model.MainViewModel;
 import com.applications.asm.places.view_model.PlaceDetailsViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -37,11 +39,16 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
     private PlaceDetailsViewModel placeDetailsViewModel;
     private Dialog loadingGetCoordinates;
     private PlaceDetailsVM placeDetailsVM;
+    private MainViewModel mainViewModel;
     private boolean isRecreated;
 
     @Named("placeDetailsVMFactory")
     @Inject
     ViewModelProvider.Factory placeDetailsViewModelFactory;
+
+    @Named("mainVMFactory")
+    @Inject
+    ViewModelProvider.Factory mainViewModelFactory;
 
     public PlaceDetailsFragment() {
         // Required empty public constructor
@@ -63,6 +70,7 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         placeDetailsViewModel = new ViewModelProvider(this, placeDetailsViewModelFactory).get(PlaceDetailsViewModel.class);
+        mainViewModel = new ViewModelProvider(requireActivity(), mainViewModelFactory).get(MainViewModel.class);
         initViewObservables();
         setListeners();
     }
@@ -87,7 +95,8 @@ public class PlaceDetailsFragment extends BaseFragment<FragmentPlaceDetailsBindi
 
     private void setListeners() {
         getViewBinding().showMapButton.setOnClickListener(view -> {
-
+            mainViewModel.getPlaceMapVM().setValue(new PlaceMapVM(placeDetailsVM.getName(), placeDetailsVM.getLatitude(), placeDetailsVM.getLongitude(), placeDetailsVM.getAddress()));
+            NavHostFragment.findNavController(this).navigate(R.id.action_placeDetailsFragment_to_mapFragment);
         });
         getViewBinding().showReviewsButton.setOnClickListener(view -> {
             Bundle bundle = getArguments();

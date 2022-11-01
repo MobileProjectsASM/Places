@@ -76,9 +76,9 @@
         tools:layout="@layout/fragment_map_places" />
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.applications.asm.places.view.fragments.MapFragment"
+        android:name="com.applications.asm.places.view.fragments.MapPlaceFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map_place" />
     <fragment
         android:id="@+id/searchLocationFragment"
         android:name="com.applications.asm.places.view.fragments.SearchLocationFragment"
