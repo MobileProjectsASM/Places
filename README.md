@@ -44,4 +44,5 @@ Esta capa está modelada siguiente el patrón **MVVM**, en esta se realiza toda 
 
 ## Ejemplo
 
-<img src="/preview/places.gif" width="300" height="533" align="right" />
+<img src="/preview/places_1.gif" width="300" height="533" align="right" />
+<img src="/preview/places_2.gif" width="300" height="533" align="right" />
