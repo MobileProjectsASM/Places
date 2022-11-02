@@ -29,7 +29,8 @@
         <entry key="app/src/main/res/layout/fragment_categories.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_commmon_menu.xml" value="0.32019927536231885" />
         <entry key="app/src/main/res/layout/fragment_common_search.xml" value="0.32019927536231885" />
-        <entry key="app/src/main/res/layout/fragment_coordinates.xml" value="0.15932117527862208" />
+        <entry key="app/src/main/res/layout/fragment_coordinates.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_coordinates_map.xml" value="0.425" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_list.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_list_places.xml" value="0.240625" />

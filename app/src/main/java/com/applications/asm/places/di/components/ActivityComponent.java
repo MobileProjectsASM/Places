@@ -4,6 +4,7 @@ import com.applications.asm.places.di.modules.MappersModule;
 import com.applications.asm.places.di.modules.ViewModelsModule;
 import com.applications.asm.places.di.scopes.ActivityScope;
 import com.applications.asm.places.view.activities.MainActivity;
+import com.applications.asm.places.view.fragments.CoordinatesMapFragment;
 import com.applications.asm.places.view.fragments.MapPlaceFragment;
 import com.applications.asm.places.view.fragments.MapPlacesFragment;
 import com.applications.asm.places.view.fragments.PlaceDetailsFragment;
@@ -38,4 +39,5 @@ public interface ActivityComponent {
     void inject(PlaceDetailsFragment placeDetailsFragment);
     void inject(ReviewsFragment reviewsFragment);
     void inject(MapPlaceFragment mapPlaceFragment);
+    void inject(CoordinatesMapFragment coordinatesMapFragment);
 }

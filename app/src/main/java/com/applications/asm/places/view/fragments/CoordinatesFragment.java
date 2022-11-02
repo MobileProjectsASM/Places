@@ -53,6 +53,7 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
     private MainViewModel mainViewModel;
     private SavedStateHandle savedStateHandle;
     private int countChangesLat, countChangesLon;
+    private boolean isRecreatedView;
 
     @Named("mainVMFactory")
     @Inject
@@ -62,14 +63,20 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
     @Inject
     ViewModelProvider.Factory coordinatesViewModelFactory;
 
+    public CoordinatesFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         getActivityComponent().inject(this);
     }
 
-    public CoordinatesFragment() {
-        // Required empty public constructor
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        isRecreatedView = false;
     }
 
     @Override
@@ -84,13 +91,15 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
         initLaunchers();
         initViewObservables();
         setListeners();
-        mainViewModel.loadCoordinates(CoordinatesVM.StateVM.SAVED).observe(getViewLifecycleOwner(), this::callbackCoordinates);
+        if(!isRecreatedView) mainViewModel.loadCoordinates(CoordinatesVM.StateVM.SAVED).observe(getViewLifecycleOwner(), this::callbackCoordinates);
+        else mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setCoordinates);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         formDisposable.clear();
+        isRecreatedView = true;
     }
 
     @Override
@@ -125,6 +134,12 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
                 ViewUtils.showGeneralErrorDialog(requireContext(), resource.getErrorMessage());
                 break;
         }
+    }
+
+    private void setCoordinates(CoordinatesVM coordinatesVM) {
+        setLatitudeText(String.valueOf(coordinatesVM.getLatitude()));
+        setLongitudeText(String.valueOf(coordinatesVM.getLongitude()));
+
     }
 
     private void callbackCoordinatesSaved(Resource<Boolean> resource) {
@@ -163,6 +178,7 @@ public class CoordinatesFragment extends BaseFragment<FragmentCoordinatesBinding
                     requestPermissionLocation();
             }
         });
+        getViewBinding().pointFromMapButton.setOnClickListener(view -> NavHostFragment.findNavController(this).navigate(R.id.action_coordinatesFragment_to_coordinatesMapFragment));
     }
 
     private void initViewObservables() {

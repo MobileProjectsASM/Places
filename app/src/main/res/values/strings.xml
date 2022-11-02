@@ -130,4 +130,7 @@
     <string name="page">Pagina</string>
     <string name="of">de</string>
     <string name="content_description_place_image_map">Imagen del lugar en el mapa</string>
+    <string name="content_description_marker_image_map">Marcardor de seleccion</string>
+    <string name="point_location_text_label">Señalar lugar</string>
+    <string name="point_from_map_text_label">Señalar desde el mapa</string>
 </resources>

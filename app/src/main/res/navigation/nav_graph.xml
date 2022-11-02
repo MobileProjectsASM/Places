@@ -43,8 +43,8 @@
         android:label="fragment_location"
         tools:layout="@layout/fragment_coordinates" >
         <action
-            android:id="@+id/action_coordinatesFragment_to_searchLocationFragment"
-            app:destination="@id/searchLocationFragment" />
+            android:id="@+id/action_coordinatesFragment_to_coordinatesMapFragment"
+            app:destination="@id/coordinatesMapFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchPlacesFragment"
@@ -79,10 +79,10 @@
         android:name="com.applications.asm.places.view.fragments.MapPlaceFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map_place" />
-    <fragment
-        android:id="@+id/searchLocationFragment"
-        android:name="com.applications.asm.places.view.fragments.SearchLocationFragment"
-        android:label="fragment_search_location"
-        tools:layout="@layout/fragment_search_location" />
     <action android:id="@+id/action_global_placeDetailsFragment" app:destination="@id/placeDetailsFragment" />
+    <fragment
+        android:id="@+id/coordinatesMapFragment"
+        android:name="com.applications.asm.places.view.fragments.CoordinatesMapFragment"
+        android:label="CoordinatesMapFragment"
+        tools:layout="@layout/fragment_coordinates_map"/>
 </navigation>
