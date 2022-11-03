@@ -11,5 +11,5 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Single;
 
 public interface AllPlaces {
-    Single<Response<FoundPlaces>> withThisCriteria(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page);
+    Single<Response<FoundPlaces>> withThisCriteria(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page, String locale);
 }

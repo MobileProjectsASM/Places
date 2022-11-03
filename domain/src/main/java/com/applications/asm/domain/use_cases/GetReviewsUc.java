@@ -13,8 +13,22 @@ import javax.inject.Inject;
 
 import io.reactivex.rxjava3.core.Single;
 
-public class GetReviewsUc extends SingleUseCase<Response<List<Review>>, String> {
+public class GetReviewsUc extends SingleUseCase<Response<List<Review>>, GetReviewsUc.Params> {
     private final AllReviews allReviews;
+
+    public static class Params {
+        private final String placeId;
+        private final String locale;
+
+        private Params(String placeId, String locale) {
+            this.placeId = placeId;
+            this.locale = locale;
+        }
+
+        public static Params forGetReviews(String placeId, String locale) {
+            return new Params(placeId, locale);
+        }
+    }
 
     @Inject
     public GetReviewsUc(UseCaseScheduler useCaseScheduler, AllReviews allReviews) {
@@ -22,17 +36,17 @@ public class GetReviewsUc extends SingleUseCase<Response<List<Review>>, String> 
         this.allReviews = allReviews;
     }
 
-    private Single<String> validateParams(String placeId) {
+    private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if (placeId == null)
+            if (params.placeId == null || params.locale == null)
                 throw new ParameterException("You entered a null value");
-            return placeId;
+            return params;
         });
     }
 
     @Override
-    protected Single<Response<List<Review>>> build(String placeId) {
-        return validateParams(placeId)
-                .flatMap(allReviews::ofThisPlace);
+    protected Single<Response<List<Review>>> build(Params params) {
+        return validateParams(params)
+                .flatMap(param -> allReviews.ofThisPlace(params.placeId, params.locale));
     }
 }

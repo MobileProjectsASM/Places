@@ -31,8 +31,9 @@ public class GetPlacesUc extends SingleUseCase<Response<FoundPlaces>, GetPlacesU
         private final List<Criterion> pricesCriteria;
         private final Boolean isOpenNow;
         private final Integer page;
+        private final String locale;
 
-        private Params(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page) {
+        private Params(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page, String locale) {
             this.placeToFind = placeToFind;
             this.coordinates = coordinates;
             this.radius = radius;
@@ -41,10 +42,11 @@ public class GetPlacesUc extends SingleUseCase<Response<FoundPlaces>, GetPlacesU
             this.pricesCriteria = pricesCriteria;
             this.isOpenNow = isOpenNow;
             this.page = page;
+            this.locale = locale;
         }
 
-        public static Params forFilterPlaces(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page) {
-            return new Params(placeToFind, coordinates, radius, categories, sortCriterion, pricesCriteria, isOpenNow, page);
+        public static Params forFilterPlaces(String placeToFind, Coordinates coordinates, Integer radius, List<Category> categories, Criterion sortCriterion, List<Criterion> pricesCriteria, Boolean isOpenNow, Integer page, String locale) {
+            return new Params(placeToFind, coordinates, radius, categories, sortCriterion, pricesCriteria, isOpenNow, page, locale);
         }
     }
 
@@ -57,7 +59,7 @@ public class GetPlacesUc extends SingleUseCase<Response<FoundPlaces>, GetPlacesU
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.placeToFind == null || params.coordinates == null || params.radius == null || params.categories == null || params.sortCriterion == null || params.pricesCriteria == null || params.isOpenNow == null || params.page == null)
+            if(params.placeToFind == null || params.coordinates == null || params.radius == null || params.categories == null || params.sortCriterion == null || params.pricesCriteria == null || params.isOpenNow == null || params.page == null || params.locale == null)
                 throw new ParameterException("Error: You entered a null value");
             if(!validators.validateLatitudeRange(params.coordinates.getLatitude()) || !validators.validateLongitudeRange(params.coordinates.getLongitude()))
                 throw new ParameterException("Error: Coordinates out of range");
@@ -72,7 +74,7 @@ public class GetPlacesUc extends SingleUseCase<Response<FoundPlaces>, GetPlacesU
     @Override
     protected Single<Response<FoundPlaces>> build(Params params) {
         return validateParams(params)
-                .flatMap(param -> allPlaces.withThisCriteria(param.placeToFind, param.coordinates, param.radius, param.categories, param.sortCriterion, param.pricesCriteria, param.isOpenNow, param.page));
+                .flatMap(param -> allPlaces.withThisCriteria(param.placeToFind, param.coordinates, param.radius, param.categories, param.sortCriterion, param.pricesCriteria, param.isOpenNow, param.page, param.locale));
     }
 
 }

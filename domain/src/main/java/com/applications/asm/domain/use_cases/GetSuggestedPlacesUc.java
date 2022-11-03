@@ -22,14 +22,16 @@ public class GetSuggestedPlacesUc extends SingleUseCase<Response<List<SuggestedP
     public static class Params {
         private final String place;
         private final Coordinates coordinates;
+        private final String locale;
 
-        private Params(String place, Coordinates coordinates) {
+        private Params(String place, Coordinates coordinates, String locale) {
             this.place = place;
             this.coordinates = coordinates;
+            this.locale = locale;
         }
 
-        public static Params forSuggestedPlaces(String place, Coordinates coordinates) {
-            return new Params(place, coordinates);
+        public static Params forSuggestedPlaces(String place, Coordinates coordinates, String locale) {
+            return new Params(place, coordinates, locale);
         }
     }
 
@@ -42,7 +44,7 @@ public class GetSuggestedPlacesUc extends SingleUseCase<Response<List<SuggestedP
 
     private Single<Params> validateParams(Params params) {
         return Single.fromCallable(() -> {
-            if(params.place == null || params.coordinates == null)
+            if(params.place == null || params.coordinates == null || params.locale == null)
                 throw new ParameterException("You entered a null value");
             if(!validators.validateLatitudeRange(params.coordinates.getLatitude()) || !validators.validateLongitudeRange(params.coordinates.getLongitude()))
                 throw new ParameterException("Coordinates out of range");

@@ -8,5 +8,5 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Single;
 
 public interface AllReviews {
-    Single<Response<List<Review>>> ofThisPlace(String placeId);
+    Single<Response<List<Review>>> ofThisPlace(String placeId, String locale);
 }
