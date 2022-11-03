@@ -77,12 +77,12 @@ public class MapPlaceFragment extends BaseFragment<FragmentMapPlaceBinding> impl
 
     private void callbackGetPlaceMapVM(PlaceMapVM placeMapVM) {
         createMarker(placeMapVM);
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(placeMapVM.getLatitude(), placeMapVM.getLongitude()), 15f), 2000, null);
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(placeMapVM.getCoordinatesVM().getLatitude(), placeMapVM.getCoordinatesVM().getLongitude()), 15f), 2000, null);
         map.setInfoWindowAdapter(this);
     }
 
     private void createMarker(PlaceMapVM placeMapVM) {
-        LatLng coordinates = new LatLng(placeMapVM.getLatitude(), placeMapVM.getLongitude());
+        LatLng coordinates = new LatLng(placeMapVM.getCoordinatesVM().getLatitude(), placeMapVM.getCoordinatesVM().getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(coordinates);
         Marker marker = map.addMarker(markerOptions);
         if(marker != null) marker.setTag(placeMapVM);

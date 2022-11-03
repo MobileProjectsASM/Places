@@ -7,8 +7,7 @@ public class PlaceDetailsVM {
     private String name;
     private String imageUrl;
     private String address;
-    private Double longitude;
-    private Double latitude;
+    private CoordinatesVM coordinatesVM;
     private Double rating;
     private PriceVM price;
     private String categories;
@@ -17,13 +16,12 @@ public class PlaceDetailsVM {
     private List<ScheduleVM> schedule;
     private Boolean isOpen;
 
-    public PlaceDetailsVM(String id, String name, String imageUrl, String address, Double longitude, Double latitude, Double rating, PriceVM price, String categories, String phoneNumber, Integer reviewsCounter, List<ScheduleVM> schedule, Boolean isOpen) {
+    public PlaceDetailsVM(String id, String name, String imageUrl, String address, CoordinatesVM coordinatesVM, Double rating, PriceVM price, String categories, String phoneNumber, Integer reviewsCounter, List<ScheduleVM> schedule, Boolean isOpen) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
         this.address = address;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.coordinatesVM = coordinatesVM;
         this.rating = rating;
         this.price = price;
         this.categories = categories;
@@ -65,20 +63,12 @@ public class PlaceDetailsVM {
         this.imageUrl = imageUrl;
     }
 
-    public Double getLongitude() {
-        return longitude;
+    public CoordinatesVM getCoordinatesVM() {
+        return coordinatesVM;
     }
 
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
-    }
-
-    public Double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
+    public void setCoordinatesVM(CoordinatesVM coordinatesVM) {
+        this.coordinatesVM = coordinatesVM;
     }
 
     public Double getRating() {

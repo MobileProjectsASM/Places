@@ -3,17 +3,15 @@ package com.applications.asm.places.model;
 public class PlaceVM {
     private String id;
     private String name;
-    private Double latitude;
-    private Double longitude;
+    private CoordinatesVM coordinatesVM;
     private String imageUrl;
     private String categories;
     private String address;
 
-    public PlaceVM(String id, String name, Double latitude, Double longitude, String imageUrl, String categories, String address) {
+    public PlaceVM(String id, String name, CoordinatesVM coordinatesVM, String imageUrl, String categories, String address) {
         this.id = id;
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.coordinatesVM = coordinatesVM;
         this.imageUrl = imageUrl;
         this.categories = categories;
         this.address = address;
@@ -35,20 +33,12 @@ public class PlaceVM {
         this.name = name;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public CoordinatesVM getCoordinatesVM() {
+        return coordinatesVM;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setCoordinatesVM(CoordinatesVM coordinatesVM) {
+        this.coordinatesVM = coordinatesVM;
     }
 
     public String getImageUrl() {

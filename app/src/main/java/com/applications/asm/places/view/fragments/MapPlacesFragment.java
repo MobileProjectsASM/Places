@@ -123,7 +123,7 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
     }
 
     private void createMarker(PlaceVM placeVM) {
-        LatLng coordinates = new LatLng(placeVM.getLatitude(), placeVM.getLongitude());
+        LatLng coordinates = new LatLng(placeVM.getCoordinatesVM().getLatitude(), placeVM.getCoordinatesVM().getLongitude());
         MarkerOptions markerOptions = new MarkerOptions().position(coordinates).title(placeVM.getName());
         Marker marker = map.addMarker(markerOptions);
         if(marker != null) marker.setTag(placeVM);
@@ -133,7 +133,7 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
         PlaceVM placeVM = (PlaceVM) marker.getTag();
         if(placeVM != null) {
             Bundle bundle = new Bundle();
-            mapCoordinates = new CoordinatesVM(placeVM.getLatitude(), placeVM.getLongitude());
+            mapCoordinates = new CoordinatesVM(placeVM.getCoordinatesVM().getLatitude(), placeVM.getCoordinatesVM().getLongitude());
             bundle.putString(PLACE_ID_KEY, placeVM.getId());
             NavHostFragment.findNavController(this).navigate(R.id.action_global_placeDetailsFragment, bundle);
             map.clear();

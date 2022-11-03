@@ -23,10 +23,11 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PlaceMapperImpl implements PlaceMapper {
+    private CoordinatesMapper coordinatesMapper;
 
     @Inject
-    public PlaceMapperImpl() {
-
+    public PlaceMapperImpl(CoordinatesMapper coordinatesMapper) {
+        this.coordinatesMapper = coordinatesMapper;
     }
 
     @Override
@@ -37,7 +38,7 @@ public class PlaceMapperImpl implements PlaceMapper {
     @Override
     public PlaceVM getPlaceVM(Place place) {
         String categories = getCategories(place.getCategories());
-        return new PlaceVM(place.getId(), place.getName(), place.getLocation().getLatitude(), place.getLocation().getLongitude(), place.getImageUrl(), categories, place.getAddress());
+        return new PlaceVM(place.getId(), place.getName(), coordinatesMapper.getCoordinatesVM(place.getLocation()), place.getImageUrl(), categories, place.getAddress());
     }
 
     @Override
@@ -47,8 +48,7 @@ public class PlaceMapperImpl implements PlaceMapper {
             placeDetails.getName(),
             placeDetails.getImageUrl(),
             placeDetails.getAddress(),
-            placeDetails.getLocation().getLongitude(),
-            placeDetails.getLocation().getLatitude(),
+            coordinatesMapper.getCoordinatesVM(placeDetails.getLocation()),
             placeDetails.getRating(),
             getPrice(placeDetails.getPrice()),
             getCategories(placeDetails.getCategories()),

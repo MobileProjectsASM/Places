@@ -2,15 +2,13 @@ package com.applications.asm.places.model;
 
 public class PlaceMapVM {
     private String name;
-    private Double latitude;
-    private Double longitude;
+    private CoordinatesVM coordinatesVM;
     private String address;
     private String imageUrl;
 
-    public PlaceMapVM(String name, Double latitude, Double longitude, String address, String imageUrl) {
+    public PlaceMapVM(String name, CoordinatesVM coordinatesVM, String address, String imageUrl) {
         this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.coordinatesVM = coordinatesVM;
         this.address = address;
         this.imageUrl = imageUrl;
     }
@@ -23,20 +21,12 @@ public class PlaceMapVM {
         this.name = name;
     }
 
-    public Double getLatitude() {
-        return latitude;
+    public CoordinatesVM getCoordinatesVM() {
+        return coordinatesVM;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
-
-    public Double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Double longitude) {
-        this.longitude = longitude;
+    public void setCoordinatesVM(CoordinatesVM coordinatesVM) {
+        this.coordinatesVM = coordinatesVM;
     }
 
     public String getAddress() {
