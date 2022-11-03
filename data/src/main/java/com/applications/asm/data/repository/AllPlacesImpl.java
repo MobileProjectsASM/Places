@@ -85,7 +85,7 @@ public class AllPlacesImpl implements AllPlaces {
             if(priceCriterion.getId().compareTo("$") == 0) priceCriteriaString.add("1");
             else if(priceCriterion.getId().compareTo("$$") == 0) priceCriteriaString.add("2");
             else if(priceCriterion.getId().compareTo("$$$") == 0) priceCriteriaString.add("3");
-            else priceCriteriaString.add("$$$$");
+            else priceCriteriaString.add("4");
         }
         return priceCriteriaString;
     }
