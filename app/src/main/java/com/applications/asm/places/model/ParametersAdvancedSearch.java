@@ -11,8 +11,9 @@ public class ParametersAdvancedSearch {
     private List<CriterionVM> pricesCriterion;
     private Boolean isOpenNow;
     private Integer page;
+    private String locale;
 
-    public ParametersAdvancedSearch(String place, CoordinatesVM coordinatesVM, Integer radius, List<CategoryVM> categories, CriterionVM sortCriterion, List<CriterionVM> pricesCriterion, Boolean isOpenNow, Integer page) {
+    public ParametersAdvancedSearch(String place, CoordinatesVM coordinatesVM, Integer radius, List<CategoryVM> categories, CriterionVM sortCriterion, List<CriterionVM> pricesCriterion, Boolean isOpenNow, Integer page, String locale) {
         this.place = place;
         this.coordinatesVM = coordinatesVM;
         this.radius = radius;
@@ -21,6 +22,7 @@ public class ParametersAdvancedSearch {
         this.pricesCriterion = pricesCriterion;
         this.isOpenNow = isOpenNow;
         this.page = page;
+        this.locale = locale;
     }
 
     public String getPlace() {
@@ -85,5 +87,13 @@ public class ParametersAdvancedSearch {
 
     public void setPage(Integer page) {
         this.page = page;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

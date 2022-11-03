@@ -148,7 +148,7 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
     }
 
     private void getFirstPlaces(Resource<FoundPlacesVM> resource) {
-        getViewBinding().resultsPlacesFrameLayout.removeAllViews();
+     getViewBinding().resultsPlacesFrameLayout.removeAllViews();
         switch(resource.getStatus()) {
             case LOADING:
                 LoadingLayoutBinding viewLoadingBinding = LoadingLayoutBinding.inflate(getLayoutInflater());

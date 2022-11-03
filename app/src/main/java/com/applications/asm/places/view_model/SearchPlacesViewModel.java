@@ -29,10 +29,10 @@ public class SearchPlacesViewModel extends ViewModel {
         this.coordinatesMapper = coordinatesMapper;
     }
 
-    public LiveData<Resource<List<SuggestedPlaceVM>>> getSuggestedPlaces(String place, CoordinatesVM coordinatesVM) {
+    public LiveData<Resource<List<SuggestedPlaceVM>>> getSuggestedPlaces(String place, CoordinatesVM coordinatesVM, String locale) {
         MediatorLiveData<Resource<List<SuggestedPlaceVM>>> liveDataSuggestedPlaces = new MediatorLiveData<>();
         liveDataSuggestedPlaces.setValue(Resource.loading());
-        LiveData<Resource<List<SuggestedPlaceVM>>> sourceSuggestedPlaces = LiveDataReactiveStreams.fromPublisher(getSuggestedPlacesUc.execute(GetSuggestedPlacesUc.Params.forSuggestedPlaces(place, coordinatesMapper.getCoordinates(coordinatesVM)))
+        LiveData<Resource<List<SuggestedPlaceVM>>> sourceSuggestedPlaces = LiveDataReactiveStreams.fromPublisher(getSuggestedPlacesUc.execute(GetSuggestedPlacesUc.Params.forSuggestedPlaces(place, coordinatesMapper.getCoordinates(coordinatesVM), locale))
                 .flatMap(listResponse -> {
                     Single<Resource<List<SuggestedPlaceVM>>> suggestedPlacesResource;
                     if(listResponse.getError() == null || listResponse.getError().isEmpty()) {

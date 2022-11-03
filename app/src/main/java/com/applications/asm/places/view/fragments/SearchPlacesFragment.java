@@ -202,7 +202,7 @@ public class SearchPlacesFragment extends CommonMenuSearchFragment<FragmentSearc
                     .skip(1)
                     .map(CharSequence::toString);
             Disposable disposable = placeObservable.subscribe(text -> {
-                if(!text.isEmpty()) searchPlacesViewModel.getSuggestedPlaces(text, workCoordinates).observe(getViewLifecycleOwner(), this::callbackSuggestedPlaces);
+                if(!text.isEmpty()) searchPlacesViewModel.getSuggestedPlaces(text, workCoordinates, "es_MX").observe(getViewLifecycleOwner(), this::callbackSuggestedPlaces);
                 else callbackSuggestedPlaces(Resource.success(new ArrayList<>()));
             });
             formDisposable.add(disposable);

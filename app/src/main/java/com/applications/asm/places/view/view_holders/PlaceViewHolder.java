@@ -18,13 +18,13 @@ public class PlaceViewHolder extends RecyclerView.ViewHolder {
         binding = PlaceItemLayoutBinding.bind(view);
     }
 
-    public void render(PlaceVM placeM, PlaceClickListener placeClickListener) {
-        if(placeM.getImageUrl().compareTo("") != 0) Picasso.get().load(placeM.getImageUrl()).placeholder(R.drawable.place_image).error(R.drawable.no_image).fit().centerCrop().into(binding.placeImageView);
+    public void render(PlaceVM placeVM, PlaceClickListener placeClickListener) {
+        if(placeVM.getImageUrl().compareTo("") != 0) Picasso.get().load(placeVM.getImageUrl()).placeholder(R.drawable.place_image).error(R.drawable.no_image).fit().centerCrop().into(binding.placeImageView);
         else Picasso.get().load(R.drawable.no_image).fit().centerCrop().into(binding.placeImageView);
-        binding.namePlaceTextView.setText(placeM.getName());
-        binding.addressPlaceTextView.setText(placeM.getAddress());
-        binding.categoriesPlaceTextView.setText(placeM.getCategories());
+        binding.namePlaceTextView.setText(placeVM.getName());
+        binding.addressPlaceTextView.setText(placeVM.getAddress());
+        binding.categoriesPlaceTextView.setText(placeVM.getCategories());
 
-        itemView.setOnClickListener(view -> placeClickListener.onPlaceClickListener(placeM));
+        itemView.setOnClickListener(view -> placeClickListener.onPlaceClickListener(placeVM));
     }
 }

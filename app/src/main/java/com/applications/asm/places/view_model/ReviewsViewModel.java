@@ -22,10 +22,10 @@ public class ReviewsViewModel extends ViewModel {
         this.reviewMapper = reviewMapper;
     }
 
-    public LiveData<Resource<List<ReviewVM>>> getReviews(String placeId) {
+    public LiveData<Resource<List<ReviewVM>>> getReviews(String placeId, String locale) {
         MediatorLiveData<Resource<List<ReviewVM>>> liveDataReviews = new MediatorLiveData<>();
         liveDataReviews.setValue(Resource.loading());
-        LiveData<Resource<List<ReviewVM>>> sourceReviews = LiveDataReactiveStreams.fromPublisher(getReviewsUc.execute(placeId)
+        LiveData<Resource<List<ReviewVM>>> sourceReviews = LiveDataReactiveStreams.fromPublisher(getReviewsUc.execute(GetReviewsUc.Params.forGetReviews(placeId, locale))
             .map(response -> {
                 Resource<List<ReviewVM>> resource;
                 if(response.getError() == null || response.getError().isEmpty()) resource = Resource.success(reviewMapper.getReviewsVM(response.getData()));

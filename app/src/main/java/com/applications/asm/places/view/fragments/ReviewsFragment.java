@@ -63,7 +63,7 @@ public class ReviewsFragment extends BaseFragment<FragmentReviewsBinding> {
 
     private void initViewObservables() {
         Bundle bundle = getArguments();
-        if(bundle != null) reviewsViewModel.getReviews(bundle.getString(PLACE_REVIEWS_KEY)).observe(getViewLifecycleOwner(), this::getReviews);
+        if(bundle != null) reviewsViewModel.getReviews(bundle.getString(PLACE_REVIEWS_KEY), "es_MX").observe(getViewLifecycleOwner(), this::getReviews);
     }
 
     private void initAdapter() {

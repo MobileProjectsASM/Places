@@ -250,7 +250,7 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
             pricesSelected.add(criterionVM);
         }
 
-        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesSelected, placesOpen, 1));
+        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesSelected, placesOpen, 1, "es_MX"));
         NavHostFragment.findNavController(this).navigate(R.id.action_advancedSearchFragment_to_placesFragment);
     }
 }

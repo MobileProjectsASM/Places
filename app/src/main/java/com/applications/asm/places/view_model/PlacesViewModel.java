@@ -40,7 +40,7 @@ public class PlacesViewModel extends ViewModel {
     public LiveData<Resource<FoundPlacesVM>> getPlaces(ParametersAdvancedSearch parametersAdvancedSearch) {
         MediatorLiveData<Resource<FoundPlacesVM>> liveDataPlaces = new MediatorLiveData<>();
         liveDataPlaces.setValue(Resource.loading());
-        GetPlacesUc.Params params = GetPlacesUc.Params.forFilterPlaces(parametersAdvancedSearch.getPlace(), coordinatesMapper.getCoordinates(parametersAdvancedSearch.getCoordinatesVM()), parametersAdvancedSearch.getRadius(), categoryMapper.getCategories(parametersAdvancedSearch.getCategories()), criterionMapper.getCriterion(parametersAdvancedSearch.getSortCriterion()), criterionMapper.getCriteria(parametersAdvancedSearch.getPricesCriterion()), parametersAdvancedSearch.getOpenNow(), parametersAdvancedSearch.getPage());
+        GetPlacesUc.Params params = GetPlacesUc.Params.forFilterPlaces(parametersAdvancedSearch.getPlace(), coordinatesMapper.getCoordinates(parametersAdvancedSearch.getCoordinatesVM()), parametersAdvancedSearch.getRadius(), categoryMapper.getCategories(parametersAdvancedSearch.getCategories()), criterionMapper.getCriterion(parametersAdvancedSearch.getSortCriterion()), criterionMapper.getCriteria(parametersAdvancedSearch.getPricesCriterion()), parametersAdvancedSearch.getOpenNow(), parametersAdvancedSearch.getPage(), "es_MX");
         LiveData<Resource<FoundPlacesVM>> sourcePlaces = LiveDataReactiveStreams.fromPublisher(getPlacesUc.execute(params)
             .map(response -> {
                 Resource<FoundPlacesVM> resource;
