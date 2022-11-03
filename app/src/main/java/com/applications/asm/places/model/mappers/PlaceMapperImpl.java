@@ -23,7 +23,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class PlaceMapperImpl implements PlaceMapper {
-    private CoordinatesMapper coordinatesMapper;
+    private final CoordinatesMapper coordinatesMapper;
 
     @Inject
     public PlaceMapperImpl(CoordinatesMapper coordinatesMapper) {

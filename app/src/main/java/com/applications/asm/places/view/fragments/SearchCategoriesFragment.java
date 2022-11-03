@@ -101,42 +101,6 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
         return FragmentSearchCategoriesBinding.inflate(inflater, container, false);
     }
 
-    public void callbackCategories(Resource<List<CategoryVM>> resource) {
-        getViewBinding().suggestedCategoriesView.removeAllViews();
-        switch (resource.getStatus()) {
-            case LOADING:
-                LoadingLayoutBinding viewLoadingBinding = LoadingLayoutBinding.inflate(getLayoutInflater());
-                getViewBinding().suggestedCategoriesView.addView(viewLoadingBinding.getRoot());
-                break;
-            case SUCCESS:
-                List<CategoryVM> categories = resource.getData();
-                View suggestedCategoriesView;
-                if(categories.isEmpty()) {
-                    MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
-                    viewEmptyBinding.messageTextView.setText(R.string.there_are_no_categories_label  );
-                    suggestedCategoriesView = viewEmptyBinding.getRoot();
-                } else {
-                    SuggestedCategoryAdapter suggestedCategoryAdapter = new SuggestedCategoryAdapter(categories, this);
-                    SuggestedCategoriesLayoutBinding suggestedCategoriesLayoutBinding = SuggestedCategoriesLayoutBinding.inflate(getLayoutInflater());
-                    suggestedCategoriesLayoutBinding.suggestedCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-                    suggestedCategoriesLayoutBinding.suggestedCategoriesRecyclerView.setAdapter(suggestedCategoryAdapter);
-                    suggestedCategoriesView = suggestedCategoriesLayoutBinding.getRoot();
-                }
-                getViewBinding().suggestedCategoriesView.addView(suggestedCategoriesView);
-                break;
-            case WARNING:
-                MessageLayoutBinding  warningBinding = MessageLayoutBinding.inflate(getLayoutInflater());
-                warningBinding.messageTextView.setText(resource.getWarning());
-                getViewBinding().suggestedCategoriesView.addView(warningBinding.getRoot());
-                break;
-            case ERROR:
-                MessageLayoutBinding  errorBinding = MessageLayoutBinding.inflate(getLayoutInflater());
-                errorBinding.messageTextView.setText(resource.getErrorMessage());
-                getViewBinding().suggestedCategoriesView.addView(errorBinding.getRoot());
-                break;
-        }
-    }
-
     @Override
     public void onCategoryClickListener(CategoryVM categoryVM) {
         if(categoriesMap.get(categoryVM.getId()) == null) {
@@ -196,6 +160,42 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
         }
         mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::callbackWorkingCoordinates);
         mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::callbackCategoriesSelected);
+    }
+
+    public void callbackCategories(Resource<List<CategoryVM>> resource) {
+        getViewBinding().suggestedCategoriesView.removeAllViews();
+        switch (resource.getStatus()) {
+            case LOADING:
+                LoadingLayoutBinding viewLoadingBinding = LoadingLayoutBinding.inflate(getLayoutInflater());
+                getViewBinding().suggestedCategoriesView.addView(viewLoadingBinding.getRoot());
+                break;
+            case SUCCESS:
+                List<CategoryVM> categories = resource.getData();
+                View suggestedCategoriesView;
+                if(categories.isEmpty()) {
+                    MessageLayoutBinding viewEmptyBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                    viewEmptyBinding.messageTextView.setText(R.string.there_are_no_categories_label );
+                    suggestedCategoriesView = viewEmptyBinding.getRoot();
+                } else {
+                    SuggestedCategoryAdapter suggestedCategoryAdapter = new SuggestedCategoryAdapter(categories, this);
+                    SuggestedCategoriesLayoutBinding suggestedCategoriesLayoutBinding = SuggestedCategoriesLayoutBinding.inflate(getLayoutInflater());
+                    suggestedCategoriesLayoutBinding.suggestedCategoriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    suggestedCategoriesLayoutBinding.suggestedCategoriesRecyclerView.setAdapter(suggestedCategoryAdapter);
+                    suggestedCategoriesView = suggestedCategoriesLayoutBinding.getRoot();
+                }
+                getViewBinding().suggestedCategoriesView.addView(suggestedCategoriesView);
+                break;
+            case WARNING:
+                MessageLayoutBinding  warningBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                warningBinding.messageTextView.setText(resource.getWarning());
+                getViewBinding().suggestedCategoriesView.addView(warningBinding.getRoot());
+                break;
+            case ERROR:
+                MessageLayoutBinding  errorBinding = MessageLayoutBinding.inflate(getLayoutInflater());
+                errorBinding.messageTextView.setText(resource.getErrorMessage());
+                getViewBinding().suggestedCategoriesView.addView(errorBinding.getRoot());
+                break;
+        }
     }
 
     private void setListeners() {

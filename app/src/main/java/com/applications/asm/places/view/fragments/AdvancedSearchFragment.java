@@ -47,14 +47,12 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdvancedSearchBinding> {
-    private static final String COORDINATES_KEY = "COORDINATES_KEY";
     private static final String CATEGORIES_KEY = "CATEGORIES_KEY";
 
     private CompositeDisposable formDisposable;
     private Dialog loadingGetSortAndPrices;
     private MainViewModel mainViewModel;
     private AdvancedSearchViewModel advancedSearchViewModel;
-    private Map<Integer, CriterionVM> pricesMap;
     private CoordinatesVM workCoordinates;
     private CriterionVM sortCriterionSelected;
     private List<CategoryVM> categoriesSelected;
@@ -188,13 +186,12 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     }
 
     private void setPricesCriteria(List<CriterionVM> prices) {
-        pricesMap = new HashMap<>();
         for(CriterionVM criterionVM : prices) {
             int chipId = View.generateViewId();
-            pricesMap.put(chipId, criterionVM);
             Chip chip = PriceChipLayoutBinding.inflate(getLayoutInflater()).getRoot();
             chip.setText(criterionVM.getName());
             chip.setId(chipId);
+            chip.setTag(criterionVM);
             getViewBinding().chipGroupPrices.addView(chip);
         }
     }
@@ -247,8 +244,11 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
 
         List<Integer> chipIdsSelected = getViewBinding().chipGroupPrices.getCheckedChipIds();
         List<CriterionVM> pricesSelected = new ArrayList<>();
-        for(Integer chipIdSelected : chipIdsSelected)
-            pricesSelected.add(pricesMap.get(chipIdSelected));
+        for(Integer chipIdSelected : chipIdsSelected) {
+            Chip chip = getViewBinding().getRoot().findViewById(chipIdSelected);
+            CriterionVM criterionVM = (CriterionVM) chip.getTag();
+            pricesSelected.add(criterionVM);
+        }
 
         mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesSelected, placesOpen, 1));
         NavHostFragment.findNavController(this).navigate(R.id.action_advancedSearchFragment_to_placesFragment);
