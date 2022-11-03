@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,7 +41,6 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
     private final String PLACES = "PLACES";
     private MainViewModel mainViewModel;
     private GoogleMap map;
-    private Map<String, PlaceVM> markers;
     private List<PlaceVM> placesVM;
     private CoordinatesVM mapCoordinates;
     private boolean isRecreated;
@@ -80,6 +78,17 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
         isRecreated = true;
     }
 
+    @Override
+    protected FragmentMapPlacesBinding bindingInflater(LayoutInflater inflater, ViewGroup container) {
+        return FragmentMapPlacesBinding.inflate(inflater, container, false);
+    }
+
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        map = googleMap;
+        initViewObservables();
+    }
+
     private void initViewObservables() {
         if(!isRecreated) {
             LiveData<CoordinatesVM> coordinatesVM = mainViewModel.getWorkCoordinates();
@@ -92,17 +101,6 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
             });
             placesAndCoordinates.observe(getViewLifecycleOwner(), this::callbackPlacesAndCoordinates);
         } else renderMap();
-    }
-
-    @Override
-    protected FragmentMapPlacesBinding bindingInflater(LayoutInflater inflater, ViewGroup container) {
-        return FragmentMapPlacesBinding.inflate(inflater, container, false);
-    }
-
-    @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
-        map = googleMap;
-        initViewObservables();
     }
 
     private void createMapFragment() {
@@ -118,24 +116,21 @@ public class MapPlacesFragment extends BaseFragment<FragmentMapPlacesBinding> im
 
     private void renderMap() {
         if(map != null) {
-            markers = new HashMap<>();
-            for(PlaceVM placeVM: placesVM) {
-                Marker marker = createMarker(placeVM.getLatitude(), placeVM.getLongitude(), placeVM.getName());
-                markers.put(marker.getId(), placeVM);
-            }
+            for(PlaceVM placeVM: placesVM) createMarker(placeVM);
             map.setOnInfoWindowClickListener(this::clickOnMarkerTitle);
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapCoordinates.getLatitude(), mapCoordinates.getLongitude()), 15f), 2000, null);
         }
     }
 
-    private Marker createMarker(Double latitude, Double longitude, String title) {
-        LatLng coordinates = new LatLng(latitude, longitude);
-        MarkerOptions markerOptions = new MarkerOptions().position(coordinates).title(title);
-        return map.addMarker(markerOptions);
+    private void createMarker(PlaceVM placeVM) {
+        LatLng coordinates = new LatLng(placeVM.getLatitude(), placeVM.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions().position(coordinates).title(placeVM.getName());
+        Marker marker = map.addMarker(markerOptions);
+        if(marker != null) marker.setTag(placeVM);
     }
 
     private void clickOnMarkerTitle(Marker marker) {
-        PlaceVM placeVM = markers.get(marker.getId());
+        PlaceVM placeVM = (PlaceVM) marker.getTag();
         if(placeVM != null) {
             Bundle bundle = new Bundle();
             mapCoordinates = new CoordinatesVM(placeVM.getLatitude(), placeVM.getLongitude());

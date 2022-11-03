@@ -108,7 +108,7 @@ public class MapPlaceFragment extends BaseFragment<FragmentMapPlaceBinding> impl
     }
 
     static class MarkerCallback implements Callback {
-        private Marker marker = null;
+        private final Marker marker;
 
         public MarkerCallback(Marker marker) {
             this.marker = marker;
@@ -116,16 +116,8 @@ public class MapPlaceFragment extends BaseFragment<FragmentMapPlaceBinding> impl
 
         @Override
         public void onSuccess() {
-            if (marker == null)
-            {
-                return;
-            }
-
-            if (!marker.isInfoWindowShown())
-            {
-                return;
-            }
-
+            if (marker == null) return;
+            if (!marker.isInfoWindowShown()) return;
             marker.hideInfoWindow();
             marker.showInfoWindow();
         }
