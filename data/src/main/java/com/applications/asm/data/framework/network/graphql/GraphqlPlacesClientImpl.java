@@ -44,7 +44,7 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
     }
 
     @Override
-    public Single<Response<SearchPlacesQuery.Data>> getSearchedPlaces(String place, double latitude, double longitude, double radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer initIndex, Integer limit) {
+    public Single<Response<SearchPlacesQuery.Data>> getSearchedPlaces(String place, double latitude, double longitude, double radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer initIndex, Integer limit, String locale) {
         SearchPlacesQuery searchPlacesQuery = SearchPlacesQuery.builder()
                 .term(place)
                 .latitude(latitude)
@@ -56,6 +56,7 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
                 .isOpenNow(isOpenNow)
                 .offSet(initIndex)
                 .limit(limit)
+                .locale(locale)
         .build();
         ApolloCall<SearchPlacesQuery.Data> searchPlacesCall = apolloClient.query(searchPlacesQuery);
         Observable<Response<SearchPlacesQuery.Data>> obsSearchPlaces = Rx3Apollo.from(searchPlacesCall);
@@ -90,8 +91,8 @@ public class GraphqlPlacesClientImpl implements GraphqlPlacesClient {
     }
 
     @Override
-    public Single<Response<PlaceReviewsQuery.Data>> getPlaceReviews(String placeId) {
-        ApolloCall<PlaceReviewsQuery.Data> placesReviewsCall = apolloClient.query(PlaceReviewsQuery.builder().placeId(placeId).build());
+    public Single<Response<PlaceReviewsQuery.Data>> getPlaceReviews(String placeId, String locale) {
+        ApolloCall<PlaceReviewsQuery.Data> placesReviewsCall = apolloClient.query(PlaceReviewsQuery.builder().placeId(placeId).locale(locale).build());
         Observable<Response<PlaceReviewsQuery.Data>> obsPlaceReviews = Rx3Apollo.from(placesReviewsCall);
         return Single.fromObservable(obsPlaceReviews).onErrorResumeNext(throwable -> {
             Exception exception = (Exception) throwable;

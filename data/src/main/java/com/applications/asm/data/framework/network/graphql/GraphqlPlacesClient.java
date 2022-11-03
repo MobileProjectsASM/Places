@@ -11,7 +11,7 @@ import io.reactivex.rxjava3.core.Single;
 
 public interface GraphqlPlacesClient {
     Single<Response<PlaceSuggestionQuery.Data>> getPlaceSuggestion(String placeId);
-    Single<Response<SearchPlacesQuery.Data>> getSearchedPlaces(String place, double latitude, double longitude, double radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer initIndex, Integer limit);
+    Single<Response<SearchPlacesQuery.Data>> getSearchedPlaces(String place, double latitude, double longitude, double radius, String categories, String sortBy, String price, Boolean isOpenNow, Integer initIndex, Integer limit, String locale);
     Single<Response<PlaceDetailsQuery.Data>> getPlaceDetails(String placeId);
-    Single<Response<PlaceReviewsQuery.Data>> getPlaceReviews(String placeId);
+    Single<Response<PlaceReviewsQuery.Data>> getPlaceReviews(String placeId, String locale);
 }

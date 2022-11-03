@@ -27,8 +27,8 @@ public class AllReviewsImpl implements AllReviews {
     }
 
     @Override
-    public Single<Response<List<Review>>> ofThisPlace(String placeId) {
-        return graphqlPlacesClient.getPlaceReviews(placeId)
+    public Single<Response<List<Review>>> ofThisPlace(String placeId, String locale) {
+        return graphqlPlacesClient.getPlaceReviews(placeId, locale)
                 .map(dataApolloResponse -> {
                     Response<List<Review>> response;
                     if(!dataApolloResponse.hasErrors()) {

@@ -15,8 +15,8 @@ query PlaceSuggestion($id: String!) {
     }
 }
 
-query SearchPlaces($term: String, $latitude: Float!, $longitude: Float!, $radius: Float, $categories: String!, $sortBy: String, $price: String, $isOpenNow: Boolean, $offSet: Int, $limit: Int) {
-    search(term: $term, latitude: $latitude, longitude: $longitude, radius: $radius, categories: $categories, sort_by: $sortBy, price: $price, open_now: $isOpenNow, offset: $offSet, limit: $limit) {
+query SearchPlaces($term: String, $latitude: Float!, $longitude: Float!, $radius: Float, $categories: String!, $sortBy: String, $price: String, $isOpenNow: Boolean, $offSet: Int, $limit: Int, $locale: String) {
+    search(term: $term, latitude: $latitude, longitude: $longitude, radius: $radius, categories: $categories, sort_by: $sortBy, price: $price, open_now: $isOpenNow, offset: $offSet, limit: $limit, locale: $locale) {
         total
         business {
             id
@@ -81,8 +81,8 @@ query PlaceDetails($id: String!) {
     }
 }
 
-query PlaceReviews($placeId: String!) {
-    reviews(business: $placeId) {
+query PlaceReviews($placeId: String!, $locale: String) {
+    reviews(business: $placeId, locale: $locale) {
         total
         review {
             time_created
