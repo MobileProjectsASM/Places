@@ -145,8 +145,7 @@
         app:selectionRequired="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/divider2"
-        app:checkedButton="@id/button_close">
+        app:layout_constraintTop_toTopOf="@id/divider2">
 
         <Button
             android:id="@+id/button_open"

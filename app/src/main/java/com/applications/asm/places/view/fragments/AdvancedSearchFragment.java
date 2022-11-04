@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -27,7 +27,6 @@ import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.view.adapters.SortCriteriaAdapter;
 import com.applications.asm.places.view.fragments.base.CommonMenuSearchFragment;
 import com.applications.asm.places.view.utils.FormValidators;
-import com.applications.asm.places.view.utils.MultipleLiveDataTransformation;
 import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.AdvancedSearchViewModel;
 import com.applications.asm.places.view_model.MainViewModel;
@@ -35,6 +34,8 @@ import com.google.android.material.chip.Chip;
 import com.jakewharton.rxbinding4.widget.RxTextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +48,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
 public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdvancedSearchBinding> {
-    private static final String CATEGORIES_KEY = "CATEGORIES_KEY";
 
     private CompositeDisposable formDisposable;
     private Dialog loadingGetSortAndPrices;
@@ -56,7 +56,9 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     private CoordinatesVM workCoordinates;
     private CriterionVM sortCriterionSelected;
     private List<CategoryVM> categoriesSelected;
+    private Map<String, Object> pricesSelected;
     private Map<String, Object> sortAndPrices;
+    private String radius;
     private Boolean isRecreatedView;
     private Boolean placesOpen;
 
@@ -82,6 +84,8 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         isRecreatedView = false;
+        pricesSelected = new HashMap<>();
+        radius = "";
     }
 
     @Override
@@ -133,18 +137,38 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         else renderView();
     }
 
+    @SuppressWarnings("unchecked")
     private void renderView() {
         EditText radiusEditText = getViewBinding().radiusTextInputLayout.getEditText();
         if(radiusEditText != null) {
-            Observable<String> radiusObservable = RxTextView.textChanges(radiusEditText).map(CharSequence::toString);
-            Observable<Boolean> observableForm = radiusObservable.map(this::validateRadiusField);
+            radiusEditText.setText(radius);
+            Observable<String> radiusObservable = RxTextView.textChanges(radiusEditText).map(CharSequence::toString).skip(isRecreatedView ? 0 : 1);
+            Observable<Boolean> observableForm = radiusObservable.map(radius -> {
+                this.radius = radius;
+                return validateRadiusField(radius);
+            });
             Disposable disposable = observableForm.subscribe(getViewBinding().applyFilterButton::setEnabled);
             formDisposable.add(disposable);
         }
+        getViewBinding().statePlaceButtonToggleGroup.check(placesOpen ? R.id.button_open : R.id.button_close);
         setListeners();
         setSortAndPrices(sortAndPrices);
-        if(!isRecreatedView) mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setWorkCoordinates);
-        else mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::setCategories);
+
+        AutoCompleteTextView sortCriteriaAutoCompleteTextView = (AutoCompleteTextView) getViewBinding().sortByTextInputLayout.getEditText();
+        if(!isRecreatedView) {
+            mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setWorkCoordinates);
+            List<CriterionVM> sortCriteria = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.SORT_CRITERIA_LIST);
+            sortCriterionSelected = sortCriteria.get(0);
+        } else {
+            mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::setCategories);
+
+            for(int i = 0; i < getViewBinding().chipGroupPrices.getChildCount(); i++) {
+                Chip chip = (Chip) getViewBinding().chipGroupPrices.getChildAt(i);
+                chip.setChecked(pricesSelected.containsKey(((CriterionVM) chip.getTag()).getId()));
+            }
+        }
+
+        if(sortCriteriaAutoCompleteTextView != null) sortCriteriaAutoCompleteTextView.setText(sortCriterionSelected.getName(), false);
     }
 
     private void setListeners() {
@@ -180,8 +204,6 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         if(sortCriteriaAutoCompleteTextView != null) {
             SortCriteriaAdapter sortCriteriaAdapter = new SortCriteriaAdapter(requireContext(), sortCriteria);
             sortCriteriaAutoCompleteTextView.setAdapter(sortCriteriaAdapter);
-            sortCriteriaAutoCompleteTextView.setText(sortCriteria.get(0).getName(), false);
-            sortCriterionSelected = sortCriteria.get(0);
         }
     }
 
@@ -192,6 +214,10 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
             chip.setText(criterionVM.getName());
             chip.setId(chipId);
             chip.setTag(criterionVM);
+            chip.setOnCheckedChangeListener((compoundButton, b) -> {
+                if(b) pricesSelected.put(criterionVM.getId(), criterionVM);
+                else pricesSelected.remove(criterionVM.getId());
+            });
             getViewBinding().chipGroupPrices.addView(chip);
         }
     }
@@ -242,15 +268,10 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         EditText editTextRadius = getViewBinding().radiusTextInputLayout.getEditText();
         if(editTextRadius != null && !editTextRadius.getText().toString().isEmpty()) radius = Integer.parseInt(editTextRadius.getText().toString());
 
-        List<Integer> chipIdsSelected = getViewBinding().chipGroupPrices.getCheckedChipIds();
-        List<CriterionVM> pricesSelected = new ArrayList<>();
-        for(Integer chipIdSelected : chipIdsSelected) {
-            Chip chip = getViewBinding().getRoot().findViewById(chipIdSelected);
-            CriterionVM criterionVM = (CriterionVM) chip.getTag();
-            pricesSelected.add(criterionVM);
-        }
+        List<CriterionVM> pricesList = new ArrayList<>();
+        for(Object obj: pricesSelected.values()) pricesList.add((CriterionVM) obj);
 
-        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesSelected, placesOpen, 1, "es_MX"));
+        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesList, placesOpen, 1, "es_MX"));
         NavHostFragment.findNavController(this).navigate(R.id.action_advancedSearchFragment_to_placesFragment);
     }
 }
