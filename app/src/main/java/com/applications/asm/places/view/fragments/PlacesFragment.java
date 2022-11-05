@@ -170,7 +170,9 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
                     placesView = placesLayoutBinding.getRoot();
                 }
                 String results = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
-                String pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + foundPlacesVM.getPages();
+                String pages;
+                if(foundPlacesVM.getPages() != 0) pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + foundPlacesVM.getPages();
+                else pages = getString(R.string.page) + " 0 " + getString(R.string.of) + " " + foundPlacesVM.getPages();
                 maxPage = foundPlacesVM.getPages();
                 getViewBinding().totalResultsTextView.setText(results);
                 getViewBinding().totalPagesTextView.setText(pages);
@@ -222,7 +224,9 @@ public class PlacesFragment extends BaseFragment<FragmentPlacesBinding> implemen
         initScrollListener(placesLayoutBinding.placesRecyclerView);
         getViewBinding().resultsPlacesFrameLayout.addView(placesLayoutBinding.getRoot());
         String message = getString(R.string.number_results_text) + " " + placeAdapter.getItemCount();
-        String pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + maxPage;
+        String pages;
+        if(maxPage != 0) pages = getString(R.string.page) + " " + parametersAdvancedSearch.getPage() + " " + getString(R.string.of) + " " + maxPage;
+        else pages = getString(R.string.page) + " 0 " + getString(R.string.of) + " " + maxPage;
         getViewBinding().totalResultsTextView.setText(message);
         getViewBinding().totalPagesTextView.setText(pages);
     }

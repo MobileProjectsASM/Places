@@ -152,7 +152,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:textAppearance="@style/regular_text_style"
-            app:layout_constraintBottom_toBottomOf="@+id/categories_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/categories_text"
             app:layout_constraintTop_toTopOf="@+id/categories_text" />
@@ -163,7 +162,7 @@
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/categories_text" />
+            app:layout_constraintTop_toBottomOf="@+id/categories_value_text" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/schedule_subtitle_text"

@@ -3,6 +3,7 @@ package com.applications.asm.places.view.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import com.applications.asm.places.model.ParametersAdvancedSearch;
 import com.applications.asm.places.model.Resource;
 import com.applications.asm.places.view.adapters.SortCriteriaAdapter;
 import com.applications.asm.places.view.fragments.base.CommonMenuSearchFragment;
+import com.applications.asm.places.view.utils.AfterTextChanged;
 import com.applications.asm.places.view.utils.FormValidators;
 import com.applications.asm.places.view.utils.ViewUtils;
 import com.applications.asm.places.view_model.AdvancedSearchViewModel;
@@ -59,6 +61,7 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     private Map<String, Object> pricesSelected;
     private Map<String, Object> sortAndPrices;
     private String radius;
+    private String place;
     private Boolean isRecreatedView;
     private Boolean placesOpen;
 
@@ -86,6 +89,7 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         isRecreatedView = false;
         pricesSelected = new HashMap<>();
         radius = "";
+        place = "";
     }
 
     @Override
@@ -139,10 +143,17 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
 
     @SuppressWarnings("unchecked")
     private void renderView() {
+        //Place EditText
+        EditText placeEditText = getViewBinding().placeTextInputLayout.getEditText();
+        if(placeEditText != null) {
+            placeEditText.setText(place);
+            placeEditText.addTextChangedListener((AfterTextChanged) editable -> place = editable.toString());
+        }
+
         EditText radiusEditText = getViewBinding().radiusTextInputLayout.getEditText();
         if(radiusEditText != null) {
             radiusEditText.setText(radius);
-            Observable<String> radiusObservable = RxTextView.textChanges(radiusEditText).map(CharSequence::toString).skip(isRecreatedView ? 0 : 1);
+            Observable<String> radiusObservable = isRecreatedView ? RxTextView.textChanges(radiusEditText).map(CharSequence::toString) : RxTextView.textChanges(radiusEditText).map(CharSequence::toString).skip(1);
             Observable<Boolean> observableForm = radiusObservable.map(radius -> {
                 this.radius = radius;
                 return validateRadiusField(radius);
@@ -158,7 +169,7 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
         if(!isRecreatedView) {
             mainViewModel.getWorkCoordinates().observe(getViewLifecycleOwner(), this::setWorkCoordinates);
             List<CriterionVM> sortCriteria = (List<CriterionVM>) sortAndPrices.get(AdvancedSearchViewModel.SORT_CRITERIA_LIST);
-            sortCriterionSelected = sortCriteria.get(0);
+            if(sortCriteria != null) sortCriterionSelected = sortCriteria.get(0);
         } else {
             mainViewModel.getCategoriesSelected().observe(getViewLifecycleOwner(), this::setCategories);
 
@@ -260,18 +271,12 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     }
 
     private void applyFilter() {
-        String placeToSearch = "";
-        EditText editTextPlace = getViewBinding().placeTextInputLayout.getEditText();
-        if(editTextPlace != null) placeToSearch = editTextPlace.getText().toString();
-
-        int radius = 0;
-        EditText editTextRadius = getViewBinding().radiusTextInputLayout.getEditText();
-        if(editTextRadius != null && !editTextRadius.getText().toString().isEmpty()) radius = Integer.parseInt(editTextRadius.getText().toString());
+        int radius = !this.radius.isEmpty() ? Integer.parseInt(this.radius) : 0;
 
         List<CriterionVM> pricesList = new ArrayList<>();
         for(Object obj: pricesSelected.values()) pricesList.add((CriterionVM) obj);
 
-        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(placeToSearch, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesList, placesOpen, 1, "es_MX"));
+        mainViewModel.getParametersAdvancedSearchVM().setValue(new ParametersAdvancedSearch(this.place, workCoordinates, radius, categoriesSelected, sortCriterionSelected, pricesList, placesOpen, 1, "es_MX"));
         NavHostFragment.findNavController(this).navigate(R.id.action_advancedSearchFragment_to_placesFragment);
     }
 }
