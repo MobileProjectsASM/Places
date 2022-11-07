@@ -137,8 +137,10 @@ public class AdvancedSearchFragment extends CommonMenuSearchFragment<FragmentAdv
     }
 
     private void initViewObservables() {
-        if(!isRecreatedView) advancedSearchViewModel.loadSortAndPrices().observe(getViewLifecycleOwner(), this::callbackLoadData);
-        else renderView();
+        if(!isRecreatedView) {
+            advancedSearchViewModel.loadSortAndPrices().observe(getViewLifecycleOwner(), this::callbackLoadData);
+            mainViewModel.getCategoriesSelected().setValue(new ArrayList<>());
+        } else renderView();
     }
 
     @SuppressWarnings("unchecked")

@@ -52,7 +52,6 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
     private CoordinatesVM workCoordinates;
     private Map<String, CategoryVM> categoriesMap;
     private Boolean categoriesAreBeingApplied;
-    private boolean isRecreatedView;
 
     @Named("mainVMFactory")
     @Inject
@@ -75,7 +74,6 @@ public class SearchCategoriesFragment extends BaseFragment<FragmentSearchCategor
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        isRecreatedView = false;
     }
 
     @Override
