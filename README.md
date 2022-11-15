@@ -49,4 +49,5 @@ Esta capa está modelada siguiente el patrón **MVVM**, en esta se realiza toda 
 <img src="/preview/places_3.jpg" width="300" height="533" align="right" />
 <img src="/preview/places_4.jpg" width="300" height="533" align="right" />
 
+### Video
 [Has clic aquí para ver el video de la funcionalidad](https://youtube.com/watch?v=vHVzcT6g0F0&feature=share)
